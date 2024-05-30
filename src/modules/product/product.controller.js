@@ -34,7 +34,6 @@ const addproduct = AsyncHandler(async (req, res, next) => {
   // });
 });
 const getallproduct = FindAll(productModel, "", "", [
-  "brand",
   "createdBy",
   "havePermission",
   "subcategory",

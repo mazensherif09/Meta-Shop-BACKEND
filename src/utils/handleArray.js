@@ -19,12 +19,3 @@ export const handleArray = ({
   );
   return currentArray;
 };
-/*
-
-cosnst aaa = (obj) => {
-for(){
-  if(currentArray){
-  }
-}
-}
-*/

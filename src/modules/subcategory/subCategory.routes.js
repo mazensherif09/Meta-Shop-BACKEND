@@ -1,6 +1,4 @@
 import express from "express";
-import { vaildation } from "../../middleware/vaildtaion.js";
-
 
 import {
   addSubCategory,
@@ -14,14 +12,15 @@ import {
   subCategorySchemaVal,
   UpdatesubCategorySchemaVal,
   paramsIdVal,
-} from "./subcategory.vaildation.js";
+} from "./subcategory.validation.js";
+import { validation } from "../../middleware/validation.js";
 
 const SubCategoryRouter = express.Router({ mergeParams: true });
 SubCategoryRouter.route("/")
-  .post(vaildation(subCategorySchemaVal), addSubCategory)
+  .post(validation(subCategorySchemaVal), addSubCategory)
   .get(getAllSubCategoryies);
 SubCategoryRouter.route("/:id")
-  .get(vaildation(paramsIdVal), getOneSubCategory)
-  .put(vaildation(UpdatesubCategorySchemaVal), updateSubCategorty)
-  .delete(vaildation(paramsIdVal), deleteSubCategory);
+  .get(validation(paramsIdVal), getOneSubCategory)
+  .put(validation(UpdatesubCategorySchemaVal), updateSubCategorty)
+  .delete(validation(paramsIdVal), deleteSubCategory);
 export { SubCategoryRouter };

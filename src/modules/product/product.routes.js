@@ -1,5 +1,5 @@
 import express from "express";
-import { vaildation } from "../../middleware/vaildtaion.js";
+import { validation } from "../../middleware/validation.js";
 import { fileUploadfields } from "../../services/FileUpload/FileUpload.js";
 import {
   addproduct,
@@ -12,7 +12,7 @@ import {
   ProductSchemaVal,
   UpdateproductSchemaVal,
   paramsIdVal,
-} from "./product.vaildation.js";
+} from "./product.validation.js";
 import { handleMediaProduct } from "../../middleware/handleProduct.js";
 import { authorized } from "../../middleware/authorized.js";
 import { ownerMiddlewar } from "../../middleware/ownerMiddlewar.js";
@@ -28,7 +28,7 @@ productRouter
       { name: "imgCover", maxCount: 1 },
       { name: "images", maxCount: 8 },
     ]), // handle files uploaded with multer
-    vaildation(ProductSchemaVal), // check vaildation
+    validation(ProductSchemaVal), // check validation
     auth, // to check user is authenticated or not
     authorized(["vendor", "super_admin", "brand_Owner"]), // check is this user have authorized to create products
     addproduct
@@ -36,13 +36,13 @@ productRouter
   .get(getallproduct);
 productRouter
   .route("/:id")
-  .get(vaildation(paramsIdVal), getOneproduct)
+  .get(validation(paramsIdVal), getOneproduct)
   .put(
     fileUploadfields([
       { name: "imgCover", maxCount: 1 },
       { name: "images", maxCount: 8 },
     ]), // handle files uploaded with multer
-    vaildation(UpdateproductSchemaVal), // check vaildation
+    validation(UpdateproductSchemaVal), // check validation
     auth, // to check if user is authenticated or not
     authorized(["vendor","adimn","super_admin", "brand_Owner"]), // check is this user have authorized to update products
     ownerMiddlewar, // check is this user have authorized to update this product or not must be [owner or super admin]
@@ -50,5 +50,5 @@ productRouter
     handlePermissions,
     updateproduct // finally update product
   )
-  .delete(vaildation(paramsIdVal), ownerMiddlewar, deleteproduct);
+  .delete(validation(paramsIdVal), ownerMiddlewar, deleteproduct);
 export { productRouter };

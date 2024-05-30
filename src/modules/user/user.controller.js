@@ -6,17 +6,25 @@ import { AsyncHandler } from "../../middleware/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
 import { forPasswordEmail } from "./../../services/mails/forgetPassword/forgetPassword.Email.js";
 import { confirmEmail } from "./../../services/mails/confirmation/confirmation.email.js";
-import { UserModel } from "./../../../database/models/user.model.js";
+import { UserModel } from "../../../database/models/user.model.js";
 
 const sighnUp = AsyncHandler(async (req, res, next) => {
   confirmEmail(req.body.email);
   const user = new UserModel(req.body);
-  await user.save();
+
+  await user.save(); //save the user body after updating
+  let token = jwt.sign(
+    { userId: user._id, role: user.role },
+    process.env.JWT_KEY
+  );
+
   return res.json({
     state: "success",
     message: "we sent verfiy massage to your email please confirm your email",
+    token,
   });
 });
+
 const logIn = AsyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
   let user = await UserModel.findOne({ email });
@@ -24,24 +32,28 @@ const logIn = AsyncHandler(async (req, res, next) => {
   if (user && bcrypt.compareSync(password, user.password)) {
     if (user?.isblocked) return res.json({ message: "user is blocked" });
 
-    if (user?.confirmEmail) {
-      await UserModel.findByIdAndUpdate(user._id, { isActive: true });
+    const { confirmEmail, _id } = user;
+    if (confirmEmail) {
+      await UserModel.findByIdAndUpdate(_id, { isActive: true });
 
-      let token = jwt.sign({ user: user._id }, process.env.SECRETKEY);
+      let token = jwt.sign({ user: _id }, process.env.SECRETKEY);
 
       return res.json({ message: "success", token });
     } else {
-      confirmEmail(user.email);
+      confirmEmail(email);
       next(new AppError(`can not log in without verfiy email`, 401));
     }
   } else {
     return next(new AppError(`incorrect email or password`, 401));
   }
 });
+
 const logout = AsyncHandler(async (req, res, next) => {
   await UserModel.findByIdAndUpdate(res.locals.user._id, { isActive: false });
   return res.json({ message: "success" });
 });
+
+
 const verfiyEmail = AsyncHandler(async (req, res, next) => {
   jwt.verify(req.params.token, process.env.SECRETKEY, async (err, decoded) => {
     if (err) return next(new AppError(err, 401));
@@ -51,10 +63,11 @@ const verfiyEmail = AsyncHandler(async (req, res, next) => {
     );
     if (!user) return next(new AppError(`user not found`, 401));
     if (user.verfiyEmail)
-      return next(new AppError(`email Already verified`, 401));
+    return next(new AppError(`email Already verified`, 401));
     return res.json({ message: "success" });
   });
 });
+
 const unsubscribe = AsyncHandler(async (req, res, next) => {
   jwt.verify(req.params.token, process.env.SECRETKEY, async (err, decoded) => {
     if (err) return next(new AppError(err, 401));

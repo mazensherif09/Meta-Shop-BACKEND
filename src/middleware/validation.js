@@ -1,6 +1,6 @@
 import { AppError } from "../utils/AppError.js";
 
-export const vaildation = (schema) => {
+export const validation = (schema) => {
   return (req, res, next) => {
     let files = {};
 
