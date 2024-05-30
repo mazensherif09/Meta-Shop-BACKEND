@@ -130,15 +130,15 @@ const FPsendEmail = AsyncHandler(async (req, res, next) => {
 const tokenForgetPassword = AsyncHandler(async (req, res, next) => {
   return res.json({ message: "vaild token" });
 });
-const ResetPassword = AsyncHandler(async (req, res, next) => {
-  const { _id } = req.user;
-  let token = jwt.sign({ user: _id }, process.env.JWT_KEY);
-  await UserModel.findByIdAndUpdate(_id, {
-    password: bcrypt.hashSync(req.body.newpassword, 8),
-    passwordChangedAt: Date.now(),
-  });
-  return res.json({ message: " Password updated successfully", token });
-});
+// const ResetPassword = AsyncHandler(async (req, res, next) => {
+//   const { _id } = req.user;
+//   let token = jwt.sign({ user: _id }, process.env.JWT_KEY);
+//   await UserModel.findByIdAndUpdate(_id, {
+//     password: bcrypt.hashSync(req.body.newpassword, 8),
+//     passwordChangedAt: Date.now(),
+//   });
+//   return res.json({ message: " Password updated successfully", token });
+// });
 export {
   sighnUp,
   shareProfile,
