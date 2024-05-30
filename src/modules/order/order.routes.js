@@ -1,19 +1,20 @@
 import express from 'express';
-import { allowedTo, protectedRoutes } from '../auth/auth.controller.js';
 import {  createOrderVal } from './order.validation.js';
 import { validation } from '../../middleware/validation.js';
 import { createCashOrder, createCheckoutSession, getAllOrders, getSpecificOrder } from './order.controller.js';
+import { authorized } from '../../middleware/authorized.js';
+import { protectedRoutes } from '../../middleware/auth/protectedRoutes.js';
 
 
 const orderRouter = express.Router();
 
-orderRouter.route('/').get(protectedRoutes, allowedTo('user'), getSpecificOrder)
+orderRouter.route('/').get(protectedRoutes, authorized('user'), getSpecificOrder)
 
-orderRouter.get('/all', protectedRoutes, allowedTo('admin'), getAllOrders)
+orderRouter.get('/all', protectedRoutes, authorized('admin'), getAllOrders)
 
 orderRouter.route('/:id')
-.post(protectedRoutes, allowedTo('user'), validation(createOrderVal), createCashOrder)
+.post(protectedRoutes, authorized('user'), validation(createOrderVal), createCashOrder)
 
-orderRouter.post("/checkOut/:id", protectedRoutes, allowedTo('user'), createCheckoutSession)
+orderRouter.post("/checkOut/:id", protectedRoutes, authorized('user'), createCheckoutSession)
 
 export default orderRouter;

@@ -6,6 +6,7 @@ const schema = new mongoose.Schema(
     userName: { type: String, trim: true, required: true },
     email: { type: String, trim: true, required: true, unique: true },
     password: { type: String, required: true },
+    passwordChangedAt: Date,
     phone: Number,
     Pincode: Number,
     isresetPassword: { type: Boolean, default: false },
@@ -25,6 +26,13 @@ const schema = new mongoose.Schema(
     confirmEmail: { type: Boolean, default: false },
     isActive: { type: Boolean, default: false },
     isblocked: { type: Boolean, default: false },
+    addresses: [
+      {
+        street: String,
+        phone: String,
+        city: String,
+      },
+    ]
   },
   { timestamps: true }
 );

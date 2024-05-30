@@ -4,8 +4,8 @@ import { AsyncHandler } from "./AsyncHandler.js";
 // and respect the business roles
 export const handlePermissions = AsyncHandler(async (req, res, next) => {
   if (
-    res.locals.schema.createdBy.toString() !== res.locals.user._id.toString() &&
-    res.locals.user.role !== "super_admin"
+    res.locals.schema.createdBy.toString() !== req.user._id.toString() &&
+    req.user.role !== "super_admin"
   ) {
     // if the user is not a super admin | createtor this product then  return next and ignore any updates in permissions
     delete req.body["havePermission"];

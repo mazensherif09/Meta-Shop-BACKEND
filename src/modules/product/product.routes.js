@@ -16,8 +16,8 @@ import {
 import { handleMediaProduct } from "../../middleware/handleProduct.js";
 import { authorized } from "../../middleware/authorized.js";
 import { ownerMiddlewar } from "../../middleware/ownerMiddlewar.js";
-import { auth } from "../../middleware/auth.js";
 import { handlePermissions } from "../../middleware/handlepermissions.js";
+import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
 
 const productRouter = express.Router();
 
@@ -29,7 +29,7 @@ productRouter
       { name: "images", maxCount: 8 },
     ]), // handle files uploaded with multer
     validation(ProductSchemaVal), // check validation
-    auth, // to check user is authenticated or not
+    protectedRoutes, // to check user is authenticated or not
     authorized(["vendor", "super_admin", "brand_Owner"]), // check is this user have authorized to create products
     addproduct
   )
@@ -43,7 +43,7 @@ productRouter
       { name: "images", maxCount: 8 },
     ]), // handle files uploaded with multer
     validation(UpdateproductSchemaVal), // check validation
-    auth, // to check if user is authenticated or not
+    protectedRoutes, // to check if user is authenticated or not
     authorized(["vendor","adimn","super_admin", "brand_Owner"]), // check is this user have authorized to update products
     ownerMiddlewar, // check is this user have authorized to update this product or not must be [owner or super admin]
     handleMediaProduct, // handle media[files] with cloudinary

@@ -10,13 +10,14 @@ import {
   updateOne,
 } from "../handlers/crudHandler.js";
 const Errormassage = "product not found";
+
 const addproduct = AsyncHandler(async (req, res, next) => {
   const { files } = req;
   const product = await productModel.findOne({ title: req.body.title });
   if (product)
     return next(new AppError(` product already  exist with same title`, 401));
   req.body.slug = slugify(req.body.title);
-  req.body.createdBy = res.locals.user._id;
+  req.body.createdBy = req.user._id;
 
   const data = new productModel(req.body); // pre save the for the  model
   await data.save(); // finallay save in database

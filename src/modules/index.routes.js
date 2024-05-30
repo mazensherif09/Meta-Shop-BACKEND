@@ -8,7 +8,6 @@ import { productRouter } from "./product/product.routes.js";
 import cartRouter from "./cart/cart.routes.js";
 import orderRouter from "./order/order.routes.js";
 import addressRouter from "./address/address.routes.js";
-import authRouter from "./auth/auth.routes.js";
 
 export const bootstrap = (app, express) => {
   const mainroute = "/api/v1"; // main route
@@ -19,7 +18,6 @@ export const bootstrap = (app, express) => {
 
   // start  Endpoints ----------------------------------------- |
   app.use(`${mainroute}/users`, UserRouter);
-  app.use(`${mainroute}/auth`, authRouter);
 
   app.use(`${mainroute}/categories`, categoryRouter);
   app.use(`${mainroute}/subcategories`, SubCategoryRouter);
