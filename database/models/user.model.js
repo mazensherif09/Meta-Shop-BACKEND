@@ -14,12 +14,9 @@ const schema = new mongoose.Schema(
       type: String,
       enum: [
         "user", // normal user | customer
+        "infeluser", // user who take coupons 
         "vendor", // vendor can create/Edit [products] => Which he owns !
-        "designer", // the designer can control on media [landing page , swipers media , etc...]
         "super_admin", // The main admin
-        "Owner_brand", // brand-Owner can create/Edit [products , brands] => Which he owns !
-        "Order_Handler", // The employee who handles review details orders => loaction , choose Who will deliver the order
-        "representatives", // The employee who delivers orders
       ],
       default: "user",
     },
