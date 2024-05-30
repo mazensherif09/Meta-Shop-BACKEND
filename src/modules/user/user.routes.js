@@ -1,7 +1,6 @@
 import express from "express";
 import {
   ForgetPasswordVal,
-  authResetPasswordVal,
   signinSchemaVal,
   signupschemaVal,
   updatePasswordVal,
@@ -11,13 +10,12 @@ import { checkEmailuser } from "../../middleware/checkUser.js";
 
 import {
   FPsendEmail,
-  ResetPassword,
   changepassword,
   deleteUser,
   logIn,
   logout,
   shareProfile,
-  sighnUp,
+  signUp,
   softdelete,
   tokenForgetPassword,
   unsubscribe,
@@ -37,7 +35,7 @@ UserRouter.post(
   `${authRoute}/register`,
   validation(signupschemaVal),
   checkEmailuser,
-  sighnUp
+  signUp
 ); //sign up
 
 UserRouter.post(`${authRoute}/login`, validation(signinSchemaVal), logIn); //log in

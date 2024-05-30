@@ -8,7 +8,7 @@ import { forPasswordEmail } from "./../../services/mails/forgetPassword/forgetPa
 import { confirmEmail } from "./../../services/mails/confirmation/confirmation.email.js";
 import { UserModel } from "../../../database/models/user.model.js";
 
-const sighnUp = AsyncHandler(async (req, res, next) => {
+const signUp = AsyncHandler(async (req, res, next) => {
   confirmEmail(req.body.email);
   const user = new UserModel(req.body);
 
@@ -24,7 +24,6 @@ const sighnUp = AsyncHandler(async (req, res, next) => {
     token,
   });
 });
-
 const logIn = AsyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
   let user = await UserModel.findOne({ email });
@@ -47,13 +46,11 @@ const logIn = AsyncHandler(async (req, res, next) => {
     return next(new AppError(`Incorrect email or password`, 401));
   }
 });
-
 const logout = AsyncHandler(async (req, res, next) => {
   const { _id } = req.user;
   await UserModel.findByIdAndUpdate(_id, { isActive: false });
   return res.json({ message: "success" });
 });
-
 const verfiyEmail = AsyncHandler(async (req, res, next) => {
   jwt.verify(req.params.token, process.env.SECRETKEY, async (err, decoded) => {
     if (err) return next(new AppError(err, 401));
@@ -67,7 +64,6 @@ const verfiyEmail = AsyncHandler(async (req, res, next) => {
     return res.json({ message: "success" });
   });
 });
-
 const unsubscribe = AsyncHandler(async (req, res, next) => {
   jwt.verify(req.params.token, process.env.SECRETKEY, async (err, decoded) => {
     if (err) return next(new AppError(err, 401));
@@ -89,7 +85,6 @@ const changepassword = AsyncHandler(async (req, res, next) => {
 
   res.json({ message: "success", token });
 });
-
 const updateuser = AsyncHandler(async (req, res, next) => {
   const { _id } = req.user;
   await UserModel.findByIdAndUpdate(_id, req.body);
@@ -140,7 +135,7 @@ const tokenForgetPassword = AsyncHandler(async (req, res, next) => {
 //   return res.json({ message: " Password updated successfully", token });
 // });
 export {
-  sighnUp,
+  signUp,
   shareProfile,
   logIn,
   logout,
@@ -150,7 +145,6 @@ export {
   deleteUser,
   softdelete,
   unsubscribe,
-  ResetPassword,
   FPsendEmail,
   tokenForgetPassword,
 };
