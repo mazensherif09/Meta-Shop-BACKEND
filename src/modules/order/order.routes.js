@@ -4,17 +4,18 @@ import { validation } from '../../middleware/validation.js';
 import { createCashOrder, createCheckoutSession, getAllOrders, getSpecificOrder } from './order.controller.js';
 import { authorized } from '../../middleware/authorized.js';
 import { protectedRoutes } from '../../middleware/auth/protectedRoutes.js';
+import { userRoles } from '../../assets/userRoles.js';
 
 
 const orderRouter = express.Router();
 
-orderRouter.route('/').get(protectedRoutes, authorized('user'), getSpecificOrder)
+orderRouter.route('/').get(protectedRoutes, authorized(userRoles.User), getSpecificOrder)
 
-orderRouter.get('/all', protectedRoutes, authorized('admin'), getAllOrders)
+orderRouter.get('/all', protectedRoutes, authorized(userRoles.Admin, userRoles.Super_admin), getAllOrders)
 
 orderRouter.route('/:id')
-.post(protectedRoutes, authorized('user'), validation(createOrderVal), createCashOrder)
+.post(protectedRoutes, authorized(userRoles.User), validation(createOrderVal), createCashOrder)
 
-orderRouter.post("/checkOut/:id", protectedRoutes, authorized('user'), createCheckoutSession)
+orderRouter.post("/checkOut/:id", protectedRoutes, authorized(userRoles.User), createCheckoutSession)
 
 export default orderRouter;

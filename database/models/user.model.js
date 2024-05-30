@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
+import { userRoles } from "../../src/assets/userRoles";
 
 const schema = new mongoose.Schema(
   {
@@ -12,12 +13,7 @@ const schema = new mongoose.Schema(
     isresetPassword: { type: Boolean, default: false },
     role: {
       type: String,
-      enum: [
-        "user", // normal user | customer
-        "infeluser", // user who take coupons 
-        "vendor", // vendor can create/Edit [products] => Which he owns !
-        "super_admin", // The main admin
-      ],
+      enum: Object.values(userRoles),
       default: "user",
     },
     confirmEmail: { type: Boolean, default: false },
