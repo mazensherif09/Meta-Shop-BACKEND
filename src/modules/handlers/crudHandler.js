@@ -18,7 +18,7 @@ export const InsertOne = (model, Errormassage, slug, check) => {
     });
   });
 };
-export const FindAll = ({model, Errormassage, param, populateArray}) => {
+export const FindAll = ({ model, Errormassage, param, populateArray }) => {
   return AsyncHandler(async (req, res, next) => {
     let filterObject = {};
     if (param && req.params[param]) {
@@ -61,7 +61,7 @@ export const updateOne = (model, Errormassage, slug) => {
     if (slug) {
       req.body.slug = slugify(req.body[slug]);
     }
-    
+
     const document = await model.findByIdAndUpdate(
       { _id: req.params.id },
       req.body,

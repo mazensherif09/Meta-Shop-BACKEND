@@ -5,9 +5,9 @@ export class ApiFetcher {
   }
   pagination() {
     if (this.searchQuery.page <= 0) this.searchQuery.page = 1;
-    if (this.searchQuery.pagelimit <= 0) this.searchQuery.pagelimit = 25;
+    if (this.searchQuery.pagelimit <= 0) this.searchQuery.pagelimit = 20;
     let pageNumber = this.searchQuery.page * 1 || 1;
-    let pageLimit = this.searchQuery.pagelimit * 1 || 25;
+    let pageLimit = this.searchQuery.pagelimit * 1 || 20;
     let skip = (pageNumber - 1) * pageLimit;
     this.mongooseQuery.skip(skip).limit(pageLimit);
     this.pageNumber = pageNumber;
