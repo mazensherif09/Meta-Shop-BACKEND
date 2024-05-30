@@ -132,12 +132,12 @@ const tokenForgetPassword = AsyncHandler(async (req, res, next) => {
 });
 const ResetPassword = AsyncHandler(async (req, res, next) => {
   const { _id } = req.user;
-  req.body.newPassword = bcrypt.hashSync(req.body.newPassword, 8);
+  let token = jwt.sign({ user: _id }, process.env.JWT_KEY);
   await UserModel.findByIdAndUpdate(_id, {
-    password: req.body.newPassword,
-    isresetPassword: false,
+    password: bcrypt.hashSync(req.body.newpassword, 8),
+    passwordChangedAt: Date.now(),
   });
-  return res.json({ message: " Password updated successfully" });
+  return res.json({ message: " Password updated successfully", token });
 });
 export {
   sighnUp,

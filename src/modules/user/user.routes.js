@@ -78,12 +78,12 @@ UserRouter.get(
   tokenForgetPassword
 ); // this optional endpoint  for front-end to loaders(react js || next js) to check token for handle layout
 
-UserRouter.post(
-  `${authRoute}/resetPassword`,
-  validation(authResetPasswordVal),
-  protectedRoutes,
-  PincodeCheck,
-  ResetPassword
-); // reset password if token vaild
+// UserRouter.post(
+//   `${authRoute}/resetPassword`,
+//   validation(authResetPasswordVal),
+//   protectedRoutes,
+//   PincodeCheck,
+//   ResetPassword
+// ); // reset password if token vaild
 //end forgot paswword routes
 export { UserRouter };

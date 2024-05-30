@@ -1,7 +1,8 @@
 import { UserModel } from "../../../database/models/user.model.js";
-import { catchError } from "../../middleware/catchError.js";
+import { AsyncHandler } from "../../middleware/AsyncHandler.js";
 
-const addToAddress = catchError(async (req, res, next) => {
+
+const addToAddress = AsyncHandler(async (req, res, next) => {
   let address = await UserModel.findByIdAndUpdate(req.user._id, {$addToSet: {addresses: req.body}},
     { new: true })
 
@@ -9,7 +10,7 @@ const addToAddress = catchError(async (req, res, next) => {
   address && res.json({ message: "success", address: address.addresses }); //address after update
 });
 
-const removeFromAddress = catchError(async (req, res, next) => {
+const removeFromAddress = AsyncHandler(async (req, res, next) => {
   let address = await UserModel.findByIdAndUpdate(req.user._id, 
     {$pull: {addresses:{_id:req.params.id}}},{ new: true }) 
 
@@ -17,7 +18,7 @@ const removeFromAddress = catchError(async (req, res, next) => {
   address && res.json({ message: "success", address: address.addresses }); //address after update
 });
 
-const getLoggedAddress = catchError(async (req, res, next) => {
+const getLoggedAddress = AsyncHandler(async (req, res, next) => {
   let {addresses} = await UserModel.findById(req.user._id)
 
   addresses && res.json({ message: "success", addresses }); //address after update

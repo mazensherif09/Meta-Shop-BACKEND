@@ -1,13 +1,13 @@
 import { cartModel } from "../../../database/models/cart.model.js";
 import { orderModel } from "../../../database/models/order.model.js";
 import { productModel } from "../../../database/models/product.model.js";
-import { catchError } from "../../middleware/catchError.js";
+import { AsyncHandler } from "../../middleware/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
 import Stripe from "stripe";
 
 const stripe = new Stripe('sk_test....');
 
-const createCashOrder = catchError(async (req, res, next) => {
+const createCashOrder = AsyncHandler(async (req, res, next) => {
   //1- get cart --> cartId
   let cart = await cartModel.findById(req.params.id);
   if (!cart) return next(new AppError("cart not found"));
@@ -39,7 +39,7 @@ const createCashOrder = catchError(async (req, res, next) => {
   res.json({ message: "success", order });
 });
 
-const getSpecificOrder = catchError(async (req, res, next) => {
+const getSpecificOrder = AsyncHandler(async (req, res, next) => {
   //1- get order --> user Id
   let order = await orderModel
     .findOne({ user: req.user._id })
@@ -49,7 +49,7 @@ const getSpecificOrder = catchError(async (req, res, next) => {
   res.json({ message: "success", order });
 });
 
-const getAllOrders = catchError(async (req, res, next) => {
+const getAllOrders = AsyncHandler(async (req, res, next) => {
   //1- get cart --> cartId
   let orders = await orderModel.find().populate("orderItems.product");
   if (!orders) return next(new AppError("order not found"));
@@ -57,7 +57,7 @@ const getAllOrders = catchError(async (req, res, next) => {
   res.json({ message: "success", orders });
 });
 
-const createCheckoutSession = catchError(async (req, res, next) => {
+const createCheckoutSession = AsyncHandler(async (req, res, next) => {
   //1- get cart --> cartId
   let cart = await cartModel.findById(req.params.id);
   if (!cart) return next(new AppError("cart not found"));
