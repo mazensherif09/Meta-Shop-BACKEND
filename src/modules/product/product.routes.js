@@ -1,0 +1,54 @@
+import express from "express";
+import { vaildation } from "../../middleware/vaildtaion.js";
+import { fileUploadfields } from "../../services/FileUpload/FileUpload.js";
+import {
+  addproduct,
+  getallproduct,
+  getOneproduct,
+  updateproduct,
+  deleteproduct,
+} from "./product.controller.js";
+import {
+  ProductSchemaVal,
+  UpdateproductSchemaVal,
+  paramsIdVal,
+} from "./product.vaildation.js";
+import { handleMediaProduct } from "../../middleware/handleProduct.js";
+import { authorized } from "../../middleware/authorized.js";
+import { ownerMiddlewar } from "../../middleware/ownerMiddlewar.js";
+import { auth } from "../../middleware/auth.js";
+import { handlePermissions } from "../../middleware/handlepermissions.js";
+
+const productRouter = express.Router();
+
+productRouter
+  .route("/")
+  .post(
+    fileUploadfields([
+      { name: "imgCover", maxCount: 1 },
+      { name: "images", maxCount: 8 },
+    ]), // handle files uploaded with multer
+    vaildation(ProductSchemaVal), // check vaildation
+    auth, // to check user is authenticated or not
+    authorized(["vendor", "super_admin", "brand_Owner"]), // check is this user have authorized to create products
+    addproduct
+  )
+  .get(getallproduct);
+productRouter
+  .route("/:id")
+  .get(vaildation(paramsIdVal), getOneproduct)
+  .put(
+    fileUploadfields([
+      { name: "imgCover", maxCount: 1 },
+      { name: "images", maxCount: 8 },
+    ]), // handle files uploaded with multer
+    vaildation(UpdateproductSchemaVal), // check vaildation
+    auth, // to check if user is authenticated or not
+    authorized(["vendor","adimn","super_admin", "brand_Owner"]), // check is this user have authorized to update products
+    ownerMiddlewar, // check is this user have authorized to update this product or not must be [owner or super admin]
+    handleMediaProduct, // handle media[files] with cloudinary
+    handlePermissions,
+    updateproduct // finally update product
+  )
+  .delete(vaildation(paramsIdVal), ownerMiddlewar, deleteproduct);
+export { productRouter };
