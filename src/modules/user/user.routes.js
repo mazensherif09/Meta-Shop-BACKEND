@@ -23,7 +23,7 @@ import {
   verfiyEmail,
 } from "./user.controller.js";
 import { comparePassword } from "../../middleware/comparePassword.js";
-import { PincodeCheck } from "../../middleware/PincodeCheck.js";
+// import { PincodeCheck } from "../../middleware/PincodeCheck.js";
 import { validation } from "../../middleware/validation.js";
 import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
 
