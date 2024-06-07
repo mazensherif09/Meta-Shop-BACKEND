@@ -11,9 +11,10 @@ export const protectedRoutes = AsyncHandler(async (req, res, next) => {
   //2-verfiy token
   jwt.verify(token, process.env.SECRETKEY, async (err, decoded) => {
     if (err) return next(new AppError(err, 401));
+    console.log("🚀 ~ jwt.verify ~ decoded:", decoded)
 
     //3- User -> exist or not
-    const user = await UserModel.findById(decoded?.user);
+    const user = await UserModel.findById(decoded?.id);
     if (!user) return next(new AppError("User is not found", 401));
     //4- user blocked or not
     if (user?.isblocked) return next(new AppError("User is blocked", 401));

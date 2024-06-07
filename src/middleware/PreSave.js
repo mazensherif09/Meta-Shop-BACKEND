@@ -1,5 +1,5 @@
 import slugify from "slugify";
-import { updateFileCloudinary } from "../cloudnairy/cloudnairy.js";
+import { updateFileCloudinary } from "../utils/cloudnairy.js";
 import { AppError } from "../utils/AppError.js";
 import { AsyncHandler } from "./AsyncHandler.js";
 

@@ -4,7 +4,7 @@ import {
   Uploader,
   deleteFileCloudinary,
   updateFileCloudinary,
-} from "../cloudnairy/cloudnairy.js";
+} from "../utils/cloudnairy.js";
 import { AppError } from "../utils/AppError.js";
 import { AsyncHandler } from "./AsyncHandler.js";
 export const handleMediaProduct = AsyncHandler(async (req, res, next) => {

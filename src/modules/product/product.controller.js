@@ -1,7 +1,7 @@
 import slugify from "slugify";
 import { AsyncHandler } from "../../middleware/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
-import { Uploader } from "../../cloudnairy/cloudnairy.js";
+import { Uploader } from "../../utils/cloudnairy.js";
 import { productModel } from "./../../../database/models/product.model.js";
 import {
   FindAll,
