@@ -3,7 +3,7 @@ import { cartModel } from "../../../database/models/cart.model.js";
 import { productModel } from "../../../database/models/product.model.js";
 import { AppError } from "../../utils/AppError.js";
 import { couponModel } from "../../../database/models/coupon.model.js";
-import { AsyncHandler } from "../../middleware/AsyncHandler.js";
+import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 
 const calcTotalPrice = (cart) => {
   let totalPrice = 0;

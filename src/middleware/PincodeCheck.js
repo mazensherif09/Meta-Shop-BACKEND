@@ -1,5 +1,5 @@
 import { AppError } from "../utils/AppError.js";
-import { AsyncHandler } from "./AsyncHandler.js";
+import { AsyncHandler } from "./globels/AsyncHandler.js";
 
 export const PincodeCheck = AsyncHandler(async (req, res, next) => {
   if (req.user.Pincode !== req.body.pincode)

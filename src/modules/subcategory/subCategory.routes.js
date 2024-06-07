@@ -13,7 +13,7 @@ import {
   UpdatesubCategorySchemaVal,
   paramsIdVal,
 } from "./subcategory.validation.js";
-import { validation } from "../../middleware/validation.js";
+import { validation } from "../../middleware/globels/validation.js";
 
 const SubCategoryRouter = express.Router({ mergeParams: true });
 SubCategoryRouter.route("/")

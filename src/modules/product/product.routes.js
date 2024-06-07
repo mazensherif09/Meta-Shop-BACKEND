@@ -1,5 +1,5 @@
 import express from "express";
-import { validation } from "../../middleware/validation.js";
+import { validation } from "../../middleware/globels/validation.js";
 import { fileUploadfields } from "../../services/FileUpload/FileUpload.js";
 import {
   addproduct,
@@ -14,7 +14,7 @@ import {
   paramsIdVal,
 } from "./product.validation.js";
 import { handleMediaProduct } from "../../middleware/handleProduct.js";
-import { authorized } from "../../middleware/authorized.js";
+import { authorized } from "../../middleware/globels/authorized.js";
 import { ownerMiddlewar } from "../../middleware/ownerMiddlewar.js";
 import { handlePermissions } from "../../middleware/handlepermissions.js";
 import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";

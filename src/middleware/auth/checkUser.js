@@ -1,8 +1,8 @@
 
 
-import { UserModel } from "../../database/models/user.model.js";
-import { AppError } from "../utils/AppError.js";
-import { AsyncHandler } from "./AsyncHandler.js";
+import { UserModel } from "../../../database/models/user.model.js";
+import { AppError } from "../../utils/AppError.js";
+import { AsyncHandler } from "../globels/AsyncHandler.js";
 
 
 export const checkEmailuser = AsyncHandler(async (req, res, next) => {

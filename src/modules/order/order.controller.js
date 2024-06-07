@@ -1,7 +1,7 @@
 import { cartModel } from "../../../database/models/cart.model.js";
 import { orderModel } from "../../../database/models/order.model.js";
 import { productModel } from "../../../database/models/product.model.js";
-import { AsyncHandler } from "../../middleware/AsyncHandler.js";
+import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
 import Stripe from "stripe";
 

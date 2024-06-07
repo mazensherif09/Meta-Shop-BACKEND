@@ -1,4 +1,4 @@
-import { AppError } from "../utils/AppError.js";
+import { AppError } from "../../utils/AppError.js";
 import { AsyncHandler } from "./AsyncHandler.js";
 
 export const authorized = (permissions) => {

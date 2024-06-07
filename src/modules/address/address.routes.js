@@ -1,9 +1,9 @@
 import express from 'express';
-import { validation } from '../../middleware/validation.js';
+import { validation } from '../../middleware/globels/validation.js';
 import { addToAddress, getLoggedAddress, removeFromAddress } from './address.controller.js';
 import { addAddressVal, paramsIdVal } from './address.validation.js';
 import { protectedRoutes } from '../../middleware/auth/protectedRoutes.js';
-import { authorized } from '../../middleware/authorized.js';
+import { authorized } from '../../middleware/globels/authorized.js';
 
 const addressRouter = express.Router();
 

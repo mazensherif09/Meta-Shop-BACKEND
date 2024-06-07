@@ -1,7 +1,7 @@
 import slugify from "slugify";
 import { updateFileCloudinary } from "../utils/cloudnairy.js";
 import { AppError } from "../utils/AppError.js";
-import { AsyncHandler } from "./AsyncHandler.js";
+import { AsyncHandler } from "./globels/AsyncHandler.js";
 
 export const PreSaveFunction = (model, Errormassage, slug, img) => {
   return AsyncHandler(async (req, res, next) => {

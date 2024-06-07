@@ -1,5 +1,5 @@
 import slugify from "slugify";
-import { AsyncHandler } from "../../middleware/AsyncHandler.js";
+import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
 import { Uploader } from "../../utils/cloudnairy.js";
 import { productModel } from "./../../../database/models/product.model.js";

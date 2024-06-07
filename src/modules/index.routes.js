@@ -2,13 +2,14 @@ import { UserRouter } from "./user/user.routes.js";
 import { AppError } from "../utils/AppError.js";
 import { dbConnection } from "../../database/dbConnection.js";
 import { categoryRouter } from "./category/category.routes.js";
-import { globalError } from "../middleware/globalError.js";
+
 import { SubCategoryRouter } from "./subcategory/subCategory.routes.js";
 import { productRouter } from "./product/product.routes.js";
 import cartRouter from "./cart/cart.routes.js";
 import orderRouter from "./order/order.routes.js";
 import addressRouter from "./address/address.routes.js";
 import { AuthRouter } from "./auth/auth.routes.js";
+import { globalError } from "../middleware/globels/globalError.js";
 
 export const bootstrap = (app, express) => {
   const mainroute = "/api"; // main route

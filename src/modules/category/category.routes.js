@@ -15,7 +15,7 @@ import { fileUploadSingle } from "../../services/FileUpload/FileUpload.js";
 import { SubCategoryRouter } from "../subcategory/subCategory.routes.js";
 import { PreSaveFunction } from "../../middleware/PreSave.js";
 import { categoryModel } from "../../../database/models/category.model.js";
-import { validation } from "../../middleware/validation.js";
+import { validation } from "../../middleware/globels/validation.js";
 
 const categoryRouter = express.Router();
 categoryRouter.use("/:category/subcategories", SubCategoryRouter);

@@ -1,5 +1,5 @@
 import slugify from "slugify";
-import { AsyncHandler } from "../../middleware/AsyncHandler.js";
+import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
 import { ApiFetcher } from "../../utils/Fetcher.js";
 

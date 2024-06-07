@@ -5,7 +5,7 @@ import {
   signinSchemaVal,
   signupschemaVal,
 } from "./auth.vailadtion.js";
-import { checkEmailuser } from "../../middleware/checkUser.js";
+import { checkEmailuser } from "../../middleware/auth/checkUser.js";
 
 import {
   signUp,
@@ -16,8 +16,8 @@ import {
   tokenForgetPassword,
   ResetPassword,
 } from "./auth.controller.js";
-import { comparePassword } from "../../middleware/comparePassword.js";
-import { validation } from "../../middleware/validation.js";
+import { comparePassword } from "../../middleware/auth/comparePassword.js";
+import { validation } from "../../middleware/globels/validation.js";
 import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
 
 const AuthRouter = express.Router();

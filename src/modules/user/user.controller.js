@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 
 import qrcode from "qrcode";
 import bcrypt from "bcrypt";
-import { AsyncHandler } from "../../middleware/AsyncHandler.js";
+import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
 import { forPasswordEmail } from "./../../services/mails/forgetPassword/forgetPassword.Email.js";
 import { confirmEmail } from "./../../services/mails/confirmation/confirmation.email.js";

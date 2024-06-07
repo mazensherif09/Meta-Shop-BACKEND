@@ -1,8 +1,8 @@
 import express from 'express';
 import { addToCart, applyCoupon, clearUserCart, getLoggedCart, removeItemCart, updateQTY } from './cart.controller.js';
 import { addCartVal, paramsIdVal, updateQTYVal } from './cart.validation.js';
-import { validation } from '../../middleware/validation.js';
-import { authorized } from '../../middleware/authorized.js';
+import { validation } from '../../middleware/globels/validation.js';
+import { authorized } from '../../middleware/globels/authorized.js';
 import { protectedRoutes } from '../../middleware/auth/protectedRoutes.js';
 import { userRoles } from '../../assets/userRoles.js';
 

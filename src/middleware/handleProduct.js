@@ -6,7 +6,7 @@ import {
   updateFileCloudinary,
 } from "../utils/cloudnairy.js";
 import { AppError } from "../utils/AppError.js";
-import { AsyncHandler } from "./AsyncHandler.js";
+import { AsyncHandler } from "./globels/AsyncHandler.js";
 export const handleMediaProduct = AsyncHandler(async (req, res, next) => {
   const { files, body } = req;
   const product = res.locals.schema;

@@ -1,6 +1,6 @@
 import { UserModel } from "../../../database/models/user.model.js";
 import { AppError } from "../../utils/AppError.js";
-import { AsyncHandler } from "../AsyncHandler.js";
+import { AsyncHandler } from "../globels/AsyncHandler.js";
 import jwt from "jsonwebtoken";
 
 export const protectedRoutes = AsyncHandler(async (req, res, next) => {

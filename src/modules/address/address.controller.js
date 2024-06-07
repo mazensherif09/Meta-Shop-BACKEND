@@ -1,5 +1,5 @@
 import { UserModel } from "../../../database/models/user.model.js";
-import { AsyncHandler } from "../../middleware/AsyncHandler.js";
+import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 
 
 const addToAddress = AsyncHandler(async (req, res, next) => {

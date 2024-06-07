@@ -6,7 +6,7 @@ import {
   updatePasswordVal,
   updateVal,
 } from "./user.vailadtion.js";
-import { checkEmailuser } from "../../middleware/checkUser.js";
+import { checkEmailuser } from "../../middleware/auth/checkUser.js";
 
 import {
   FPsendEmail,
@@ -22,9 +22,9 @@ import {
   updateuser,
   verfiyEmail,
 } from "./user.controller.js";
-import { comparePassword } from "../../middleware/comparePassword.js";
+import { comparePassword } from "../../middleware/auth/comparePassword.js";
 // import { PincodeCheck } from "../../middleware/PincodeCheck.js";
-import { validation } from "../../middleware/validation.js";
+import { validation } from "../../middleware/globels/validation.js";
 import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
 
 const UserRouter = express.Router();
