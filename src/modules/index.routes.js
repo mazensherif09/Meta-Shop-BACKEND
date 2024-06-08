@@ -1,5 +1,6 @@
 import cors from "cors";
 import helmet from "helmet";
+import morgan from "morgan";
 import { UserRouter } from "./user/user.routes.js";
 import { AppError } from "../utils/AppError.js";
 import { dbConnection } from "../../database/dbConnection.js";
@@ -13,25 +14,30 @@ import addressRouter from "./address/address.routes.js";
 import { AuthRouter } from "./auth/auth.routes.js";
 import { globalError } from "../middleware/globels/globalError.js";
 import cookieParser from "cookie-parser";
+import { logger } from "../middleware/globels/logger.js";
 export const bootstrap = (app, express) => {
   const mainroute = "/api"; // main route
   const corsOptions = {
     origin: process.env.FrontUrl, // Replace with your frontend domain
-    methods: ['GET', 'POST', 'PUT', 'DELETE','patch'], // Allowed HTTP methods
-    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+    methods: ["GET", "POST", "PUT", "DELETE", "patch"], // Allowed HTTP methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
     credentials: true, // Allow credentials (cookies, authorization headers, etc.)
   };
-  
-  
-  app.use(cors(process.env.mode !== 'dev' ? corsOptions : {}));// Use the CORS middleware with the specified options
+  app.use(logger());
+  app.use(cors(process.env.mode !== "dev" ? corsOptions : {})); // Use the CORS middleware with the specified options
   // Use helmet to enhance your app's security
   app.use(helmet());
-
   app.use(express.json()); // middlewar  for buffer
-  app.use(cookieParser()); // for handle cookies 
+  app.use(cookieParser()); // for handle cookies
   app.use("/uploads", express.static("uploads")); // middlewar for File upload
   // start  Endpoints ----------------------------------------- |
-  app.use(`${mainroute}/auth`,AuthRouter); // middlewar for
+  app.get(mainroute, (req, res) => {
+    return res.status(200).json({
+      status: "success",
+      message: "Welcome to Meta-Shop API",
+    });
+  });
+  app.use(`${mainroute}/auth`, AuthRouter); // middlewar for
   app.use(`${mainroute}/users`, UserRouter);
   app.use(`${mainroute}/categories`, categoryRouter);
   app.use(`${mainroute}/subcategories`, SubCategoryRouter);
