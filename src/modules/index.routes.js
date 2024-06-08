@@ -23,10 +23,10 @@ export const bootstrap = (app, express) => {
     allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
     credentials: true, // Allow credentials (cookies, authorization headers, etc.)
   };
-  app.use(logger());
+  app.use(logger()); // logging requests in terminal
   app.use(cors(process.env.mode !== "dev" ? corsOptions : {})); // Use the CORS middleware with the specified options
   // Use helmet to enhance your app's security
-  app.use(helmet());
+  app.use(helmet()); // for handle XSS attacks
   app.use(express.json()); // middlewar  for buffer
   app.use(cookieParser()); // for handle cookies
   app.use("/uploads", express.static("uploads")); // middlewar for File upload
