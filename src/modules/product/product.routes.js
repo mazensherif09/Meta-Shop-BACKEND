@@ -18,7 +18,7 @@ import { authorized } from "../../middleware/globels/authorized.js";
 import { ownerMiddlewar } from "../../middleware/ownerMiddlewar.js";
 import { handlePermissions } from "../../middleware/handlepermissions.js";
 import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
-import { userRoles } from "../../assets/userRoles.js";
+import { userRoles } from "../../assets/enums/userRoles.js";
 
 const productRouter = express.Router();
 

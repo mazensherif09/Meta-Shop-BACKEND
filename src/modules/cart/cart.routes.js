@@ -1,10 +1,10 @@
 import express from 'express';
-import { addToCart, applyCoupon, clearUserCart, getLoggedCart, removeItemCart, updateQTY } from './cart.controller.js';
-import { addCartVal, paramsIdVal, updateQTYVal } from './cart.validation.js';
+import { addToCart, applyCoupon, clearCart, getLoggedCart, removeItemCart,  } from './cart.controller.js';
+import { addCartVal, paramsIdVal,  } from './cart.validation.js';
 import { validation } from '../../middleware/globels/validation.js';
-import { authorized } from '../../middleware/globels/authorized.js';
 import { protectedRoutes } from '../../middleware/auth/protectedRoutes.js';
-import { userRoles } from '../../assets/userRoles.js';
+import { protectedRoutesCart } from '../../middleware/cart/protectedRoutesCart.js';
+
 
 
 
@@ -13,16 +13,14 @@ const cartRouter = express.Router();
 
 cartRouter
 .route('/')
-.post(protectedRoutes, authorized(userRoles.User), validation(addCartVal), addToCart)
-.get(protectedRoutes, authorized(userRoles.User), getLoggedCart)
-.delete(protectedRoutes, authorized(userRoles.User), clearUserCart)
+.post(protectedRoutesCart, validation(addCartVal), addToCart)
+.get(protectedRoutesCart, getLoggedCart)
+.delete(protectedRoutesCart, clearCart)
 
-cartRouter.post('/applycoupon', protectedRoutes, authorized(userRoles.User), applyCoupon)
+cartRouter.post('/applycoupon', protectedRoutes, applyCoupon)
 
 cartRouter
 .route('/:id')
-// .get(validation(paramsIdVal), getSingleCategory)
-.put(protectedRoutes, authorized(userRoles.User), validation(updateQTYVal), updateQTY)
-.delete(protectedRoutes, authorized(userRoles.User), validation(paramsIdVal), removeItemCart)
+.delete(protectedRoutesCart, validation(paramsIdVal), removeItemCart)
 
 export default cartRouter;

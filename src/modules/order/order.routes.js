@@ -4,7 +4,7 @@ import { validation } from '../../middleware/globels/validation.js';
 import { createCashOrder, createCheckoutSession, getAllOrders, getSpecificOrder } from './order.controller.js';
 import { authorized } from '../../middleware/globels/authorized.js';
 import { protectedRoutes } from '../../middleware/auth/protectedRoutes.js';
-import { userRoles } from '../../assets/userRoles.js';
+import { userRoles } from '../../assets/enums/userRoles.js';
 
 
 const orderRouter = express.Router();

@@ -1,4 +1,3 @@
-import { raw } from "express";
 import { cartModel } from "../../../database/models/cart.model.js";
 import { productModel } from "../../../database/models/product.model.js";
 import { AppError } from "../../utils/AppError.js";
@@ -12,93 +11,105 @@ const calcTotalPrice = (cart) => {
   });
   cart.totalPrice = totalPrice;
 
-  if(cart.discount){
-    let totalPriceAfterDiscount =  cart.totalPrice - (cart.totalPrice * cart.discount) / 100;
+  if (cart?.discount) {
+    let totalPriceAfterDiscount =
+      cart.totalPrice - (cart.totalPrice * cart.discount) / 100;
     cart.totalPriceAfterDiscount = totalPriceAfterDiscount;
   }
 };
 
 const addToCart = AsyncHandler(async (req, res, next) => {
-  let product = await productModel.findById(req.body.product);
+  let product = await productModel.findById(req?.body?.item?.product);
   if (!product) return next(new AppError("Product not found"));
-  if (req.body.quantity > product.quantity)
-    return next(new AppError("out of stock"));
-
-  let cartExist = await cartModel.findOne({ user: req.user._id });
+  let query = {}
+  let user= req?.user?._id;
+  if (user) {
+    query = { user }
+  } else if (req.cart) {
+    query = { _id: req.cart }
+  }
+  const cartExist = await cartModel.findOne(query);
   if (!cartExist) {
+    if (!req?.user?._id) query = {};
     let cart = new cartModel({
-      user: req.user._id,
+      ...query,
       cartItems: [
         {
           ...req.body,
-          price: product.price,
         },
       ],
-    });
-    calcTotalPrice(cart);
+    })
     await cart.save();
-    !cart && res.status(404).json({ message: "cart not found" });
-    cart && res.json({ message: "success", cart });
+    if (!cart) return next(new AppError("something went wrong try again later."));
+    
+
+    return res.json(cart);
   } else {
     let item = cartExist.cartItems.find(
-      (item) => item.product == req.body.product
+      (item) => item?.selected_option == req?.body?.item?.selected_option && item?.product == req?.body?.item?.product
     );
 
     if (item) {
-      if (item.quantity >= product.quantity)
-        return next(new AppError("out of stock"));
-      item.quantity += req.body.quantity || 1;
+      item.quantity += 1
     } else
       cartExist.cartItems.push({
         ...req.body,
-        price: product.price,
       });
 
     calcTotalPrice(cartExist);
 
     await cartExist.save();
 
-    res.status(404).json({ message: "success", cartExist });
+    return res.json(cartExist);
   }
 });
 
-const updateQTY = AsyncHandler(async (req, res, next) => {
-  let cart = await cartModel.findOne({ user: req.user._id });
-  !cart && res.status(404).json({ message: "cart not found" }); //case not found cart
-
-  let item = cart.cartItems.find((item) => item._id == req.params.id);
-  if (!item) return next(new AppError("item not found"));
-  item.quantity = req.body.quantity;
-  calcTotalPrice(cart);
-  await cart.save();
-
-  cart && res.json({ message: "success", cart }); //cart after update
-});
-
 const removeItemCart = AsyncHandler(async (req, res, next) => {
+  let query = {};
+  if (req.user._id) {
+    query = { user: req.user._id }
+  }else {
+    query = { _id: req.cart }
+  }
   let cart = await cartModel.findOneAndUpdate(
-    { user: req.user._id },
-    { $pull: { cartItems: { _id: req.params.id } } },
+    query, 
+    { $pull: { cartItems: { _id: req?.params?.id } } },
     { new: true }
   );
   calcTotalPrice(cart);
   await cart.save();
-  !cart && res.status(404).json({ message: "cart not found" }); //case not found address
-  cart && res.json({ message: "success", cart }); //address after update
+  if (!cart) return next(new AppError("something went wrong try again later."));
+  return res.json(cart);
 });
 
 const getLoggedCart = AsyncHandler(async (req, res, next) => {
+  let query = {};
+  if (req.user._id) {
+    query = { user: req.user._id }
+  }else {
+    query = { _id: req.cart }
+  }
   let cart = await cartModel
-    .findOne({ user: req.user._id })
+    .findOne(query)
     .populate("cartItems.product");
-  !cart && res.status(404).json({ message: "cart not found" }); //case not found cart
-  cart && res.json({ message: "success", cart }); //address after update
+    if (!cart) return next(new AppError("something went wrong try again later."));
+  return res.json(cart);
 });
 
-const clearUserCart = AsyncHandler(async (req, res, next) => {
-  let cart = await cartModel.findOneAndDelete({ user: req.user._id });
-  !cart && res.status(404).json({ message: "cart not found" }); //case not found cart
-  cart && res.json({ message: "success", cart }); //address after update
+const clearCart = AsyncHandler(async (req, res, next) => {
+  let query = {};
+  if (req.user._id) {
+    query = { user: req?.user?._id }
+  }else {
+    query = { _id: req?.cart?._id }
+  }
+  let cart = await cartModel.findOneAndUpdate(
+    query, 
+    { cartItems:[] },
+    { new: true }
+  );
+  if (!cart) return next(new AppError("something went wrong try again later."));
+  return res.json(cart);
 });
 
 const applyCoupon = AsyncHandler(async (req, res, next) => {
@@ -107,21 +118,20 @@ const applyCoupon = AsyncHandler(async (req, res, next) => {
     expires: { $gte: Date.now() },
   });
   if (!coupon) return next(new AppError("invalid coupon", 401));
-
   let cart = await cartModel.findOne({ user: req.user._id });
-  if (!cart) return next(new AppError('cart not found', 404));
-  let totalPriceAfterDiscount =  cart.totalPrice - (cart.totalPrice * coupon.discount) / 100;
+  if (!cart) return next(new AppError("cart not found", 404));
+  let totalPriceAfterDiscount =
+    cart.totalPrice - (cart.totalPrice * coupon.discount) / 100;
   cart.totalPriceAfterDiscount = totalPriceAfterDiscount;
-  cart.discount = coupon.discount
+  cart.discount = coupon.discount;
   await cart.save();
-  res.json({ message: "success", cart });
+  return res.json({ message: "success", cart });
 });
 
 export {
   addToCart,
-  updateQTY,
   removeItemCart,
   getLoggedCart,
-  clearUserCart,
+  clearCart,
   applyCoupon,
 };

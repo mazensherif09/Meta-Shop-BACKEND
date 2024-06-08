@@ -40,13 +40,17 @@ const schema = new mongoose.Schema(
     imgcover: { url: String, public_id: String },
     images: [{ url: String, public_id: String }],
     createdBy: { type: ObjectId, ref: "user" },
-    havePermission: [{ type: ObjectId, ref: "user" }],
     subcategory: {
       type: ObjectId,
       ref: "subcategory",
-      populate: false,
     },
     category: { type: ObjectId, ref: "category" },
+    options: [
+      {
+        name: String,
+        stock: { type: Number, default: 0, min: 0 },
+      },
+    ],
   },
   { timestamps: true }
 );
