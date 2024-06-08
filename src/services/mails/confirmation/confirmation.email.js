@@ -1,4 +1,3 @@
-import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
 import { confirmationLayout } from "./temaplate.js";
 import { transporter } from "../../../utils/sendEmail.js";

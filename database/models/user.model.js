@@ -9,7 +9,7 @@ const schema = new mongoose.Schema(
     password: { type: String, required: true },
     passwordChangedAt: Date,
     phone: Number,
-    Pincode: Number,
+    pincode: Number,
     isresetPassword: { type: Boolean, default: false },
     role: {
       type: String,

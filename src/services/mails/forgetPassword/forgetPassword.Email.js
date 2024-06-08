@@ -1,21 +1,27 @@
-import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
 import { forgetPasswordLayout } from "./template.js";
-export const forPasswordEmail = async (email, Pincode) => {
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: "mohamedosama10085@gmail.com",
-      pass: "qcnjyqmbxgqleiwk",
-    },
-  });
-
-  let token = jwt.sign({ email }, process.env.SECRETKEY, { expiresIn: "15m" });
-
-  const info = await transporter.sendMail({
-    from: '"moahmed osama" <mohamedosama10085@gmail.com>', // sender address
-    to: email, // list of receivers
-    subject: "Forget Your Password ?", // Subject line
-    html: forgetPasswordLayout(token, Pincode).toString(), // html body
-  });
+import { transporter } from "../../../utils/sendEmail.js";
+export const forgetPasswordEmail = async (email, Pincode) => {
+  try {
+    let token = jwt.sign({ email }, process.env.SECRETKEY, {
+      expiresIn: "15m",
+    });
+    const data = await transporter.sendMail({
+      from: `"moahmed osama" <${process.env.Email_username}>`, // sender address
+      to: email, // list of receivers
+      subject: "Forget Your Password ?", // Subject line
+      html: forgetPasswordLayout(token, Pincode).toString(), // html body
+    });
+    return {
+      message: `We sent email to ${email} `,
+      data,
+      success: true,
+    };
+  } catch (error) {
+    return {
+      message: error?.message || "some thing went wrong try again later.",
+      data: error,
+      success: false,
+    };
+  }
 };

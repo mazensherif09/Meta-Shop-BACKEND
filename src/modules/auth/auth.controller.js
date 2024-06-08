@@ -2,13 +2,13 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
-import { forPasswordEmail } from "../../services/mails/forgetPassword/forgetPassword.Email.js";
+import { forgetPasswordEmail } from "../../services/mails/forgetPassword/forgetPassword.Email.js";
 import { confirmEmail } from "../../services/mails/confirmation/confirmation.email.js";
 import { UserModel } from "../../../database/models/user.model.js";
+import { generateSecurePin } from "../../utils/genratePinCode.js";
 
 const signUp = AsyncHandler(async (req, res, next) => {
-  const EmailRes = await confirmEmail(req.body.email);
-  console.log("🚀 ~ signUp ~ res:", EmailRes);
+  const email = await confirmEmail(req.body.email);
   const user = new UserModel(req.body);
   await user.save(); // save the user body after updating
   let token = jwt.sign(
@@ -24,16 +24,15 @@ const signUp = AsyncHandler(async (req, res, next) => {
 const signIn = AsyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
   let user = await UserModel.findOne({ email });
-
   if (user && bcrypt.compareSync(password, user.password)) {
     if (user?.isblocked) return res.json({ message: "User is blocked" });
-
     const { _id } = user;
-    if (user?.confirmEmail || true) {
+    if (user?.confirmEmail) {
       await UserModel.findByIdAndUpdate(_id, { isActive: true });
-
-      let token = jwt.sign({ id: user?._id, role: user?.role }, process.env.SECRETKEY);
-
+      let token = jwt.sign(
+        { id: user?._id, role: user?.role },
+        process.env.SECRETKEY
+      );
       return res.json({ message: "Success", token });
     } else {
       next(new AppError(`Can not sign in without verfiy email`, 401));
@@ -71,10 +70,12 @@ const FPsendEmail = AsyncHandler(async (req, res, next) => {
   const findUser = await UserModel.findOne({ email });
   if (!findUser) return next(new AppError(`user not found`, 401));
   if (findUser?.isblocked) return next(new AppError("user is blocked", 401));
-  const pincode = Math.floor(Math.random() * 9000 + 100000); // to generate random pin code 6 digits
-  forPasswordEmail(email, pincode);
+  const securePin = generateSecurePin(6);
+  const { success } = await forgetPasswordEmail(email, securePin);
+  if (!success)
+    return next(new AppError(`something wrong try again later`, 401));
   await UserModel.findByIdAndUpdate(findUser._id, {
-    Pincode: pincode,
+    pincode: securePin,
     isresetPassword: true,
   });
   return res.json({ message: `We sent email to ${email} ` });
