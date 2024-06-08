@@ -24,8 +24,8 @@ AuthRouter.post(`/signup`, validation(signupschemaVal), checkEmailuser, signUp);
 AuthRouter.post(`/signin`, validation(signinSchemaVal), signIn); //log in :)
 AuthRouter.get("/verify/:token", verfiyEmail); // verfiy Email :)
 AuthRouter.get(`/unsubscribe/:token`, unsubscribe); // unsubscribe  :)
-AuthRouter.post(`/forgetPassword`, validation(ForgetPasswordVal), FPsendEmail); // send email for reset password !
-AuthRouter.get(`/forgetPassword/:token`, protectedRoutes, tokenForgetPassword); // this optional endpoint  for front-end to loaders(react js || next js) to check token for handle layout !
+AuthRouter.post(`/forget-password`, validation(ForgetPasswordVal), FPsendEmail); // send email for reset password !
+AuthRouter.get(`/forget-Password/:token`, protectedRoutes, tokenForgetPassword); // this optional endpoint  for front-end to loaders(react js || next js) to check token for handle layout !
 AuthRouter.post(
   `/resetPassword`,
   validation(authResetPasswordVal),

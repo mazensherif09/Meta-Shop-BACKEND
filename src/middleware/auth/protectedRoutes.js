@@ -5,8 +5,8 @@ import jwt from "jsonwebtoken";
 
 export const protectedRoutes = AsyncHandler(async (req, res, next) => {
   //1- token is exist or not
-  const { token } = req.headers;
-  if (req.params.token) token = req.params.token;
+  let { token } = req?.headers;
+  if (req?.params?.token) token = req?.params?.token;
   if (!token) return next(new AppError("Token is not provided", 401)); //401
   //2-verfiy token
   jwt.verify(token, process.env.SECRETKEY, async (err, decoded) => {
