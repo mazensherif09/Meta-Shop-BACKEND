@@ -17,4 +17,4 @@ process.on("unhandledRejection", (error) => {
   console.log("error", error);
 });
 
-app.listen(process.env.PORT, () => console.log( chalk.magenta(`app listening `)));
+app.listen(process.env.PORT, () => console.log( chalk.white(`app listening... `)));

@@ -22,7 +22,6 @@ import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
 
 const AuthRouter = express.Router();
 AuthRouter.post(`/signup`, validation(signupschemaVal), checkEmailuser, signUp); //sign up :)
-
 AuthRouter.post(`/signin`, validation(signinSchemaVal), signIn); //log in :)
 AuthRouter.get("/verify/:token", verfiyEmail); // verfiy Email !
 AuthRouter.get(`/unsubscribe/:token`, unsubscribe); // unsubscribe => delete account !

@@ -26,13 +26,16 @@ export const logger = () => {
     return color(mehtod);
   };
   return morgan((tokens, req, res) => {
+    const status = tokens.status(req, res);
+    const isError = status >= 400;
+    const customMessage = isError ? chalk.red(`${tokens.status(req, res)}`) : chalk.green(`${tokens.status(req, res)}`);
     return [
       chalk.white(`[${formattedTime}]`),
       `${chalk.black(req.protocol)}:`,
       colors(tokens.method(req, res)),
       tokens.url(req, res),
       `(${Math.ceil(tokens["response-time"](req, res))} ms)`,
-      tokens.status(req, res),
+      customMessage
     ].join(" ");
   });
 };

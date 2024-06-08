@@ -25,11 +25,11 @@ export const bootstrap = (app, express) => {
   };
   app.use(logger()); // logging requests in terminal
   app.use(cors(process.env.mode !== "dev" ? corsOptions : {})); // Use the CORS middleware with the specified options
-  // Use helmet to enhance your app's security
-  app.use(helmet()); // for handle XSS attacks
+  app.use(helmet()); //  Use helmet to enhance your app's security and for handle XSS attacks
   app.use(express.json()); // middlewar  for buffer
   app.use(cookieParser()); // for handle cookies
   app.use("/uploads", express.static("uploads")); // middlewar for File upload
+
   // start  Endpoints ----------------------------------------- |
   app.get(mainroute, (req, res) => {
     return res.status(200).json({

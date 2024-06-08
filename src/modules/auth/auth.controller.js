@@ -7,10 +7,10 @@ import { confirmEmail } from "../../services/mails/confirmation/confirmation.ema
 import { UserModel } from "../../../database/models/user.model.js";
 
 const signUp = AsyncHandler(async (req, res, next) => {
-  // const res = await confirmEmail(req.body.email);
-  // console.log("🚀 ~ signUp ~ res:", res);
+  const EmailRes = await confirmEmail(req.body.email);
+  console.log("🚀 ~ signUp ~ res:", EmailRes);
   const user = new UserModel(req.body);
-  await user.save(); //save the user body after updating
+  await user.save(); // save the user body after updating
   let token = jwt.sign(
     { id: user?._id, role: user?.role },
     process.env.SECRETKEY
