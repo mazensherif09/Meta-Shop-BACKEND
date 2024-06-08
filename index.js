@@ -5,6 +5,7 @@ process.on("uncaughtException", (error) => {
 import express from "express";
 import dotenv from "dotenv";
 import { bootstrap } from "./src/modules/index.routes.js";
+import chalk from "chalk";
 
 dotenv.config(); //config env
 
@@ -16,4 +17,4 @@ process.on("unhandledRejection", (error) => {
   console.log("error", error);
 });
 
-app.listen(process.env.PORT, () => console.log(`Example app listening `));
+app.listen(process.env.PORT, () => console.log( chalk.magenta(`app listening `)));
