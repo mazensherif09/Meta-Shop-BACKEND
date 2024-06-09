@@ -1,7 +1,7 @@
 export const Roles_permissions = {
-    read: "read", 
-    update: "update", 
-    delete: "update", 
-    create: "create" 
+    read: "READ", 
+    update: "UPDATE", 
+    delete: "DELETE", 
+    create: "CREATE" 
   };
   Object.freeze(Roles_permissions);

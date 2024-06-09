@@ -10,16 +10,26 @@ const schema = new mongoose.Schema(
       required: true,
       minLength: [2, "too short category name"],
     },
+    description: {
+      type: String,
+      trim: true,
+    },
     roles: [
       {
-        name: {
+        collection: {
           type: String,
           unique: [true, "name is required"],
           trim: true,
           required: true,
           minLength: [2, "too short category name"],
         },
-        permissions: [{ type: String, enum: Object.values(Roles_permissions), default: "user" }],
+        permissions: [
+          {
+            type: String,
+            enum: Object.values(Roles_permissions),
+            default: Roles_permissions.read,
+          },
+        ],
       },
     ],
     createdBy: { type: mongoose.Types.ObjectId, ref: "user" },
@@ -28,13 +38,3 @@ const schema = new mongoose.Schema(
 );
 
 export const UserRoleModel = mongoose.model("user_roles", schema);
-
-/*
-{
-table: "users",
-feilds:[{
-name:,
-roles:[]
-}]
-}
-*/
