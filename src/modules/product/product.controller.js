@@ -15,24 +15,21 @@ const addproduct = AsyncHandler(async (req, res, next) => {
   const { files } = req;
   const product = await productModel.findOne({ title: req.body.title });
   if (product)
-    return next(new AppError(` product already  exist with same title`, 401));
+    return next(new AppError(` product already exist with same title`, 401));
   req.body.slug = slugify(req.body.title);
   req.body.createdBy = req.user._id;
-
-  const data = new productModel(req.body); // pre save the for the  model
-  await data.save(); // finallay save in database
-  res.json({ data }); // to return new product and save more time
+  const newProduct = new productModel(req.body); // pre save the for the  model
   let imgCover = ""; // intial value
   if (files?.imgCover) imgCover = files?.imgCover[0]?.path || ""; // set value if admin sent feild imgCover
   const images = files?.images?.map((val) => val?.path); // set value if admin sent feild images
-  data.images = await Promise.all(
+  newProduct.images = await Promise.all(
     images.map(async (val) => await Uploader(val)) // promise => looping on custom function to upload images to cloudinary
   );
-  data.imgcover = await Uploader(imgCover); // custom function to upload images to cloudinary
-  // await data.save(); // finallay save in database
-  // return res.json({
-  //   data,
-  // });
+  newProduct.imgcover = await Uploader(imgCover); // custom function to upload images to cloudinary
+  await newProduct.save(); // finallay save in database
+  return res.json(
+    newProduct,
+  );
 });
 const getallproduct = FindAll(productModel, "", "", [
   "createdBy",

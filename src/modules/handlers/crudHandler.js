@@ -56,22 +56,15 @@ export const FindOne = (model, Errormassage) => {
     });
   });
 };
-export const updateOne = (model, Errormassage, slug) => {
+export const updateOne = (model, Errormassage) => {
   return AsyncHandler(async (req, res, next) => {
-    if (slug) {
-      req.body.slug = slugify(req.body[slug]);
-    }
-
     const document = await model.findByIdAndUpdate(
       { _id: req.params.id },
       req.body,
       { new: true }
     );
     if (!document) return next(new AppError(Errormassage, 404));
-
-    return res.json({
-      data: document,
-    });
+    return res.json(document);
   });
 };
 export const deleteOne = (model, Errormassage) => {
