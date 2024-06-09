@@ -3,17 +3,16 @@ import { validation } from '../../middleware/globels/validation.js';
 import { addToAddress, getLoggedAddress, removeFromAddress } from './address.controller.js';
 import { addAddressVal, paramsIdVal } from './address.validation.js';
 import { protectedRoutes } from '../../middleware/auth/protectedRoutes.js';
-import { authorized } from '../../middleware/globels/authorized.js';
 
 const addressRouter = express.Router();
 
 addressRouter
 .route('/')
-.patch(protectedRoutes, authorized('user'),validation(addAddressVal), addToAddress)
-.get(protectedRoutes, authorized('user'),getLoggedAddress)
+.patch(protectedRoutes,validation(addAddressVal), addToAddress)
+.get(protectedRoutes,getLoggedAddress)
 
 addressRouter
 .route('/:id')
-.delete(protectedRoutes, authorized('user','admin'), validation(paramsIdVal), removeFromAddress)
+.delete(protectedRoutes,  validation(paramsIdVal), removeFromAddress)
 
 export default addressRouter;

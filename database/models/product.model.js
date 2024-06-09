@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { UserModel } from "./user.model.js";
 const ObjectId = mongoose.Schema.Types.ObjectId;
 const schema = new mongoose.Schema(
   {
