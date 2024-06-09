@@ -1,7 +1,6 @@
 import slugify from "slugify";
 import { productModel } from "../../database/models/product.model.js";
 import {
-  Uploader,
   deleteFileCloudinary,
   updateFileCloudinary,
 } from "../utils/cloudnairy.js";
