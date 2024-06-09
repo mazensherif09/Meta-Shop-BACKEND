@@ -12,7 +12,9 @@ export const checkCart = AsyncHandler(async (req, res, next) => {
       cart = await cartModel.findOne(query).populate("items.product");
       }
   if (!cart) {
-    cart = new cartModel({});
+    cart = new cartModel({
+        Items: [],
+    });
     if (req?.user?._id) {
       cart.user = req?.user?._id;
     } else {

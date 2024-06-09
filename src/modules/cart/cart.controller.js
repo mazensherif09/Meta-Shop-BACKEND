@@ -4,7 +4,6 @@ import { AppError } from "../../utils/AppError.js";
 import { couponModel } from "../../../database/models/coupon.model.js";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 
-
 const addToCart = AsyncHandler(async (req, res, next) => {
   let product = await productModel.findById(req?.body?.product);
   if (!product) return next(new AppError("Product not found", 404));
@@ -28,23 +27,22 @@ const removeItemCart = AsyncHandler(async (req, res, next) => {
   let query = req?.user?._id
     ? { user: req?.user?._id }
     : req?.cookies?.cart
-      ? { _id: req?.cookies?.cart }
-      : null;
-  if (!query)
-    return next(new AppError("something went wrong try again later."));
+    ? { _id: req?.cookies?.cart }
+    : null;
+  if (!query)  return next(new AppError("something went wrong try again later."));
   let cart = await cartModel.findOneAndUpdate(
     query,
-    { $pull: { cartItems: { _id: req?.params?.id } } },
+    { $pull: { items: { _id: req?.params?.id } } },
     { new: true }
   );
   if (!cart) return next(new AppError("something went wrong try again later."));
+  cart = await cart.populate("items.product").execPopulate();
   return res.json(cart);
 });
 const getLoggedCart = AsyncHandler(async (req, res, next) => {
   let cart = req?.cart;
   return res.json(cart);
 });
-
 const clearCart = AsyncHandler(async (req, res, next) => {
   let cart = req?.cart;
   cart.cartItems = [];
