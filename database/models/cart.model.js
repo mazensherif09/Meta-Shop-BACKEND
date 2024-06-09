@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const schema = new mongoose.Schema(
   {
     user: { type: mongoose.Types.ObjectId, ref: "user" },
-    tems: [
+    items: [
       {
         product: { type: mongoose.Types.ObjectId, ref: "product" },
         quantity: {

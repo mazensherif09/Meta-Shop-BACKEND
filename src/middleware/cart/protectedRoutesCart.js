@@ -4,10 +4,9 @@ import { AppError } from "../../utils/AppError.js";
 import { UserModel } from "../../../database/models/user.model.js";
 
 export const protectedRoutesCart = AsyncHandler(async (req, res, next) => {
-  //1- token is exist or not
-  const { token } = req.headers;
-  if (req.params.token) token = req.params.token;
-  //2-verfiy token
+  // 1-token is exist or not
+  let { token } = req.headers;
+  // 2-verfiy token
   if (token) {
     jwt.verify(token, process.env.SECRETKEY, async (err, decoded) => {
       if (err) return next(new AppError(err, 401));
@@ -26,13 +25,7 @@ export const protectedRoutesCart = AsyncHandler(async (req, res, next) => {
       return next();
     });
   } else {
-    const cart = req.cookies.cart || req.query.cart;
-    console.log(cookies);
-    if (!cart && req.originalUrl !== "api/cart" && req?.mehtod !== "post") {
-      return next(new AppError(" cart is not available"));
-    } else {
-      req.cart = cart;
-    }
     return next();
   }
 });
+
