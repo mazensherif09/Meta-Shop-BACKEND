@@ -33,6 +33,7 @@ export const bootstrap = (app, express) => {
 
   // start  Endpoints ----------------------------------------- |
   app.get(mainroute, (req, res) => {
+    console.log(req.query);
     return res.status(200).json({
       status: "success",
       message: "Welcome to Meta-Shop API",

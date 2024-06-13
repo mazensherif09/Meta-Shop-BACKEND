@@ -7,14 +7,18 @@ export const checkCart = AsyncHandler(async (req, res, next) => {
   : req?.cookies?.cart
   ? { _id: req?.cookies?.cart }
   : null;
+
   let cart = null;
   if (query) {
       cart = await cartModel.findOne(query).populate("items.product");
       }
   if (!cart) {
     cart = new cartModel({
-        Items: [],
+        items: [],
     });
+
+
+
     if (req?.user?._id) {
       cart.user = req?.user?._id;
     } else {

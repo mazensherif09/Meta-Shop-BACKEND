@@ -1,24 +1,11 @@
 import Joi from "joi";
 
-const signupschemaVal = Joi.object({
-  userName: Joi.string().min(3).max(30).required(),
-  email: Joi.string().email().required(),
-  password: Joi.string()
-    .pattern(/^[A-Z][a-z0-9#@]{8,30}$/)
-    .required(),
-  rePassword: Joi.valid(Joi.ref("password")).required(),
-});
-const signinSchemaVal = Joi.object({
-  email: Joi.string().email().required(),
-  password: Joi.string()
-    .pattern(/^[A-Z][a-z0-9#@]{8,30}$/)
-    .required(),
-});
+
 const ForgetPasswordVal = Joi.object({
   email: Joi.string().email().required(),
 });
 const updateVal = Joi.object({
-  userName: Joi.string().min(3).max(30),
+  fullName: Joi.string().min(3).max(30),
   email: Joi.string().email(),
   age: Joi.number().integer().min(10).max(80),
  
@@ -41,8 +28,6 @@ const authResetPasswordVal = Joi.object({
  
 });
 export {
-  signinSchemaVal,
-  signupschemaVal,
   ForgetPasswordVal,
   updateVal,
   updatePasswordVal,

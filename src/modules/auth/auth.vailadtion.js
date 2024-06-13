@@ -1,7 +1,7 @@
 import Joi from "joi";
 
 const signupschemaVal = Joi.object({
-  userName: Joi.string().min(3).max(30).required(),
+  fullName: Joi.string().min(3).max(30).required(),
   email: Joi.string().email().required(),
   password: Joi.string()
     .pattern(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/)

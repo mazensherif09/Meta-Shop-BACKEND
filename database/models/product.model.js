@@ -31,23 +31,27 @@ const schema = new mongoose.Schema(
       default: 0,
     },
     sold: Number,
-    quantity: { type: Number, min: 0, default: 0 },
-    rateAvg: { type: Number, min: 0, default: 0 },
-    rateCount: { type: Number, min: 0, default: 0 },
     isFeatured: { type: Boolean, default: true },
     puplish: { type: Boolean, default: false, default: false },
     imgcover: { url: String, public_id: String },
-    images: [{ url: String, public_id: String }],
     createdBy: { type: ObjectId, ref: "user" },
     subcategory: {
       type: ObjectId,
       ref: "subcategory",
     },
     category: { type: ObjectId, ref: "category" },
-    options: [
+    colors: [
       {
-        name: String,
-        stock: { type: Number, default: 0, min: 0 },
+        name: { type: String, default: "non-color" },
+        code: { type: String, default: null },
+        images: [{ type: ObjectId, ref: "files" },
+        ],
+        sizes: [
+          {
+            size: { type: ObjectId, ref: "size" },
+            stock: { type: Number, default: 0, min: 0 },
+          },
+        ]
       },
     ],
   },
