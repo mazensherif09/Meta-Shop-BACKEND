@@ -33,7 +33,7 @@ const schema = new mongoose.Schema(
     sold: Number,
     isFeatured: { type: Boolean, default: true },
     puplish: { type: Boolean, default: false, default: false },
-    imgcover: { url: String, public_id: String },
+    poster: { type: ObjectId, ref: "file" },
     createdBy: { type: ObjectId, ref: "user" },
     subcategory: {
       type: ObjectId,
@@ -42,16 +42,14 @@ const schema = new mongoose.Schema(
     category: { type: ObjectId, ref: "category" },
     colors: [
       {
-        name: { type: String, default: "non-color" },
-        code: { type: String, default: null },
-        images: [{ type: ObjectId, ref: "files" },
-        ],
+        color: { type: ObjectId, ref: "color" },
+        images: [{ type: ObjectId, ref: "file" }],
         sizes: [
           {
             size: { type: ObjectId, ref: "size" },
             stock: { type: Number, default: 0, min: 0 },
           },
-        ]
+        ],
       },
     ],
   },

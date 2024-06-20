@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
+import { enumRoles } from "../../src/assets/enums/Roles_permissions";
 
 const schema = new mongoose.Schema(
   {
@@ -10,7 +11,12 @@ const schema = new mongoose.Schema(
     phone: Number,
     pincode: Number,
     isresetPassword: { type: Boolean, default: false },
-    role:  { type: mongoose.Types.ObjectId, ref: "user_roles", default: null },
+    // role:  { type: mongoose.Types.ObjectId, ref: "user_roles", default: null },
+    role: {
+      type: String,
+      enum: [Object.values(enumRoles)],
+      default: enumRoles?.user,
+    },
     confirmEmail: { type: Boolean, default: false },
     isActive: { type: Boolean, default: false },
     isblocked: { type: Boolean, default: false },

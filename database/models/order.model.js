@@ -3,27 +3,28 @@ import mongoose from "mongoose";
 const schema = new mongoose.Schema(
   {
     user: { type: mongoose.Types.ObjectId, ref: "user" },
-
     orderItems: [
       {
-        product: { type: mongoose.Types.ObjectId, ref: "product" },
-        quantity: Number,
-        price: Number,
+        product: {},
+        quantity: {
+          type: Number,
+          default: 1,
+        },
+        selectedOptionId: String,
       },
     ],
     totalOrderPrice: Number,
-
     shippingAddress: {
       street: String,
       city: String,
       phone: String,
     },
-    paymentType:{
+    paymentType: {
       type: String,
-      enum:['card','cash'],
-      default: 'cash',
+      enum: ["card", "cash"],
+      default: "cash",
     },
-    isDelivered:{
+    isDelivered: {
       type: Boolean,
       default: false,
     },
@@ -33,7 +34,6 @@ const schema = new mongoose.Schema(
       default: false,
     },
     paidAt: Date,
-
   },
   { timestamps: true }
 );

@@ -6,11 +6,11 @@ const schema = new mongoose.Schema(
     items: [
       {
         product: { type: mongoose.Types.ObjectId, ref: "product" },
+        selectedOptionId: String,
         quantity: {
           type: Number,
           default: 1,
         },
-        selected_option: String,
       },
     ],
     totalPrice: Number,
