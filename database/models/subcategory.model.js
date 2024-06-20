@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+const ObjectId = mongoose.Types.ObjectId;
 const schema = new mongoose.Schema(
   {
     name: {
@@ -14,8 +14,9 @@ const schema = new mongoose.Schema(
       lowercase: true,
       required: true,
     },
-    category: { type: mongoose.Types.ObjectId, ref: "category" },
-    createdBy: { type: mongoose.Types.ObjectId, ref: "user" },
+    poster: { type: ObjectId, ref: "file" },
+    category: { type: ObjectId, ref: "category" },
+    createdBy: { type: ObjectId, ref: "user" },
   },
   { timestamps: true }
 );

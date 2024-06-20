@@ -14,7 +14,7 @@ const schema = new mongoose.Schema(
       lowercase: true,
       required: true,
     },
-    img: { url: String, public_id: String },
+    poster: { type: ObjectId, ref: "file" },
     createdBy: { type: mongoose.Types.ObjectId, ref: "user" },
   },
   { timestamps: true }

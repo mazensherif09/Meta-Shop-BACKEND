@@ -19,5 +19,4 @@ const schema = new Schema({
   createdBy: { type: ObjectId, ref: "user" },
 });
 
-const sizeModel = mongoose.model("size", schema);
-export default sizeModel;
+export const sizeModel = mongoose.model("size", schema);
