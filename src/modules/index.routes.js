@@ -10,7 +10,6 @@ import { SubCategoryRouter } from "./subcategory/subCategory.routes.js";
 import { productRouter } from "./product/product.routes.js";
 import cartRouter from "./cart/cart.routes.js";
 import orderRouter from "./order/order.routes.js";
-import addressRouter from "./address/address.routes.js";
 import { AuthRouter } from "./auth/auth.routes.js";
 import { globalError } from "../middleware/globels/globalError.js";
 import cookieParser from "cookie-parser";
@@ -46,7 +45,6 @@ export const bootstrap = (app, express) => {
   app.use(`${mainroute}/subcategories`, SubCategoryRouter);
   app.use(`${mainroute}/products`, productRouter);
   app.use(`${mainroute}/orders`, orderRouter);
-  app.use(`${mainroute}/addresses`, addressRouter);
   // End  Endpoints ------------------------------------------- |
   dbConnection(); // database connection
 

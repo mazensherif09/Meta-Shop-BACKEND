@@ -4,6 +4,8 @@ import {
   authResetPasswordVal,
   signinSchemaVal,
   signupschemaVal,
+  updatePasswordVal,
+  updateVal,
 } from "./auth.vailadtion.js";
 import { checkEmailuser } from "../../middleware/auth/checkUser.js";
 
@@ -15,9 +17,15 @@ import {
   FPsendEmail,
   tokenForgetPassword,
   ResetPassword,
+  logout,
+  softdelete,
+  updateuser,
+  deleteUser,
+  changepassword,
 } from "./auth.controller.js";
 import { validation } from "../../middleware/globels/validation.js";
 import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
+import { comparePassword } from "../../middleware/auth/comparePassword.js";
 
 const AuthRouter = express.Router();
 AuthRouter.post(`/signup`, validation(signupschemaVal), checkEmailuser, signUp); //sign up :)
@@ -32,5 +40,19 @@ AuthRouter.post(
   protectedRoutes,
   ResetPassword
 ); // reset password if token vaild
+
+AuthRouter.post(`/logout`, protectedRoutes, logout); // log out
+AuthRouter.delete("/softdelete", protectedRoutes, softdelete); // soft delete => account will be blocked (cant log in if  account blocked)
+AuthRouter.route(`/:id`)
+  .put(validation(updateVal), protectedRoutes, updateuser) // update user
+  .delete(protectedRoutes, deleteUser); // delete user
+AuthRouter.put(
+  `/resetPassword`,
+  validation(updatePasswordVal),
+  protectedRoutes,
+  comparePassword,
+  changepassword
+); // reset password
+
 //end forgot paswword routes
 export { AuthRouter };

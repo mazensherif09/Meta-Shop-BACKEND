@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken";
-import qrcode from "qrcode";
 import bcrypt from "bcrypt";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { UserModel } from "../../../database/models/user.model.js";
@@ -39,12 +38,6 @@ const softdelete = AsyncHandler(async (req, res, next) => {
   });
   return res.json({ message: "success" });
 });
-// const shareProfile = AsyncHandler(async (req, res, next) => {
-//   const { _id } = req.user;
-//   qrcode.toDataURL(`http://localhost:3000/messages/${_id}`, function (err, qr) {
-//     return res.send(`<img src="${qr}"/>`);
-//   });
-// });
 export {
   logout,
   changepassword,

@@ -94,12 +94,50 @@ const ResetPassword = AsyncHandler(async (req, res, next) => {
   });
   return res.json({ message: " Password updated successfully", token });
 });
+const logout = AsyncHandler(async (req, res, next) => {
+  const { _id } = req.user;
+  await UserModel.findByIdAndUpdate(_id, { isActive: false });
+  return res.json({ message: "success" });
+});
+const changepassword = AsyncHandler(async (req, res, next) => {
+  const { _id } = req.user;
+  let token = jwt.sign({ user: _id }, process.env.SECRETKEY);
+  await UserModel.findByIdAndUpdate(_id, {
+    password: bcrypt.hashSync(req.body.newpassword, 8),
+    passwordChangedAt: Date.now(),
+  });
+
+  res.json({ message: "success", token });
+});
+const updateuser = AsyncHandler(async (req, res, next) => {
+  const { _id } = req.user;
+  await UserModel.findByIdAndUpdate(_id, req.body);
+  return res.json({ message: "sucess" });
+});
+const deleteUser = AsyncHandler(async (req, res, next) => {
+  const { _id } = req.user;
+  await UserModel.findByIdAndDelete(_id);
+  return res.json({ message: "sucess" });
+});
+const softdelete = AsyncHandler(async (req, res, next) => {
+  const { _id } = req.user;
+  await UserModel.findByIdAndUpdate(_id, {
+    isblocked: true,
+    isActive: false,
+  });
+  return res.json({ message: "success" });
+});
 export {
   signUp,
   signIn,
+  logout,
+  updateuser,
+  deleteUser,
+  softdelete,
   verfiyEmail,
   unsubscribe,
   FPsendEmail,
-  tokenForgetPassword,
   ResetPassword,
+  changepassword,
+  tokenForgetPassword,
 };
