@@ -12,6 +12,7 @@ const schema = new mongoose.Schema(
     expires: Date,
     discount: { type: Number, default: 0, required: true, min: 1 },
     createdBy: { type: mongoose.Types.ObjectId, ref: "user" },
+    relatedTo: { type: mongoose.Types.ObjectId, ref: "user" },
   },
   { timestamps: true }
 );
