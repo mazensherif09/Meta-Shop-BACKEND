@@ -22,9 +22,7 @@ categoryRouter.use("/:category/subcategories", SubCategoryRouter);
 categoryRouter
   .route("/")
   .post(
-    fileUploadSingle("img"),
     validation(CategorySchemaVal),
-    PreSaveFunction(categoryModel, "category", "name", "img"),
     addCategory
   )
   .get(getallCategoryies);
@@ -32,9 +30,7 @@ categoryRouter
   .route("/:id")
   .get(validation(paramsIdVal), getOneCategory)
   .put(
-    fileUploadSingle("img"),
     validation(UpdateCategorySchemaVal),
-    PreSaveFunction(categoryModel, "category", "name", "img"),
     updateCategorty
   )
   .delete(validation(paramsIdVal), deleteCategory);

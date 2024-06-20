@@ -51,9 +51,7 @@ export const FindOne = (model, Errormassage) => {
   return AsyncHandler(async (req, res, next) => {
     const document = await model.findById(req.params.id);
     if (!document) return next(new AppError(Errormassage, 404));
-    return res.json({
-      data: document,
-    });
+    return res.json(document);
   });
 };
 export const updateOne = (model, Errormassage) => {

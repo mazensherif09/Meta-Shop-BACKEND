@@ -24,30 +24,15 @@ const productRouter = express.Router();
 
 productRouter
   .route("/")
-  .post(
-    fileUploadfields([
-      { name: "imgCover", maxCount: 1 },
-      { name: "images", maxCount: 8 },
-    ]), // handle files uploaded with multer
-    validation(ProductSchemaVal), // check validation
-    protectedRoutes, // to check user is authenticated or not
+  .post(validation(ProductSchemaVal), // check validation
+    // protectedRoutes, // to check user is authenticated or not
     addproduct
   )
   .get(getallproduct);
 productRouter
   .route("/:id")
   .get(validation(paramsIdVal), getOneproduct)
-  .put(
-    fileUploadfields([
-      { name: "imgCover", maxCount: 1 },
-      { name: "images", maxCount: 8 },
-    ]), // handle files uploaded with multer
-    validation(UpdateproductSchemaVal), // check validation
-    protectedRoutes, // to check if user is authenticated or not
-    ownerMiddlewar, // check is this user have authorized to update this product or not must be [owner or super admin]
-    handleMediaProduct, // handle media[files] with cloudinary
-    handlePermissions,
+  .put(validation(UpdateproductSchemaVal), // check validation
     updateproduct // finally update product
-  )
-  .delete(validation(paramsIdVal), ownerMiddlewar, deleteproduct);
+  ).delete(validation(paramsIdVal), deleteproduct);
 export { productRouter };

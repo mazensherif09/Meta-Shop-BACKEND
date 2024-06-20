@@ -20,7 +20,7 @@ const getAllSubCategoryies = FindAll(
   ["category"]
 );
 const getOneSubCategory = FindOne(SubCategoryModel, Errormassage);
-const updateSubCategorty = updateOne(SubCategoryModel, Errormassage, "name");
+const updateSubCategorty = updateOne(SubCategoryModel, Errormassage);
 const deleteSubCategory = deleteOne(SubCategoryModel, Errormassage);
 export {
   addSubCategory,
