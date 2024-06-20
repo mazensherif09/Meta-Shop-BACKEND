@@ -13,7 +13,6 @@ import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
 
 const UserRouter = express.Router();
 // start registration routes
-
 UserRouter.route("/").post(validation(updateVal), createuser).get(getAllUsers);
 UserRouter.route("/:id").put(validation(updateVal),  updateuser) // update user
 .delete(deleteUser); // delete user
