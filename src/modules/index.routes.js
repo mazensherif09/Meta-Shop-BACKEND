@@ -18,13 +18,11 @@ import cartRouter from "./cart/cart.routes.js";
 import orderRouter from "./order/order.routes.js";
 import colorsRouter from "./colors/colors.routes.js";
 import sizesRouter from "./sizes/sizes.routes.js";
-<<<<<<< HEAD
+
 import influncerRouter from "./influncer/influncer.routes.js";
 import singleTypeRouter from "./singleType/singleType.routes.js";
-=======
-import  testRouter  from "./test/test.route.js";
->>>>>>> 1c4fa1c834b4ee6bda6b3f58a04a1ca4a934c542
 
+import  testRouter  from "./test/test.route.js";
 export const bootstrap = (app, express) => {
   const mainroute = "/api"; // main route
   const corsOptions = {
