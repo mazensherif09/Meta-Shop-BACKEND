@@ -18,6 +18,7 @@ import cartRouter from "./cart/cart.routes.js";
 import orderRouter from "./order/order.routes.js";
 import colorsRouter from "./colors/colors.routes.js";
 import sizesRouter from "./sizes/sizes.routes.js";
+import  testRouter  from "./test/test.route.js";
 
 export const bootstrap = (app, express) => {
   const mainroute = "/api"; // main route
@@ -53,6 +54,7 @@ export const bootstrap = (app, express) => {
   app.use(`${mainroute}/sizes`, sizesRouter);
   app.use(`${mainroute}/colors`, colorsRouter);
   app.use(`${mainroute}/coupon`, couponRouter);
+  app.use(`${mainroute}/test`, testRouter);
   // End  Endpoints ------------------------------------------- |
   dbConnection(); // database connection
 

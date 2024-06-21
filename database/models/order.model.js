@@ -5,12 +5,15 @@ const schema = new mongoose.Schema(
     user: { type: mongoose.Types.ObjectId, ref: "user" },
     orderItems: [
       {
-        product: {},
+        poster: String,
+        title: String,
+        slug: String,
+        selectedOptions: {},
         quantity: {
           type: Number,
           default: 1,
         },
-        selectedOptionId: String,
+        price: Number,
       },
     ],
     totalOrderPrice: Number,
