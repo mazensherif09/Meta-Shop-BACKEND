@@ -29,9 +29,18 @@ export const FileTestModel = mongoose.model("Filetest", fileSchema);
 
 // Clothes Schema
 const clothesSchema = new mongoose.Schema({
-  size: { type: String, required: true },
-  color: { type: [String], required: true },
-  images: [{ type: mongoose.Schema.Types.ObjectId, ref: "Filetest" }], // Array of File references
+  colors: [
+    {
+      color: { type: ObjectId, ref: "color" },
+      images: [{ type: ObjectId, ref: "file" }],
+      sizes: [
+        {
+          size: { type: ObjectId, ref: "size" },
+          stock: { type: Number, default: 0, min: 0 },
+        },
+      ],
+    },
+  ],
 });
 
 // Pre-find hook to automatically populate images field
