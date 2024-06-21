@@ -24,13 +24,13 @@ const fileSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-export const FileTestModel = mongoose.model("File", fileSchema);
+export const FileTestModel = mongoose.model("Filetest", fileSchema);
 
 // Clothes Schema
 const clothesSchema = new mongoose.Schema({
   size: { type: String, required: true },
   color: { type: [String], required: true },
-  images: [{ type: mongoose.Schema.Types.ObjectId, ref: "File" }], // Array of File references
+  images: [{ type: mongoose.Schema.Types.ObjectId, ref: "Filetest" }], // Array of File references
 });
 
 // Pre-find hook to automatically populate images field
