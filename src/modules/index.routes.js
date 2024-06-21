@@ -7,13 +7,18 @@ import { dbConnection } from "../../database/dbConnection.js";
 import { categoryRouter } from "./category/category.routes.js";
 
 import { SubCategoryRouter } from "./subcategory/subCategory.routes.js";
-import { productRouter } from "./product/product.routes.js";
-import cartRouter from "./cart/cart.routes.js";
-import orderRouter from "./order/order.routes.js";
 import { AuthRouter } from "./auth/auth.routes.js";
 import { globalError } from "../middleware/globels/globalError.js";
 import cookieParser from "cookie-parser";
 import { logger } from "../middleware/globels/logger.js";
+
+import { productRouter } from "./product/product.routes.js";
+import couponRouter  from "./coupon/coupon.routes.js";
+import cartRouter from "./cart/cart.routes.js";
+import orderRouter from "./order/order.routes.js";
+import colorsRouter from "./colors/colors.routes.js";
+import sizesRouter from "./sizes/sizes.routes.js";
+
 export const bootstrap = (app, express) => {
   const mainroute = "/api"; // main route
   const corsOptions = {
@@ -45,6 +50,9 @@ export const bootstrap = (app, express) => {
   app.use(`${mainroute}/subcategories`, SubCategoryRouter);
   app.use(`${mainroute}/products`, productRouter);
   app.use(`${mainroute}/orders`, orderRouter);
+  app.use(`${mainroute}/sizes`, sizesRouter);
+  app.use(`${mainroute}/colors`, colorsRouter);
+  app.use(`${mainroute}/coupon`, couponRouter);
   // End  Endpoints ------------------------------------------- |
   dbConnection(); // database connection
 

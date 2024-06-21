@@ -2,6 +2,8 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { UserModel } from "../../../database/models/user.model.js";
+import { ApiFetcher } from "../../utils/Fetcher.js";
+
 
 const createuser = AsyncHandler(async (req, res, next) => {
   const user = new UserModel(req.body);
@@ -13,8 +15,12 @@ const updateuser = AsyncHandler(async (req, res, next) => {
   return res.json({ message: "sucess" });
 });
 const deleteUser = AsyncHandler(async (req, res, next) => {
+
+  // let user = req.user;
+  // if (user._id === req?.params?.id) return res.json({ message: "ezay ya khawal"});
+
   await UserModel.findByIdAndDelete(req?.params?.id);
-  return res.json({ message: "sucess" });
+  res.json({ message: "sucess" });
 });
 const softdelete = AsyncHandler(async (req, res, next) => {
   await UserModel.findByIdAndUpdate(req?.params?.id, {
@@ -24,7 +30,39 @@ const softdelete = AsyncHandler(async (req, res, next) => {
   return res.json({ message: "success" });
 });
 const getAllUsers = AsyncHandler(async (req, res, next) => {
-  const users = await UserModel.find();
-  return res.json({ message: "sucess", users });
+  // Define the populate array, you can adjust this as per your requirements
+  const populateArray = [];
+ 
+  let filterObject = {};
+  if (req.query.filters) {  
+     filterObject = req.query.filters;
+  }
+
+  let apiFetcher = new ApiFetcher(
+    UserModel.find(filterObject).select("-password"),
+    req.query
+  );
+  apiFetcher.filter().search().sort().select();
+  // Execute the modified query and get total count
+  const total = await UserModel.countDocuments(apiFetcher.queryOrPipeline);
+
+  // Apply pagination after getting total count
+  apiFetcher.pagination();
+
+  // Execute the modified query to fetch data
+  const data = await apiFetcher.queryOrPipeline.exec();
+
+  // Calculate pagination metadata
+  const pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
+ 
+  res.status(200).json({
+    success: true,
+    data,
+    metadata: {
+      ...apiFetcher.metadata,
+      pages,
+      total,
+    },
+  });
  })
 export {  updateuser, deleteUser, softdelete,createuser,getAllUsers };

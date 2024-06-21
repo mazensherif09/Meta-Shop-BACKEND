@@ -21,17 +21,11 @@ const categoryRouter = express.Router();
 categoryRouter.use("/:category/subcategories", SubCategoryRouter);
 categoryRouter
   .route("/")
-  .post(
-    validation(CategorySchemaVal),
-    addCategory
-  )
+  .post(validation(CategorySchemaVal), addCategory)
   .get(getallCategoryies);
 categoryRouter
   .route("/:id")
   .get(validation(paramsIdVal), getOneCategory)
-  .put(
-    validation(UpdateCategorySchemaVal),
-    updateCategorty
-  )
+  .put(validation(UpdateCategorySchemaVal), updateCategorty)
   .delete(validation(paramsIdVal), deleteCategory);
 export { categoryRouter };
