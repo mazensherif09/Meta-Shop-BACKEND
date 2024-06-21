@@ -1,7 +1,9 @@
 import {
   ClothesTestModel,
   FileTestModel,
+  ProductTestModel,
   TechTestModel,
+  
 } from "../../../database/models/test.js";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 
@@ -42,7 +44,7 @@ const Putproduct = AsyncHandler(async (req, res, next) => {
   res.status(200).send(product);
 });
 const getproduct = AsyncHandler(async (req, res, next) => {
-  const products = await ProductTestModel.find().exec();
+  const products = await ProductTestModel.find().populate('images');
   res.status(200).send(products);
 });
 const getOnewproduct = AsyncHandler(async (req, res, next) => {
