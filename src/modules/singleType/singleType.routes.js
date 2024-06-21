@@ -18,13 +18,13 @@ const singleTypeRouter = express.Router();
 
 singleTypeRouter
   .route("/")
-  .post(validation(PageSchemaVal), insert)
+  .post(insert)
   .get(getPage);
 
 
 singleTypeRouter
   .route("/:id")
-  .put(validation(updatePageSchemaVal), updatePage)
+  .put(updatePage)
   .delete(validation(paramsIdVal), deletePag);
 
 export default singleTypeRouter;
