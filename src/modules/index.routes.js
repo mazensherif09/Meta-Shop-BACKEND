@@ -57,12 +57,12 @@ export const bootstrap = (app, express) => {
   app.use(`${mainroute}/sizes`, sizesRouter);
   app.use(`${mainroute}/colors`, colorsRouter);
   app.use(`${mainroute}/coupon`, couponRouter);
-<<<<<<< HEAD
+
   app.use(`${mainroute}/influncer`, influncerRouter);
   app.use(`${mainroute}/pages`, singleTypeRouter);
-=======
+
   app.use(`${mainroute}/test`, testRouter);
->>>>>>> 1c4fa1c834b4ee6bda6b3f58a04a1ca4a934c542
+
   // End  Endpoints ------------------------------------------- |
   dbConnection(); // database connection
 
