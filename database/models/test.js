@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 // Base Product Schema
 const productSchema = new mongoose.Schema(
   {
@@ -37,7 +39,7 @@ clothesSchema.pre(/^find/, function (next) {
   next();
 });
 
-export const ClothesTestModel = Producttest.discriminator("clothestest", clothesSchema);
+export const ClothesTestModel = ProductTestModel.discriminator("clothestest", clothesSchema);
 
 // Tech Schema
 const techSchema = new mongoose.Schema({
@@ -49,6 +51,6 @@ const techSchema = new mongoose.Schema({
   colors: { type: [String] },
 });
 
-export const TechTestModel = Producttest.discriminator("techtest", techSchema);
+export const TechTestModel = ProductTestModel.discriminator("techtest", techSchema);
 
 // CRUD Routes
