@@ -33,27 +33,64 @@ const schema = new mongoose.Schema(
     sold: Number,
     isFeatured: { type: Boolean, default: true },
     puplish: { type: Boolean, default: false, default: false },
-    poster: { type: ObjectId, ref: "file" },
     createdBy: { type: ObjectId, ref: "user" },
-    subcategory: {
-      type: ObjectId,
-      ref: "subcategory",
-    },
+    subcategory: { type: ObjectId, ref: "subcategory"} ,
     category: { type: ObjectId, ref: "category" },
-    colors: [
-      {
-        color: { type: ObjectId, ref: "color" },
-        images: [{ type: ObjectId, ref: "file" }],
-        sizes: [
-          {
-            size: { type: ObjectId, ref: "size" },
-            stock: { type: Number, default: 0, min: 0 },
-          },
-        ],
-      },
-    ],
   },
-  { timestamps: true }
+  { discriminatorKey: "categoryType", collection: "product" } 
 );
 
 export const productModel = mongoose.model("product", schema);
+
+// Tech Schema
+const techSchema = new mongoose.Schema({
+  specs: {
+    processor: { type: String },
+    ram: { type: String },
+    storage: { type: String },
+  },
+  colors: [
+    {
+      color: { type: ObjectId, ref: "color" },
+      images: [{ type: ObjectId, ref: "file" }],
+    },
+  ],
+});
+
+export const TechModel = productModel.discriminator("tech", techSchema);
+
+// Clothes Schema
+const clothesSchema = new mongoose.Schema({
+  colors: [
+    {
+      color: { type: ObjectId, ref: "color" },
+      images: [{ type: ObjectId, ref: "file" }],
+      sizes: [
+        {
+          size: { type: ObjectId, ref: "size" },
+          stock: { type: Number, default: 0, min: 0 },
+        },
+      ],
+    },
+  ],
+});
+
+// Pre-find hook to automatically populate images field
+clothesSchema.pre(/^find/, function (next) {
+  this.populate("colors.images");
+  next();
+});
+
+export const ClothesModel = productModel.discriminator( "clothes",  clothesSchema );
+
+
+// File Schema
+const fileSchema = new mongoose.Schema({
+  filename: { type: String, required: true },
+  filepath: { type: String, required: true },
+  mimetype: { type: String, required: true },
+  size: { type: Number, required: true },
+  createdAt: { type: Date, default: Date.now },
+});
+
+export const FileModel = productModel.discriminator("file", fileSchema);

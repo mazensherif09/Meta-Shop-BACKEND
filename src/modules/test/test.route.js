@@ -1,9 +1,9 @@
 import express from "express";
 import { validation } from "../../middleware/globels/validation.js";
-import { getproduct, testinstertTestData } from "./test.controller.js";
+import { getproduct, createproduct } from "./test.controller.js";
 
 const testRouter = express.Router();
 
-testRouter.route("/products").post(testinstertTestData).get(getproduct);
+testRouter.route("/products").post(createproduct).get(getproduct);
 
 export default testRouter;
