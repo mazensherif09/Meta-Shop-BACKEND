@@ -3,7 +3,6 @@ import { AppError } from "../../utils/AppError.js";
 export const validation = (schema) => {
   return (req, res, next) => {
     let files = {};
-
     if (req.files || req.file) {
       files = req.files ? req.files : { [req.file.fieldname]: req.file };
       req.files = files;

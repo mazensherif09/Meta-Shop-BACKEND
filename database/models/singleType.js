@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const schema = new mongoose.Schema(
   {
-    name: {
+    key: {
       type: String,
       unique: [true, "name is required"],
       trim: true,

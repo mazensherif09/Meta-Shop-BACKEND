@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
-import { enumRoles } from "../../src/assets/enums/Roles_permissions";
+import { enumRoles } from "../../src/assets/enums/Roles_permissions.js";
 
 const schema = new mongoose.Schema(
   {
@@ -14,7 +14,7 @@ const schema = new mongoose.Schema(
     // role:  { type: mongoose.Types.ObjectId, ref: "user_roles", default: null },
     role: {
       type: String,
-      enum: [Object.values(enumRoles)],
+      enum: [...Object.values(enumRoles)],
       default: enumRoles?.user,
     },
     confirmEmail: { type: Boolean, default: false },
