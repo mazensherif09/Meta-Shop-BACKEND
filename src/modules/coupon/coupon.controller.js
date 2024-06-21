@@ -68,7 +68,7 @@ const deleteCoupon = AsyncHandler(async (req, res, next) => {
 });
 
 const updateCoupon = AsyncHandler(async (req, res, next) => {
-  const document = await couponModel.findByIdAndUpdate({ _id: req.params?.id });
+  const document = await couponModel.findByIdAndUpdate({ _id: req.params?.id }, req.body);
   if (!document) next(new AppError(`Coupon is not found`, 401));
 
   res.status(200).json({

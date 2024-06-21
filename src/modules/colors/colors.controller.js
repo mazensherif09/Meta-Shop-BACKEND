@@ -68,7 +68,7 @@ const deleteColor = AsyncHandler(async (req, res, next) => {
 });
 
 const updateColor = AsyncHandler(async (req, res, next) => {
-  const document = await colorModel.findByIdAndUpdate({ _id: req.params?.id });
+  const document = await colorModel.findByIdAndUpdate({ _id: req.params?.id }, req.body);
   if (!document) next(new AppError(`Color is not found`, 401));
 
   res.status(200).json({

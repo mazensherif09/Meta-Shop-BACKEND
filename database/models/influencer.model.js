@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { influencers } from "../../src/assets/enums/influeners";
+import { influencers } from "../../src/assets/enums/influeners.js";
 
 const schema = new mongoose.Schema(
   {
@@ -25,4 +25,4 @@ const schema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const couponModel = mongoose.model("influencer", schema);
+export const influencerModel = mongoose.model("influencer", schema);
