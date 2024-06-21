@@ -10,7 +10,7 @@ const productSchema = new mongoose.Schema(
     description: { type: String },
     createdAt: { type: Date, default: Date.now },
   },
-  { discriminatorKey: "category", collection: "products" }
+  { discriminatorKey: "category", collection: "productstest" }
 );
 
 export const ProductTestModel = mongoose.model("Producttest", productSchema);
