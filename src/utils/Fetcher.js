@@ -1,10 +1,12 @@
 export class ApiFetcher {
   constructor(queryOrPipeline, searchQuery) {
+    console.log("🚀 ~ ApiFetcher ~ constructor ~ queryOrPipeline:", queryOrPipeline)
     this.queryOrPipeline = queryOrPipeline;
     this.searchQuery = searchQuery;
 
     this.metadata = {}; // Initialize metadata
   }
+  
 
   pagination() {
     let pageNumber = this.searchQuery.page * 1 || 1;

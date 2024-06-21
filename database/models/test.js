@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 // Base Product Schema
 const productSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     price: { type: Number, required: true },
-    category: { type: String, required: true },
+    category: { type: ObjectId, ref: "category" },
     brand: { type: String },
     description: { type: String },
     createdAt: { type: Date, default: Date.now },
@@ -39,7 +40,10 @@ clothesSchema.pre(/^find/, function (next) {
   next();
 });
 
-export const ClothesTestModel = ProductTestModel.discriminator("clothestest", clothesSchema);
+export const ClothesTestModel = ProductTestModel.discriminator(
+  "clothestest",
+  clothesSchema
+);
 
 // Tech Schema
 const techSchema = new mongoose.Schema({
@@ -51,6 +55,9 @@ const techSchema = new mongoose.Schema({
   colors: { type: [String] },
 });
 
-export const TechTestModel = ProductTestModel.discriminator("techtest", techSchema);
+export const TechTestModel = ProductTestModel.discriminator(
+  "techtest",
+  techSchema
+);
 
 // CRUD Routes
