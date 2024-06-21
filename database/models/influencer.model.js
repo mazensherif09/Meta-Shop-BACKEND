@@ -5,7 +5,7 @@ const schema = new mongoose.Schema(
   {
     state: {
       type: String,
-      enum: [Object.values(influencers)],
+      enum: Object.values(influencers),
       default: influencers.pending,
     },
     coupon: { type: mongoose.Types.ObjectId, ref: "coupon" },
