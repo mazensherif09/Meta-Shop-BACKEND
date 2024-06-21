@@ -66,7 +66,7 @@ const deleteSize = AsyncHandler(async (req, res, next) => {
 });
 
 const updateSize = AsyncHandler(async (req, res, next) => {
-  const document = await sizeModel.findByIdAndUpdate({ _id: req.params?.id });
+  const document = await sizeModel.findByIdAndUpdate({ _id: req.params?.id }, req.body);
   if (!document) next(new AppError(`Color is not found`, 401));
 
   res.status(200).json(
