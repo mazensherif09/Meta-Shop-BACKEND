@@ -12,6 +12,7 @@ import {
   ProductSchemaVal,
   UpdateproductSchemaVal,
   paramsIdVal,
+  paramsSlugVal
 } from "./product.validation.js";
 import { handleMediaProduct } from "../../middleware/handleProduct.js";
 
@@ -29,9 +30,11 @@ productRouter
     addproduct
   )
   .get(getallproduct);
-productRouter
+
+  productRouter.get("/:slug", validation(paramsSlugVal), getOneproduct)
+
+  productRouter
   .route("/:id")
-  .get(validation(paramsIdVal), getOneproduct)
   .put(validation(UpdateproductSchemaVal), // check validation
     updateproduct // finally update product
   ).delete(validation(paramsIdVal), deleteproduct);

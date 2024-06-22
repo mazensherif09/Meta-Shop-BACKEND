@@ -38,43 +38,12 @@ const insert = AsyncHandler(async (req, res, next) => {
 });
 
 const getPage = AsyncHandler(async (req, res, next) => {
-  // Define the populate array, you can adjust this as per your requirements
-  const populateArray = [];
-
-  let filterObject = {};
-  if (req.query.filters) {
-    filterObject = req.query.filters;
-  }
-
-  let apiFetcher = new ApiFetcher(
-    SingleTypeModel.find(filterObject),
-    req.query
-  );
-
-  apiFetcher.search().sort().select().populate(populateArray);
-
-  // Execute the modified query and get total count
-  const total = await SingleTypeModel.countDocuments(
-    apiFetcher.queryOrPipeline
-  );
-
-  // Apply pagination after getting total count
-  apiFetcher.pagination();
-
-  // Execute the modified query to fetch data
-  const data = await apiFetcher.queryOrPipeline.exec();
-
-  // Calculate pagination metadata
-  const pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
+  const document = await SingleTypeModel.findById(req.params?.id);
+  if (!document) next(new AppError(`Page is not found`, 401));
 
   res.status(200).json({
     succses: true,
-    data,
-    metadata: {
-      ...apiFetcher.metadata,
-      pages,
-      total,
-    },
+    data: document,
   });
 });
 
@@ -82,7 +51,7 @@ const deletePag = AsyncHandler(async (req, res, next) => {
   const document = await SingleTypeModel.findByIdAndDelete({
     _id: req.params?.id,
   });
-  if (!document) next(new AppError(`Influncer is not found`, 401));
+  if (!document) next(new AppError(`Page is not found`, 401));
 
   res.status(200).json({
     succses: true,
@@ -96,7 +65,7 @@ const updatePage = AsyncHandler(async (req, res, next) => {
     { _id: req.params?.id },
     req.body
   );
-  if (!document) next(new AppError(`Influncer not found`, 401));
+  if (!document) next(new AppError(`Page not found`, 401));
 
   res.status(200).json({
     succses: true,

@@ -2,17 +2,18 @@ export class ApiFetcher {
   constructor(queryOrPipeline, searchQuery) {
     this.queryOrPipeline = queryOrPipeline;
     this.searchQuery = searchQuery;
-
+    this.isPipeline = Array.isArray(queryOrPipeline); // Check if it's a pipeline
+    this.populateArray = []; // Initialize populate array
     this.metadata = {}; // Initialize metadata
   }
-  
 
+  // Pagination method
   pagination() {
     let pageNumber = this.searchQuery.page * 1 || 1;
     let pageLimit = this.searchQuery.pagelimit * 1 || 20;
     let skip = (pageNumber - 1) * pageLimit;
 
-    if (Array.isArray(this.queryOrPipeline)) {
+    if (this.isPipeline) {
       this.queryOrPipeline.push({ $skip: skip });
       this.queryOrPipeline.push({ $limit: pageLimit });
     } else {
@@ -26,8 +27,9 @@ export class ApiFetcher {
     return this;
   }
 
+  // Filter method
   filter() {
-    if (this.searchQuery) {
+    if (this.searchQuery.filter) {
       let filterObject = { ...this.searchQuery.filter };
       filterObject = JSON.stringify(filterObject);
       filterObject = filterObject.replace(
@@ -36,17 +38,16 @@ export class ApiFetcher {
       );
       filterObject = JSON.parse(filterObject);
 
-      if (Array.isArray(this.queryOrPipeline)) {
-        // For pipeline, push $match stage
+      if (this.isPipeline) {
         this.queryOrPipeline.push({ $match: filterObject });
       } else {
-        // For basic find query, apply filter directly
         this.queryOrPipeline.find(filterObject);
       }
     }
     return this;
   }
 
+  // Sort method
   sort() {
     if (this.searchQuery.sort) {
       let sortBy = {};
@@ -56,17 +57,16 @@ export class ApiFetcher {
         sortBy[key] = order === "desc" ? -1 : 1;
       });
 
-      if (Array.isArray(this.queryOrPipeline)) {
-        // For pipeline, push $sort stage
+      if (this.isPipeline) {
         this.queryOrPipeline.push({ $sort: sortBy });
       } else {
-        // For basic find query, apply sort directly
         this.queryOrPipeline.sort(sortBy);
       }
     }
     return this;
   }
 
+  // Select method
   select() {
     if (this.searchQuery.fields) {
       let fields = {};
@@ -75,17 +75,16 @@ export class ApiFetcher {
         fields[field] = 1;
       });
 
-      if (Array.isArray(this.queryOrPipeline)) {
-        // For pipeline, push $project stage
+      if (this.isPipeline) {
         this.queryOrPipeline.push({ $project: fields });
       } else {
-        // For basic find query, apply select directly
         this.queryOrPipeline.select(fields);
       }
     }
     return this;
   }
 
+  // Search method
   search() {
     if (this.searchQuery.index) {
       let indexQueries = [];
@@ -96,13 +95,11 @@ export class ApiFetcher {
         indexQueries.push(regexQuery);
       }
 
-      if (Array.isArray(this.queryOrPipeline)) {
-        // For pipeline, push $match stage with $and operator
+      if (this.isPipeline) {
         if (indexQueries.length > 0) {
           this.queryOrPipeline.push({ $match: { $and: indexQueries } });
         }
       } else {
-        // For basic find query, apply filter directly
         for (const query of indexQueries) {
           this.queryOrPipeline.find(query);
         }
@@ -111,29 +108,43 @@ export class ApiFetcher {
     return this;
   }
 
-  populate(populateArray) {
-    let populate = this.searchQuery.populate;
-
-    if (populate) {
-      if (Array.isArray(this.queryOrPipeline)) {
-        // For pipeline, push $lookup stage
-        if (populate === "*") {
-          this.queryOrPipeline.push({ $lookup: { from: populateArray } });
-        } else {
-          this.queryOrPipeline.push({ $lookup: { from: populate, localField: "category", foreignField: "_id", as: "categoryDetails" } });
+  // Populate method for aggregation pipelines
+  populateAggregation(populateArray) {
+    if (populateArray && Array.isArray(populateArray) && populateArray.length > 0) {
+      populateArray.forEach((pop) => {
+        this.queryOrPipeline.push({
+          $lookup: {
+            from: pop.from,
+            localField: pop.localField,
+            foreignField: pop.foreignField,
+            as: pop.as,
+          },
+        });
+        if (pop.unwind) {
+          this.queryOrPipeline.push({ $unwind: `$${pop.as}` });
         }
-      } else {
-        // For basic find query, apply populate directly
-        this.queryOrPipeline.populate(populate);
-      }
+      });
     }
     return this;
   }
 
+  // Populate method for find queries
+  populateFind(populateArray) {
+    if (populateArray && Array.isArray(populateArray) && populateArray.length > 0) {
+      this.queryOrPipeline.populate(populateArray);
+    }
+    return this;
+  }
+
+  // Method to get total count
   async getTotalCount(model) {
-    const countPipeline = [...this.queryOrPipeline];
-    countPipeline.push({ $count: 'totalCount' });
-    const result = await model.aggregate(countPipeline).exec();
-    return result.length > 0 ? result[0].totalCount : 0;
+    if (this.isPipeline) {
+      const countPipeline = [...this.queryOrPipeline];
+      countPipeline.push({ $count: "totalCount" });
+      const result = await model.aggregate(countPipeline).exec();
+      return result.length > 0 ? result[0].totalCount : 0;
+    } else {
+      return await model.countDocuments(this.queryOrPipeline).exec();
+    }
   }
 }

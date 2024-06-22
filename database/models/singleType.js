@@ -12,7 +12,7 @@ const schema = new mongoose.Schema(
     },
     createdBy: { type: mongoose.Types.ObjectId, ref: "user" },
   },
-  { discriminatorKey: "PageType", collection: "pages" }
+  { timestamps: true }
 );
 
 export const SingleTypeModel = mongoose.model("singletype", schema);

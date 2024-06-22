@@ -6,7 +6,8 @@ export function addLookup(
     fromCollection,
     localField,
     foreignField,
-    matchField
+    matchField,
+    unwind = false
   ) {
     if (searchQuery[field]) {
       pipeline.push({
@@ -17,6 +18,9 @@ export function addLookup(
           as: field,
         },
       });
+      if (unwind) {
+        pipeline.push({ $unwind: `$${field}` });
+    }
       pipeline.push({ $match: { [`${field}.${matchField}`]: searchQuery[field] } });
     }
   }
