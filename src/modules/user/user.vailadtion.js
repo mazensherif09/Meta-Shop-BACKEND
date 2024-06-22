@@ -5,6 +5,7 @@ const ForgetPasswordVal = Joi.object({
   email: Joi.string().email().required(),
 });
 const updateVal = Joi.object({
+  id: Joi.string().hex().length(24),
   fullName: Joi.string().min(3).max(30),
   email: Joi.string().email(),
   age: Joi.number().integer().min(10).max(80),
