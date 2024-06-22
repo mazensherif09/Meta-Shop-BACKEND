@@ -64,7 +64,7 @@ schema.pre(/^find/, function (next) {
 export const productModel = mongoose.model("product", schema);
 
 // Tech Schema
-const techSchema = new mongoose.Schema({
+const DecorSchema = new mongoose.Schema({
   specs: {
     processor: { type: String },
     ram: { type: String },
@@ -79,7 +79,7 @@ const techSchema = new mongoose.Schema({
 });
 
 // Pre-find hook to automatically populate images field
-techSchema.pre(/^find/, function (next) {
+DecorSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'colors.color',
     model: 'color'
@@ -91,7 +91,7 @@ techSchema.pre(/^find/, function (next) {
   next();
 });
 
-export const TechModel = productModel.discriminator("tech", techSchema);
+export const DecorModel = productModel.discriminator("decor", DecorSchema);
 
 // Clothes Schema
 const clothesSchema = new mongoose.Schema({

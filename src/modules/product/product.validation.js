@@ -28,6 +28,8 @@ const ProductSchemaVal = Joi.object({
   discount: Joi.number().default(0),
   quantity: Joi.number().min(0).optional(),
   category: Joi.string().valid("clothes", "decor").required(),
+  isFeatured: Joi.boolean(),
+  puplish: Joi.boolean(),
   colors: Joi.when("category", {
     is: "clothes",
     then: clothesVal,
@@ -41,6 +43,8 @@ const UpdateproductSchemaVal = Joi.object({
   price: Joi.number().min(0).required(),
   discount: Joi.number().default(0),
   quantity: Joi.number().min(0).optional(),
+  isFeatured: Joi.boolean(),
+  puplish: Joi.boolean(),
   category: Joi.string().valid("clothes", "decor"),
   colors: Joi.when("category", {
     is: "clothes",
