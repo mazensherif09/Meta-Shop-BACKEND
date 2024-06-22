@@ -37,7 +37,7 @@ const schema = new mongoose.Schema(
     createdBy: { type: ObjectId, ref: "user" },
     subcategory: { type: ObjectId, ref: "subcategory" },
     category: { type: ObjectId, ref: "category" },
-    product_Type: {
+    type: {
       type: String,
       enum: Object.values(productTypes),
     },

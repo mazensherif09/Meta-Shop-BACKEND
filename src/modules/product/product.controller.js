@@ -19,7 +19,7 @@ import { ApiFetcher } from "../../utils/Fetcher.js";
 const Errormassage = "product not found";
 
 const addproduct = AsyncHandler(async (req, res, next) => {
-  const { product_Type, files } = req.body;
+  const { type, files } = req.body;
 
   
   const check = await productModel.findOne({ title: req.body.title });
@@ -28,9 +28,9 @@ const addproduct = AsyncHandler(async (req, res, next) => {
 
   // req.body.createdBy = req.user._id;
   let product;
-  if (product_Type === "clothes") {
+  if (type === "clothes") {
     product = new ClothesModel(req.body);
-  } else if (product_Type === "decor") {
+  } else if (type === "decor") {
     product = new DecorModel(req.body);
   } else {
     return res.status(400).send("Invalid category");
