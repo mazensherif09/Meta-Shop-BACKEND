@@ -41,5 +41,12 @@ const schema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
+// Pre-find hook to automatically populate images field
+schema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'orderItems.product',
+    model: 'product'
+  })
+  next();
+});
 export const orderModel = mongoose.model("order", schema);

@@ -50,11 +50,37 @@ const getSpecificOrder = AsyncHandler(async (req, res, next) => {
 });
 
 const getAllOrders = AsyncHandler(async (req, res, next) => {
-  //1- get cart --> cartId
-  let orders = await orderModel.find().populate("orderItems.product");
-  if (!orders) return next(new AppError("order not found"));
+  // Define the populate array, you can adjust this as per your requirements
+  const populateArray = [];
 
-  res.json(orders);
+  let filterObject = {};
+  if (req.query.filters) {
+    filterObject = req.query.filters;
+  }
+
+  let apiFetcher = new ApiFetcher(orderModel.find(filterObject), req.query);
+  apiFetcher.filter().search().sort().select();
+  // Execute the modified query and get total count
+  const total = await orderModel.countDocuments(apiFetcher.queryOrPipeline);
+
+  // Apply pagination after getting total count
+  apiFetcher.pagination();
+
+  // Execute the modified query to fetch data
+  const data = await apiFetcher.queryOrPipeline.exec();
+
+  // Calculate pagination metadata
+  const pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
+
+  res.status(200).json({
+    success: true,
+    data,
+    metadata: {
+      ...apiFetcher.metadata,
+      pages,
+      total,
+    },
+  });
 });
 
 const createCheckoutSession = AsyncHandler(async (req, res, next) => {

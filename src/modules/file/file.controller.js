@@ -1,6 +1,7 @@
 import FileModel from "../../../database/models/file.model.js";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
+import { ApiFetcher } from "../../utils/Fetcher.js";
 
 const Insert = AsyncHandler(async (req, res, next) => {
   const data = await FileModel.insertMany(req.body) 
@@ -16,12 +17,10 @@ const GetAll = AsyncHandler(async (req, res, next) => {
     filterObject = req.query.filters;
   }
 
-  let apiFetcher = new ApiFetcher(colorModel.find(filterObject), req.query);
-
-  apiFetcher.search().sort().select().populate(populateArray);
-
+  let apiFetcher = new ApiFetcher(FileModel.find(filterObject), req.query);
+  apiFetcher.filter().search().sort().select();
   // Execute the modified query and get total count
-  const total = await colorModel.countDocuments(apiFetcher.queryOrPipeline);
+  const total = await FileModel.countDocuments(apiFetcher.queryOrPipeline);
 
   // Apply pagination after getting total count
   apiFetcher.pagination();
@@ -32,7 +31,8 @@ const GetAll = AsyncHandler(async (req, res, next) => {
   // Calculate pagination metadata
   const pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
 
-  return res.status(200).json({
+  res.status(200).json({
+    success: true,
     data,
     metadata: {
       ...apiFetcher.metadata,
@@ -49,7 +49,11 @@ const GetOne = AsyncHandler(async (req, res, next) => {
 const Delete = AsyncHandler(async (req, res, next) => {
   const file = await FileModel.findByIdAndDelete({ _id: req.params?.id });
   if (!file) next(new AppError(`File is not found`, 404));
-  return res.status(200).json(file);
+
+  return res.status(200).json({
+    message: "Deleted Sucessfully",
+    document
+  });
 });
 
 export { Insert, GetAll, GetOne, Delete };

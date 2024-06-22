@@ -41,10 +41,7 @@ const getPage = AsyncHandler(async (req, res, next) => {
   const document = await SingleTypeModel.findById(req.params?.id);
   if (!document) next(new AppError(`Page is not found`, 401));
 
-  res.status(200).json({
-    succses: true,
-    data: document,
-  });
+  res.status(200).json(document);
 });
 
 const deletePag = AsyncHandler(async (req, res, next) => {
@@ -54,8 +51,7 @@ const deletePag = AsyncHandler(async (req, res, next) => {
   if (!document) next(new AppError(`Page is not found`, 401));
 
   res.status(200).json({
-    succses: true,
-    data: document,
+    message: "Deleted Sucessfully",
   });
 });
 
@@ -68,7 +64,8 @@ const updatePage = AsyncHandler(async (req, res, next) => {
   if (!document) next(new AppError(`Page not found`, 401));
 
   res.status(200).json({
-    succses: true,
+    message: "Updated Sucessfully",
+    document
   });
 });
 

@@ -10,20 +10,19 @@ const Insert = AsyncHandler(async (req, res, next) => {
   const document = new couponModel(req.body);
   await document.save();
 
- return res.status(200).json(document);
+  return res.status(200).json(document);
 });
 
 const GetAll = AsyncHandler(async (req, res, next) => {
   // Define the populate array, you can adjust this as per your requirements
   const populateArray = [];
-  
+
   let filterObject = {};
-  if (req.query.filters) {  
-     filterObject = req.query.filters;
+  if (req.query.filters) {
+    filterObject = req.query.filters;
   }
 
-  let apiFetcher = new ApiFetcher(
-    couponModel.find(filterObject) , req.query);
+  let apiFetcher = new ApiFetcher(couponModel.find(filterObject), req.query);
 
   apiFetcher.search().sort().select().populate(populateArray);
 
@@ -53,33 +52,42 @@ const Delete = AsyncHandler(async (req, res, next) => {
   const document = await couponModel.findByIdAndDelete({ _id: req.params?.id });
   if (!document) next(new AppError(`Coupon is not found`, 401));
 
-  res.status(200).json(document);
+  return res.status(200).json({
+    message: "Deleted Sucessfully",
+    document
+  });
 });
 
 const Update = AsyncHandler(async (req, res, next) => {
-  const document = await couponModel.findByIdAndUpdate({ _id: req.params?.id }, req.body);
+  const document = await couponModel.findByIdAndUpdate(
+    { _id: req.params?.id },
+    req.body
+  );
   if (!document) next(new AppError(`Coupon is not found`, 401));
 
-  return res.status(200).json(document);
+  return res.status(200).json({
+    message: "Updated Sucessfully",
+    document,
+  });
 });
 
 const checkCoupon = AsyncHandler(async (req, res, next) => {
-     
-    const { text } = req.query;  // Ensure text is provided
-    // Find the coupon in the database
-    const coupon = await couponModel.findOne({ text });
-    // Check if the coupon exists
-    if (!coupon) return next(new AppError(`Coupon not found`, 401));
+  const { text } = req.query; // Ensure text is provided
+  // Find the coupon in the database
+  const coupon = await couponModel.findOne({ text });
+  // Check if the coupon exists
+  if (!coupon) return next(new AppError(`Coupon not found`, 401));
 
-    // Check if the coupon is expired
-    const currentDate = new Date();
-    if (coupon.expires && coupon.expires < currentDate) {
-      return res.status(400).json({ success: false, message: 'Coupon has expired' });
-    }
+  // Check if the coupon is expired
+  const currentDate = new Date();
+  if (coupon.expires && coupon.expires < currentDate) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Coupon has expired" });
+  }
 
-    // Coupon is valid
-    return res.status(200).json(coupon);
-
+  // Coupon is valid
+  return res.status(200).json(coupon);
 });
 
 export { Insert, GetAll, Delete, Update, checkCoupon };

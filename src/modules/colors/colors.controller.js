@@ -16,17 +16,17 @@ const Insert = AsyncHandler(async (req, res, next) => {
 const GetAll = AsyncHandler(async (req, res, next) => {
   // Define the populate array, you can adjust this as per your requirements
   const populateArray = [];
-  
+ 
   let filterObject = {};
   if (req.query.filters) {  
      filterObject = req.query.filters;
   }
 
   let apiFetcher = new ApiFetcher(
-    colorModel.find(filterObject) , req.query);
-
-  apiFetcher.search().sort().select().populate(populateArray);
-
+    colorModel.find(filterObject),
+    req.query
+  );
+  apiFetcher.filter().search().sort().select();
   // Execute the modified query and get total count
   const total = await colorModel.countDocuments(apiFetcher.queryOrPipeline);
 
@@ -38,8 +38,9 @@ const GetAll = AsyncHandler(async (req, res, next) => {
 
   // Calculate pagination metadata
   const pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
-
-  return res.status(200).json({
+ 
+  res.status(200).json({
+    success: true,
     data,
     metadata: {
       ...apiFetcher.metadata,
@@ -53,14 +54,19 @@ const Delete = AsyncHandler(async (req, res, next) => {
   const document = await colorModel.findByIdAndDelete({ _id: req.params?.id });
   if (!document) next(new AppError(`Color is not found`, 401));
 
-  return res.status(200).json( document);
+  return res.status(200).json({
+    message: "Deleted Sucessfully",
+  });
 });
 
 const Update = AsyncHandler(async (req, res, next) => {
   const document = await colorModel.findByIdAndUpdate({ _id: req.params?.id }, req.body);
   if (!document) next(new AppError(`Color is not found`, 401));
 
- return res.status(200).json(document);
+  return res.status(200).json({
+    message: "Updated Sucessfully",
+    document
+  });
 });
 
 export { Insert, GetAll, Delete, Update };
