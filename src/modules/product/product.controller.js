@@ -24,11 +24,13 @@ const addproduct = AsyncHandler(async (req, res, next) => {
   req.body.slug = slug;
 
   // req.body.createdBy = req.user._id;
+     
+ 
 
   let product;
   if (categoryType === "clothes") {
     product = new ClothesModel({...rest, slug});
-  } else if (categoryType === "tech") {
+  } else if (categoryType === "decor") {
     product = new TechModel({...rest, slug});
   } else {
     return res.status(400).send("Invalid category");
