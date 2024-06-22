@@ -37,10 +37,9 @@ const schema = new mongoose.Schema(
     createdBy: { type: ObjectId, ref: "user" },
     subcategory: { type: ObjectId, ref: "subcategory" },
     category: { type: ObjectId, ref: "category" },
-    type: {
+    product_Type: {
       type: String,
-      enum: [...Object.values(productTypes)],
-      required: true,
+      enum: Object.values(productTypes),
     },
   },
   { timestamps: true }
@@ -71,15 +70,11 @@ export const productModel = mongoose.model("product", schema);
 
 // Tech Schema
 const DecorSchema = new mongoose.Schema({
-  specs: {
-    processor: { type: String },
-    ram: { type: String },
-    storage: { type: String },
-  },
   colors: [
     {
       color: { type: ObjectId, ref: "color" },
       images: [{ type: ObjectId, ref: "file" }],
+      stock:{type:Number, min:0, default:0 }
     },
   ],
 });

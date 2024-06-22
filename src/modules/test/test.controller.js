@@ -8,9 +8,9 @@ const createproduct = AsyncHandler(async (req, res, next) => {
 
   let product;
   if (categoryType === "clothes") {
-    product = new ClothesModel(rest);
+    product = new ClothesModel( req.body);
   } else if (categoryType === "tech") {
-    product = new TechModel(rest);
+    product = new TechModel( req.body);
   } else {
     return res.status(400).send("Invalid category");
   }
@@ -22,12 +22,12 @@ const Putproduct = AsyncHandler(async (req, res, next) => {
   const { category, ...rest } = req.body;
   let product;
   if (category === "clothes") {
-    product = await ClothesTestModel.findByIdAndUpdate(req.params.id, rest, {
+    product = await ClothesTestModel.findByIdAndUpdate(req.params.id,  req.body, {
       new: true,
       runValidators: true,
     }).exec();
   } else if (category === "tech") {
-    product = await TechTestModel.findByIdAndUpdate(req.params.id, rest, {
+    product = await TechTestModel.findByIdAndUpdate(req.params.id,  req.body, {
       new: true,
       runValidators: true,
     }).exec();

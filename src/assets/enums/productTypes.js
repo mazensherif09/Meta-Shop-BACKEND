@@ -1,4 +1,4 @@
 export const productTypes  = {
-    clouthes:"clouthes",
+    clothes:"clothes",
     decor:"decor",
 }

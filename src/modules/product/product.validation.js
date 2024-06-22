@@ -31,7 +31,7 @@ const ProductSchemaVal = Joi.object({
   puplish: Joi.boolean(),
   category: ObjectIdVal,
   subcategory: ObjectIdVal,
-  type: Joi.string().valid("clothes", "decor"),
+  product_Type: Joi.string().valid("clothes", "decor"),
   colors: Joi.when("category", {
     is: "clothes",
     then: clothesVal,

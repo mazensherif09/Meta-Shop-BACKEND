@@ -15,21 +15,19 @@ import { ApiFetcher } from "../../utils/Fetcher.js";
 const Errormassage = "product not found";
 
 const addproduct = AsyncHandler(async (req, res, next) => {
-  const { type, files, ...rest } = req.body;
+  const { product_Type, files } = req.body;
+
   
   const check = await productModel.findOne({ title: req.body.title });
   if (check) return next(new AppError(` product already exist with same title`, 401));
-
-  const slug = slugify(req.body.title);
-  req.body.slug = slug;
+  req.body.slug = slugify(req.body.title);
 
   // req.body.createdBy = req.user._id;
-   console.log(req?.body);
   let product;
-  if (type === "clothes") {
-    product = new ClothesModel({...rest, slug});
-  } else if (type === "decor") {
-    product = new DecorModel({...rest, slug});
+  if (product_Type === "clothes") {
+    product = new ClothesModel(req.body);
+  } else if (product_Type === "decor") {
+    product = new DecorModel(req.body);
   } else {
     return res.status(400).send("Invalid type");
   }
