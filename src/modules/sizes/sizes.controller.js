@@ -13,7 +13,7 @@ const addSize = AsyncHandler(async (req, res, next) => {
 
   return res.status(200).json({
     message: "Added Sucessfully",
-    document
+    data: document,
   });
 });
 
@@ -76,7 +76,7 @@ const updateSize = AsyncHandler(async (req, res, next) => {
 
   return res.status(200).json({
     message: "Updated Sucessfully",
-    document
+    data: document,
   });
 });
 

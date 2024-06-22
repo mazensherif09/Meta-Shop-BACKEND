@@ -15,7 +15,7 @@ export const InsertOne = (model, Errormassage, slug, check) => {
     await document.save();
     return res.status(200).json({
       message: "Added Sucessfully",
-      document
+      data: document,
     });
   });
 };
@@ -65,7 +65,7 @@ export const updateOne = (model, Errormassage) => {
     if (!document) return next(new AppError(Errormassage, 404));
     return res.status(200).json({
       message: "Updated Sucessfully",
-      document,
+      data: document,
     });
   });
 };
@@ -75,7 +75,7 @@ export const deleteOne = (model, Errormassage) => {
     if (!document) return next(new AppError(Errormassage, 404));
     return res.status(200).json({
       message: "Deleted Sucessfully",
-      document
+      data: document,
     });
   });
 };

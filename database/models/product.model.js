@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { productTypes } from "../../src/assets/enums/productTypes.js";
+console.log("🚀 ~ productTypes:", productTypes)
 const ObjectId = mongoose.Schema.Types.ObjectId;
 const schema = new mongoose.Schema(
   {
@@ -40,7 +41,6 @@ const schema = new mongoose.Schema(
     type: {
       type: String,
       enum: [...Object.values(productTypes)],
-      required: true,
     },
   },
   { timestamps: true }
