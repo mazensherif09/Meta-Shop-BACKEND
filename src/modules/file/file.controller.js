@@ -1,4 +1,4 @@
-import FileModel from "../../../database/models/file.model.js";
+import {FileModel} from "../../../database/models/file.model.js";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
 import { ApiFetcher } from "../../utils/Fetcher.js";

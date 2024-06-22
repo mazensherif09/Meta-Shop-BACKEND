@@ -13,6 +13,8 @@ const schema = new Schema({
     unique: true,
   },
   createdBy: { type: ObjectId, ref: "user" },
+},{
+  timestamps: true,
 });
 
 export const colorModel = mongoose.model("color", schema);

@@ -17,6 +17,8 @@ const schema = new Schema({
     required: true,
   },
   createdBy: { type: ObjectId, ref: "user" },
+},{
+  timestamps: true,
 });
 
 export const sizeModel = mongoose.model("size", schema);

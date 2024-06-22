@@ -13,7 +13,8 @@ const schema = new Schema({
     type: String,
     required: true,
   },
+},{
+  timestamps: true,
 });
+export const FileModel =  model("file", schema);
 
-const FileModel =  model("file", schema);
-export default FileModel;
