@@ -10,7 +10,10 @@ const Insert = AsyncHandler(async (req, res, next) => {
   const document = new colorModel(req.body);
   await document.save();
 
-  return res.status(200).json(document);
+  return res.status(200).json({
+    message: "Added Sucessfully",
+    document
+  });
 });
 
 const GetAll = AsyncHandler(async (req, res, next) => {

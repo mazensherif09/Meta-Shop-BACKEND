@@ -16,14 +16,12 @@ import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
 
 const singleTypeRouter = express.Router();
 
-singleTypeRouter
-  .route("/")
-  .post(insert)
+singleTypeRouter.route("/").post(insert);
 
 singleTypeRouter
   .route("/:id")
-  .get(getPage)
-  .put(updatePage)
+  .get(validation(paramsIdVal), getPage)
+  .put(validation(paramsIdVal), updatePage)
   .delete(validation(paramsIdVal), deletePag);
 
 export default singleTypeRouter;

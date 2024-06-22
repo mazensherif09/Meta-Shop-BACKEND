@@ -11,7 +11,10 @@ const addSize = AsyncHandler(async (req, res, next) => {
   const document = new sizeModel(req.body);
   await document.save();
 
-  res.status(200).json({ succses: true, data: document });
+  return res.status(200).json({
+    message: "Added Sucessfully",
+    document
+  });
 });
 
 const getSizes = AsyncHandler(async (req, res, next) => {
