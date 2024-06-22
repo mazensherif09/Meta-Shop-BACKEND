@@ -33,7 +33,7 @@ const addproduct = AsyncHandler(async (req, res, next) => {
   }
  
    await product.save();
-  res.status(201).send(product);
+   return res.status(201).send(product);
 
 });
 
@@ -107,8 +107,7 @@ const getallproduct = AsyncHandler(async (req, res, next) => {
 
   const pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
 
-  res.status(200).json({
-    success: true,
+  return res.status(200).json({
     data,
     metadata: {
       ...apiFetcher.metadata,

@@ -14,7 +14,7 @@ const addCoupon = AsyncHandler(async (req, res, next) => {
   const document = new couponModel(req.body);
   await document.save();
 
-  res.status(200).json({
+ return res.status(200).json({
     succses: true,
     data: document,
   });
@@ -46,7 +46,7 @@ const getCoupon = AsyncHandler(async (req, res, next) => {
   // Calculate pagination metadata
   const pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
 
-  res.status(200).json({
+  return res.status(200).json({
     succses: true,
     data,
     metadata: {
@@ -71,7 +71,7 @@ const updateCoupon = AsyncHandler(async (req, res, next) => {
   const document = await couponModel.findByIdAndUpdate({ _id: req.params?.id }, req.body);
   if (!document) next(new AppError(`Coupon is not found`, 401));
 
-  res.status(200).json({
+  return res.status(200).json({
     succses: true,
     data: document,
   });
@@ -92,7 +92,7 @@ const checkCoupon = AsyncHandler(async (req, res, next) => {
     }
 
     // Coupon is valid
-    res.status(200).json({ success: true, message: 'Coupon is valid', coupon });
+    return res.status(200).json({ success: true, message: 'Coupon is valid', coupon });
 
 });
 

@@ -36,7 +36,7 @@ const createCashOrder = AsyncHandler(async (req, res, next) => {
   //5- clear cart
   await cartModel.findByIdAndDelete(req.params.id);
 
-  res.json({ message: "success", order });
+  return res.json(order);
 });
 
 const getSpecificOrder = AsyncHandler(async (req, res, next) => {
@@ -46,7 +46,7 @@ const getSpecificOrder = AsyncHandler(async (req, res, next) => {
     .populate("orderItems.product");
   if (!order) return next(new AppError("order not found"));
 
-  res.json({ message: "success", order });
+  res.json(order);
 });
 
 const getAllOrders = AsyncHandler(async (req, res, next) => {
@@ -54,7 +54,7 @@ const getAllOrders = AsyncHandler(async (req, res, next) => {
   let orders = await orderModel.find().populate("orderItems.product");
   if (!orders) return next(new AppError("order not found"));
 
-  res.json({ message: "success", orders });
+  res.json(orders);
 });
 
 const createCheckoutSession = AsyncHandler(async (req, res, next) => {

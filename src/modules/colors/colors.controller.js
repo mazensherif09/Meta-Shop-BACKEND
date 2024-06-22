@@ -14,10 +14,7 @@ const addColor = AsyncHandler(async (req, res, next) => {
   const document = new colorModel(req.body);
   await document.save();
 
-  return res.status(200).json({
-    succses: true,
-    data: document,
-  });
+  return res.status(200).json(document);
 });
 
 const getColors = AsyncHandler(async (req, res, next) => {
