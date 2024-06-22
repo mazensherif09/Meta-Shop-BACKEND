@@ -41,10 +41,7 @@ const getPage = AsyncHandler(async (req, res, next) => {
   const document = await SingleTypeModel.findById(req.params?.id);
   if (!document) next(new AppError(`Page is not found`, 401));
 
-  return res.status(200).json({
-    message: "Added Sucessfully",
-    document
-  });
+  return res.status(200).json(document);
 });
 
 const deletePag = AsyncHandler(async (req, res, next) => {

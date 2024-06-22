@@ -17,7 +17,6 @@ const schema = new mongoose.Schema(
 
 export const SingleTypeModel = mongoose.model("singletype", schema);
 
-
 // Q&A_Page Schema
 const questionSchema = new mongoose.Schema({
   question: {
@@ -72,13 +71,26 @@ const landingSchema = new mongoose.Schema({
 
   topCategories: [{ type: ObjectId, ref: "category" }],
 });
+
+landingSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "topCategories",
+    model: "category",
+  })
+  .populate({
+    path: "sliderLanding.images",
+    model: "file",
+  })
+  next();
+});
+
 export const landingPageModel = SingleTypeModel.discriminator(
   "landing",
   landingSchema
 );
 
 // about_us_Page Schema
-const aboutUsSchema  = new mongoose.Schema({
+const aboutUsSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
@@ -108,7 +120,7 @@ const aboutUsSchema  = new mongoose.Schema({
 });
 export const aboutPageModel = SingleTypeModel.discriminator(
   "about_us",
-  aboutUsSchema 
+  aboutUsSchema
 );
 
 // products_Page Schema
