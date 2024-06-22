@@ -1,12 +1,12 @@
 import Joi from "joi";
-
+let ObjectIdVal = Joi.string().hex().length(24);
 const clothesVal = Joi.array().items(
   Joi.object({
-    color: Joi.string().length(24).hex(), // Validate ObjectId
-    images: Joi.array().items(Joi.string().length(24).hex()), // Validate ObjectId
+    color: ObjectIdVal, // Validate ObjectId
+    images: Joi.array().items(ObjectIdVal), // Validate ObjectId
     sizes: Joi.array().items(
       Joi.object({
-        size: Joi.string().length(24).hex().required(), // Validate ObjectId
+        size: ObjectIdVal.required(), // Validate ObjectId
         stock: Joi.number().min(0),
       })
     ),
@@ -15,8 +15,8 @@ const clothesVal = Joi.array().items(
 const decorVal = Joi.array()
   .items(
     Joi.object({
-      color: Joi.string().length(24).hex().required(), // Validate ObjectId
-      images: Joi.array().items(Joi.string().length(24).hex().required()), // Validate ObjectId
+      color: ObjectIdVal.required(), // Validate ObjectId
+      images: Joi.array().items(ObjectIdVal.required()), // Validate ObjectId
       stock: Joi.number().min(0).default(0),
     })
   )
@@ -29,8 +29,8 @@ const ProductSchemaVal = Joi.object({
   quantity: Joi.number().min(0).optional(),
   isFeatured: Joi.boolean(),
   puplish: Joi.boolean(),
-  category: Joi.string().hex().length(24),
-  subcategory: Joi.string().hex().length(24),
+  category: ObjectIdVal,
+  subcategory: ObjectIdVal,
   type: Joi.string().valid("clothes", "decor"),
   colors: Joi.when("category", {
     is: "clothes",
@@ -39,7 +39,7 @@ const ProductSchemaVal = Joi.object({
   }).optional(),
 });
 const UpdateproductSchemaVal = Joi.object({
-  id: Joi.string().hex().length(24),
+  id: ObjectIdVal,
   title: Joi.string().min(3).max(300).required().trim(),
   description: Joi.string().min(15).max(1500).required(),
   price: Joi.number().min(0).required(),
@@ -47,8 +47,8 @@ const UpdateproductSchemaVal = Joi.object({
   quantity: Joi.number().min(0).optional(),
   isFeatured: Joi.boolean(),
   puplish: Joi.boolean(),
-  category: Joi.string().hex().length(24),
-  subcategory: Joi.string().hex().length(24),
+  category: ObjectIdVal,
+  subcategory: ObjectIdVal,
   type: Joi.string().valid("clothes", "decor"),
   colors: Joi.when("category", {
     is: "clothes",
@@ -57,7 +57,7 @@ const UpdateproductSchemaVal = Joi.object({
   }).optional(),
 });
 const paramsIdVal = Joi.object({
-  id: Joi.string().hex().length(24),
+  id: ObjectIdVal,
 });
 const paramsSlugVal = Joi.object({
   slug: Joi.string().min(3).max(300).required(),
