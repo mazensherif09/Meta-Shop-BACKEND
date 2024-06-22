@@ -6,6 +6,7 @@ import {
     getSizes,
     updateSize,
     deleteSize,
+    getOne
 } from "./sizes.controller.js";
 
 import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
@@ -19,6 +20,7 @@ sizesRouter
 
 sizesRouter
   .route("/:id")
+  .get(getOne)
   .put(validation(updatesizeSchemaVal), updateSize)
   .delete(validation(paramsIdVal), deleteSize);
 

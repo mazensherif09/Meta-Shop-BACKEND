@@ -48,6 +48,13 @@ const GetAll = AsyncHandler(async (req, res, next) => {
   });
 });
 
+const getOne = AsyncHandler(async (req, res, next) => {
+  const document = await couponModel.findById(req.params?.id);
+  if (!document) next(new AppError(`Size is not found`, 401));
+
+  res.status(200).json(document);
+});
+
 const Delete = AsyncHandler(async (req, res, next) => {
   const document = await couponModel.findByIdAndDelete({ _id: req.params?.id });
   if (!document) next(new AppError(`Coupon is not found`, 401));
@@ -90,4 +97,4 @@ const checkCoupon = AsyncHandler(async (req, res, next) => {
   return res.status(200).json(coupon);
 });
 
-export { Insert, GetAll, Delete, Update, checkCoupon };
+export { Insert, GetAll, Delete, Update, checkCoupon , getOne};

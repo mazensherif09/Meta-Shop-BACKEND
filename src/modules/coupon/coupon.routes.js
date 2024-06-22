@@ -5,7 +5,7 @@ import {
   paramsIdVal,
 } from "./coupon.validation.js";
 import { validation } from "../../middleware/globels/validation.js";
-import { Insert, GetAll, Delete, Update, checkCoupon } from "./coupon.controller.js";
+import { Insert, GetAll, Delete, Update, checkCoupon, getOne } from "./coupon.controller.js";
 
 import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
 
@@ -20,6 +20,7 @@ couponRouter
 
 couponRouter
   .route("/:id")
+  .get(getOne)
   .put(validation(updateCouponSchemaVal), Update)
   .delete(validation(paramsIdVal), Delete);
 

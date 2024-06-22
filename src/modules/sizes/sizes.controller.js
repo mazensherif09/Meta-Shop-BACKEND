@@ -48,6 +48,13 @@ const getSizes = AsyncHandler(async (req, res, next) => {
   });
 });
 
+const getOne = AsyncHandler(async (req, res, next) => {
+  const document = await sizeModel.findById(req.params?.id);
+  if (!document) next(new AppError(`Size is not found`, 401));
+
+  res.status(200).json(document);
+});
+
 const deleteSize = AsyncHandler(async (req, res, next) => {
   const document = await sizeModel.findByIdAndDelete({ _id: req.params?.id });
   if (!document) next(new AppError(`Color is not found`, 401));
@@ -70,4 +77,4 @@ const updateSize = AsyncHandler(async (req, res, next) => {
   });
 });
 
-export { addSize, getSizes, deleteSize, updateSize };
+export { addSize, getSizes, deleteSize, updateSize, getOne };

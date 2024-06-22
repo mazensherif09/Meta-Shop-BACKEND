@@ -10,6 +10,7 @@ import {
   Delete,
   GetAll,
   Update,
+  getOne
 } from "./colors.controller.js";
 
 import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
@@ -23,6 +24,7 @@ colorsRouter
 
 colorsRouter
   .route("/:id")
+  .get(getOne)
   .put(validation(updateColorSchemaVal), Update)
   .delete(validation(paramsIdVal), Delete);
 
