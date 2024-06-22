@@ -45,6 +45,8 @@ const getallCategoryies = AsyncHandler(async (req, res, next) => {
     },
   });
 });
+
+
 const getOneCategory = FindOne(categoryModel, Errormassage);
 const updateCategorty = updateOne(categoryModel, Errormassage, "name");
 const deleteCategory = deleteOne(categoryModel, Errormassage);

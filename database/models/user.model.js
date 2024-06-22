@@ -46,11 +46,11 @@ schema.pre("save", async function (next) {
 });
 
 // Middleware to populate roles field on find queries
-const autoPopulateRoles = function (next) {
-  this.populate("roles");
-  next();
-};
+// const autoPopulateRoles = function (next) {
+//   this.populate("roles");
+//   next();
+// };
 
-schema.pre(/^find/, autoPopulateRoles);
+// schema.pre(/^find/, autoPopulateRoles);
 
 export const UserModel = mongoose.model("user", schema);
