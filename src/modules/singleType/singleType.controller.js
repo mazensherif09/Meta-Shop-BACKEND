@@ -14,7 +14,7 @@ const insert = AsyncHandler(async (req, res, next) => {
   // req.body.createdBy = req.user._id;
   // Attempt to insert or update a document
 
-  const { PageType, ...rest } = req.body;
+  const { PageType,  } = req.body;
 
   const check = await SingleTypeModel.findOne({ key: req.body.key });
   if (check)
@@ -22,13 +22,13 @@ const insert = AsyncHandler(async (req, res, next) => {
 
   let page;
   if (PageType === "question") {
-    page = new questionPageModel(rest, req.body.key);
+    page = new questionPageModel( req.body, req.body.key);
   } else if (PageType === "landing") {
-    page = new landingPageModel(rest, req.body.key);
+    page = new landingPageModel( req.body, req.body.key);
   } else if (PageType === "about_us") {
-    page = new aboutPageModel(rest, req.body.key);
+    page = new aboutPageModel( req.body, req.body.key);
   } else if (PageType === "products_page") {
-    page = new productsPageModel(rest, req.body.key);
+    page = new productsPageModel( req.body, req.body.key);
   } else {
     return res.status(400).send("Invalid Page Type");
   }

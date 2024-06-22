@@ -19,22 +19,19 @@ import { ApiFetcher } from "../../utils/Fetcher.js";
 const Errormassage = "product not found";
 
 const addproduct = AsyncHandler(async (req, res, next) => {
-  const { category, files, ...rest } = req.body;
+  const { type, files } = req.body;
 
+  
   const check = await productModel.findOne({ title: req.body.title });
-  if (check)
-    return next(new AppError(` product already exist with same title`, 401));
-
-  const slug = slugify(req.body.title);
-  req.body.slug = slug;
+  if (check) return next(new AppError(` product already exist with same title`, 401));
+  req.body.slug = slugify(req.body.title);
 
   // req.body.createdBy = req.user._id;
-
   let product;
-  if (category === "clothes") {
-    product = new ClothesModel({ ...rest, slug });
-  } else if (category === "decor") {
-    product = new DecorModel({ ...rest, slug });
+  if (type === "clothes") {
+    product = new ClothesModel(req.body);
+  } else if (type === "decor") {
+    product = new DecorModel(req.body);
   } else {
     return res.status(400).send("Invalid category");
   }
