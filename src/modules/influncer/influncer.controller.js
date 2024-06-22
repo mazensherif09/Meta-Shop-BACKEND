@@ -9,13 +9,10 @@ const request = AsyncHandler(async (req, res, next) => {
   const document = new influencerModel(req.body);
   await document.save();
 
-  res.status(200).json({
-    succses: true,
-    data: document,
-  });
+  res.status(200).json(document);
 });
 
-const getInfluncer = AsyncHandler(async (req, res, next) => {
+const GetAll = AsyncHandler(async (req, res, next) => {
   // Define the populate array, you can adjust this as per your requirements
   const populateArray = [];
   
@@ -42,7 +39,6 @@ const getInfluncer = AsyncHandler(async (req, res, next) => {
   const pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
 
   res.status(200).json({
-    succses: true,
     data,
     metadata: {
       ...apiFetcher.metadata,
@@ -52,25 +48,20 @@ const getInfluncer = AsyncHandler(async (req, res, next) => {
   });
 });
 
-const deleteInfluncer = AsyncHandler(async (req, res, next) => {
+const Delete = AsyncHandler(async (req, res, next) => {
   const document = await influencerModel.findByIdAndDelete({ _id: req.params?.id });
   if (!document) next(new AppError(`Influncer is not found`, 401));
 
-  res.status(200).json({
-    succses: true,
-    data: document,
-  });
+  return res.status(200).json(document);
 });
 
-const updateInfluncer = AsyncHandler(async (req, res, next) => {
+const Update = AsyncHandler(async (req, res, next) => {
   // req.body.createdBy = req.user._id;
   const document = await influencerModel.findByIdAndUpdate({ _id: req.params?.id }, req.body);
   if (!document) next(new AppError(`Influncer not found`, 401));
 
-  res.status(200).json({
-    succses: true,
-  });
+  return res.status(200).json();
 });
 
 
-export { request, getInfluncer, deleteInfluncer, updateInfluncer };
+export { request, GetAll, Delete, Update };

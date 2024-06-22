@@ -13,9 +13,7 @@ export const InsertOne = (model, Errormassage, slug, check) => {
     req.body.slug = slugify(req.body[slug]);
     const document = new model(req.body);
     await document.save();
-    return res.json({
-      data: document,
-    });
+    return res.status(200).json( document);
   });
 };
 export const FindAll = ({ model, Errormassage, param, populateArray }) => {
@@ -37,7 +35,7 @@ export const FindAll = ({ model, Errormassage, param, populateArray }) => {
       .populate(populateArray || []);
     let pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
     let data = await apiFetcher.mongooseQuery;
-    return res.json({
+    return res.status(200).json({
       data,
       metadata: {
         ...apiFetcher.metadata,
@@ -51,7 +49,7 @@ export const FindOne = (model, Errormassage) => {
   return AsyncHandler(async (req, res, next) => {
     const document = await model.findById(req.params.id);
     if (!document) return next(new AppError(Errormassage, 404));
-    return res.json(document);
+    return res.status(200).json(document);
   });
 };
 export const updateOne = (model, Errormassage) => {
@@ -62,15 +60,13 @@ export const updateOne = (model, Errormassage) => {
       { new: true }
     );
     if (!document) return next(new AppError(Errormassage, 404));
-    return res.json(document);
+    return res.status(200).json(document);
   });
 };
 export const deleteOne = (model, Errormassage) => {
   return AsyncHandler(async (req, res, next) => {
     const document = await model.findByIdAndDelete({ _id: req.params.id });
     if (!document) return next(new AppError(Errormassage, 404));
-    return res.json({
-      data: document,
-    });
+    return res.status(200).json(document);
   });
 };

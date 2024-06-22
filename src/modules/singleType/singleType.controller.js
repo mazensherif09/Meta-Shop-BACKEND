@@ -16,19 +16,19 @@ const insert = AsyncHandler(async (req, res, next) => {
 
   const { PageType, ...rest } = req.body;
 
-  const check = await SingleTypeModel.findOne({key: req.body.key});
+  const check = await SingleTypeModel.findOne({ key: req.body.key });
   if (check)
     return next(new AppError(`page already exist with same title`, 401));
 
   let page;
   if (PageType === "question") {
-    page = new questionPageModel(rest);
+    page = new questionPageModel(rest, req.body.key);
   } else if (PageType === "landing") {
-    page = new landingPageModel(rest);
+    page = new landingPageModel(rest, req.body.key);
   } else if (PageType === "about_us") {
-    page = new aboutPageModel(rest);
+    page = new aboutPageModel(rest, req.body.key);
   } else if (PageType === "products_page") {
-    page = new productsPageModel(rest);
+    page = new productsPageModel(rest, req.body.key);
   } else {
     return res.status(400).send("Invalid Page Type");
   }

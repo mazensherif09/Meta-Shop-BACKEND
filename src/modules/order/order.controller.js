@@ -86,7 +86,7 @@ const createCheckoutSession = AsyncHandler(async (req, res, next) => {
     client_reference_id: req.params.id,
     metadata: req.body.shippingAddress,
   });
-  res.json({ message: "success", session });
+  res.status(200).json(session);
 });
 
 export {

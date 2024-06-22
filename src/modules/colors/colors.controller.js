@@ -1,13 +1,9 @@
-import { cartModel } from "../../../database/models/cart.model.js";
 import { colorModel } from "../../../database/models/color.model.js";
-import { orderModel } from "../../../database/models/order.model.js";
-import { productModel } from "../../../database/models/product.model.js";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
 import { ApiFetcher } from "../../utils/Fetcher.js";
-import { convertObjectKeys } from "../../utils/convertObjectKeys.js";
 
-const addColor = AsyncHandler(async (req, res, next) => {
+const Insert = AsyncHandler(async (req, res, next) => {
   const checkDocument = await colorModel.findOne({ name: req.body?.name });
   if (checkDocument) next(new AppError(`Name is already in use`, 401));
 
@@ -17,7 +13,7 @@ const addColor = AsyncHandler(async (req, res, next) => {
   return res.status(200).json(document);
 });
 
-const getColors = AsyncHandler(async (req, res, next) => {
+const GetAll = AsyncHandler(async (req, res, next) => {
   // Define the populate array, you can adjust this as per your requirements
   const populateArray = [];
   
@@ -44,7 +40,6 @@ const getColors = AsyncHandler(async (req, res, next) => {
   const pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
 
   return res.status(200).json({
-    succses: true,
     data,
     metadata: {
       ...apiFetcher.metadata,
@@ -54,24 +49,18 @@ const getColors = AsyncHandler(async (req, res, next) => {
   });
 });
 
-const deleteColor = AsyncHandler(async (req, res, next) => {
+const Delete = AsyncHandler(async (req, res, next) => {
   const document = await colorModel.findByIdAndDelete({ _id: req.params?.id });
   if (!document) next(new AppError(`Color is not found`, 401));
 
-  return res.status(200).json({
-    succses: true,
-    data: document,
-  });
+  return res.status(200).json( document);
 });
 
-const updateColor = AsyncHandler(async (req, res, next) => {
+const Update = AsyncHandler(async (req, res, next) => {
   const document = await colorModel.findByIdAndUpdate({ _id: req.params?.id }, req.body);
   if (!document) next(new AppError(`Color is not found`, 401));
 
- return res.status(200).json({
-    succses: true,
-    data: document,
-  });
+ return res.status(200).json(document);
 });
 
-export { addColor, getColors, deleteColor, updateColor };
+export { Insert, GetAll, Delete, Update };

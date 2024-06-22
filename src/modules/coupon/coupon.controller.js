@@ -1,26 +1,19 @@
-import { cartModel } from "../../../database/models/cart.model.js";
 import { couponModel } from "../../../database/models/coupon.model.js";
-import { orderModel } from "../../../database/models/order.model.js";
-import { productModel } from "../../../database/models/product.model.js";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
 import { ApiFetcher } from "../../utils/Fetcher.js";
-import { convertObjectKeys } from "../../utils/convertObjectKeys.js";
 
-const addCoupon = AsyncHandler(async (req, res, next) => {
+const Insert = AsyncHandler(async (req, res, next) => {
   const checkDocument = await couponModel.findOne({ text: req.body?.text });
   if (checkDocument) next(new AppError(`Coupon is already in use`, 401));
 
   const document = new couponModel(req.body);
   await document.save();
 
- return res.status(200).json({
-    succses: true,
-    data: document,
-  });
+ return res.status(200).json(document);
 });
 
-const getCoupon = AsyncHandler(async (req, res, next) => {
+const GetAll = AsyncHandler(async (req, res, next) => {
   // Define the populate array, you can adjust this as per your requirements
   const populateArray = [];
   
@@ -47,7 +40,6 @@ const getCoupon = AsyncHandler(async (req, res, next) => {
   const pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
 
   return res.status(200).json({
-    succses: true,
     data,
     metadata: {
       ...apiFetcher.metadata,
@@ -57,24 +49,18 @@ const getCoupon = AsyncHandler(async (req, res, next) => {
   });
 });
 
-const deleteCoupon = AsyncHandler(async (req, res, next) => {
+const Delete = AsyncHandler(async (req, res, next) => {
   const document = await couponModel.findByIdAndDelete({ _id: req.params?.id });
   if (!document) next(new AppError(`Coupon is not found`, 401));
 
-  res.status(200).json({
-    succses: true,
-    data: document,
-  });
+  res.status(200).json(document);
 });
 
-const updateCoupon = AsyncHandler(async (req, res, next) => {
+const Update = AsyncHandler(async (req, res, next) => {
   const document = await couponModel.findByIdAndUpdate({ _id: req.params?.id }, req.body);
   if (!document) next(new AppError(`Coupon is not found`, 401));
 
-  return res.status(200).json({
-    succses: true,
-    data: document,
-  });
+  return res.status(200).json(document);
 });
 
 const checkCoupon = AsyncHandler(async (req, res, next) => {
@@ -92,8 +78,8 @@ const checkCoupon = AsyncHandler(async (req, res, next) => {
     }
 
     // Coupon is valid
-    return res.status(200).json({ success: true, message: 'Coupon is valid', coupon });
+    return res.status(200).json(coupon);
 
 });
 
-export { addCoupon, getCoupon, deleteCoupon, updateCoupon, checkCoupon };
+export { Insert, GetAll, Delete, Update, checkCoupon };

@@ -15,8 +15,7 @@ const signUp = AsyncHandler(async (req, res, next) => {
     { id: user?._id, role: user?.role },
     process.env.SECRETKEY
   );
-  return res.json({
-    state: "success",
+  return res.status(200).json({
     message: "we sent verfiy massage to your email please confirm your email",
     token,
   });
@@ -33,7 +32,7 @@ const signIn = AsyncHandler(async (req, res, next) => {
         { id: user?._id, role: user?.role },
         process.env.SECRETKEY
       );
-      return res.json({ message: "Success", token });
+      return res.status(200).json({ token });
     } else {
       next(new AppError(`Can not sign in without verfiy email`, 401));
     }
@@ -51,7 +50,7 @@ const verfiyEmail = AsyncHandler(async (req, res, next) => {
     if (!user) return next(new AppError(`user not found`, 401));
     if (user.confirmEmail)
       return next(new AppError(`email Already verified`, 401));
-    return res.json({ message: "success" });
+    return res.status(200).json({ message: "success" });
   });
 });
 const unsubscribe = AsyncHandler(async (req, res, next) => {
@@ -62,7 +61,7 @@ const unsubscribe = AsyncHandler(async (req, res, next) => {
     if (user?.confirmEmail)
       return next(new AppError(`email Already verified`, 401));
     await UserModel.findOneAndDelete({ email: decoded.email });
-    return res.json({ message: " now your not subscribe" });
+    return res.status(200).json({ message: " now your not subscribe" });
   });
 });
 const FPsendEmail = AsyncHandler(async (req, res, next) => {
@@ -78,7 +77,7 @@ const FPsendEmail = AsyncHandler(async (req, res, next) => {
     pincode: securePin,
     isresetPassword: true,
   });
-  return res.json({ message: `We sent email to ${email} ` });
+  return res.status(200).json({ message: `We sent email to ${email} ` });
 });
 const tokenForgetPassword = AsyncHandler(async (req, res, next) => {
   return res.json({ message: "vaild token" });
@@ -92,7 +91,7 @@ const ResetPassword = AsyncHandler(async (req, res, next) => {
     password: bcrypt.hashSync(req.body.newpassword, 8),
     passwordChangedAt: Date.now(),
   });
-  return res.json({ message: " Password updated successfully", token });
+  return res.status(200).json(token);
 });
 const logout = AsyncHandler(async (req, res, next) => {
   const { _id } = req.user;
@@ -107,17 +106,17 @@ const changepassword = AsyncHandler(async (req, res, next) => {
     passwordChangedAt: Date.now(),
   });
 
-  res.json({ message: "success", token });
+  res.status(200).json(token);
 });
 const updateuser = AsyncHandler(async (req, res, next) => {
   const { _id } = req.user;
   await UserModel.findByIdAndUpdate(_id, req.body);
-  return res.json({ message: "sucess" });
+  return res.status(200).json({ message: "sucess" });
 });
 const deleteUser = AsyncHandler(async (req, res, next) => {
   const { _id } = req.user;
   await UserModel.findByIdAndDelete(_id);
-  return res.json({ message: "sucess" });
+  return res.status(200).json({ message: "sucess" });
 });
 const softdelete = AsyncHandler(async (req, res, next) => {
   const { _id } = req.user;
@@ -125,7 +124,7 @@ const softdelete = AsyncHandler(async (req, res, next) => {
     isblocked: true,
     isActive: false,
   });
-  return res.json({ message: "success" });
+  return res.status(200).json({ message: "success" });
 });
 export {
   signUp,

@@ -5,12 +5,7 @@ import {
   paramsIdVal,
 } from "./influncer.validation.js";
 import { validation } from "../../middleware/globels/validation.js";
-import {
-  request,
-  getInfluncer,
-  deleteInfluncer,
-  updateInfluncer,
-} from "./influncer.controller.js";
+import { request, GetAll, Delete, Update } from "./influncer.controller.js";
 
 import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
 
@@ -19,12 +14,11 @@ const influncerRouter = express.Router();
 influncerRouter
   .route("/")
   .post(validation(influncerSchemaVal), request)
-  .get(getInfluncer);
-
+  .get(GetAll);
 
 influncerRouter
   .route("/:id")
-  .put(validation(updateInfluncerSchemaVal), updateInfluncer)
-  .delete(validation(paramsIdVal), deleteInfluncer);
+  .put(validation(updateInfluncerSchemaVal), Update)
+  .delete(validation(paramsIdVal), Delete);
 
 export default influncerRouter;

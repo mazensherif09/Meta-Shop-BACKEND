@@ -2,12 +2,12 @@ import FileModel from "../../../database/models/file.model.js";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
 
-const insertFiles = AsyncHandler(async (req, res, next) => {
+const Insert = AsyncHandler(async (req, res, next) => {
   const data = await FileModel.insertMany(req.body) 
   return res.status(200).json(data);
 });
 
-const findFiles = AsyncHandler(async (req, res, next) => {
+const GetAll = AsyncHandler(async (req, res, next) => {
   // Define the populate array, you can adjust this as per your requirements
   const populateArray = [];
 
@@ -33,7 +33,6 @@ const findFiles = AsyncHandler(async (req, res, next) => {
   const pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
 
   return res.status(200).json({
-    succses: true,
     data,
     metadata: {
       ...apiFetcher.metadata,
@@ -42,15 +41,15 @@ const findFiles = AsyncHandler(async (req, res, next) => {
     },
   });
 });
-const findOneFile = AsyncHandler(async (req, res, next) => {
+const GetOne = AsyncHandler(async (req, res, next) => {
   const file = await FileModel.findOne(req?.params?.id);
   if (!file) next(new AppError(`File is not found`, 404));
   return res.status(200).json(file);
 });
-const deleteColor = AsyncHandler(async (req, res, next) => {
+const Delete = AsyncHandler(async (req, res, next) => {
   const file = await FileModel.findByIdAndDelete({ _id: req.params?.id });
   if (!file) next(new AppError(`File is not found`, 404));
   return res.status(200).json(file);
 });
 
-export { insertFiles, findFiles, findOneFile, deleteColor };
+export { Insert, GetAll, GetOne, Delete };

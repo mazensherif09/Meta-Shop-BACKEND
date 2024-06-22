@@ -21,7 +21,7 @@ const addToCart = AsyncHandler(async (req, res, next) => {
     });
   }
   await cart.save();
-  return res.json(cart);
+  return res.status(200).json(cart);
 });
 const removeItemCart = AsyncHandler(async (req, res, next) => {
   let query = req?.user?._id
@@ -37,11 +37,11 @@ const removeItemCart = AsyncHandler(async (req, res, next) => {
   );
   if (!cart) return next(new AppError("something went wrong try again later."));
   cart = await cart.populate("items.product").execPopulate();
-  return res.json(cart);
+  return res.status(200).json(cart);
 });
 const getLoggedCart = AsyncHandler(async (req, res, next) => {
   let cart = req?.cart;
-  return res.json(cart);
+  return res.status(200).json(cart);
 });
 const clearCart = AsyncHandler(async (req, res, next) => {
   let cart = req?.cart;
@@ -66,7 +66,7 @@ const applyCoupon = AsyncHandler(async (req, res, next) => {
   return res.json({ message: "success", cart });
 });
 const boundary = AsyncHandler(async (req, res, next) => {
-  return res.json({ message: "success"});
+  return res.status(200).json({ message: "success"});
 });
 
 export { addToCart, removeItemCart, getLoggedCart, clearCart, applyCoupon, boundary };
