@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { productTypes } from "../../src/assets/enums/productTypes.js";
 const ObjectId = mongoose.Schema.Types.ObjectId;
 const schema = new mongoose.Schema(
   {
@@ -34,8 +35,13 @@ const schema = new mongoose.Schema(
     isFeatured: { type: Boolean, default: true },
     puplish: { type: Boolean, default: false, default: false },
     createdBy: { type: ObjectId, ref: "user" },
-    subcategory: { type: ObjectId, ref: "subcategory"} ,
+    subcategory: { type: ObjectId, ref: "subcategory" },
     category: { type: ObjectId, ref: "category" },
+    type: {
+      type: String,
+      enum: [...Object.values(productTypes)],
+      required: true,
+    },
   },
   { timestamps: true }
 );
@@ -43,21 +49,21 @@ const schema = new mongoose.Schema(
 // Pre-find hook to automatically populate images field
 schema.pre(/^find/, function (next) {
   this.populate({
-    path: 'colors.color',
-    model: 'color'
+    path: "colors.color",
+    model: "color",
   })
-  .populate({
-    path: 'colors.images',
-    model: 'file'
-  })
-  .populate({
-    path: 'colors.sizes.size',
-    model: 'size'
-  })
-  .populate({
-    path: 'category',
-    model: 'category'
-  });
+    .populate({
+      path: "colors.images",
+      model: "file",
+    })
+    .populate({
+      path: "colors.sizes.size",
+      model: "size",
+    })
+    .populate({
+      path: "category",
+      model: "category",
+    });
   next();
 });
 
@@ -81,13 +87,12 @@ const DecorSchema = new mongoose.Schema({
 // Pre-find hook to automatically populate images field
 DecorSchema.pre(/^find/, function (next) {
   this.populate({
-    path: 'colors.color',
-    model: 'color'
-  })
-  .populate({
-    path: 'colors.images',
-    model: 'file'
-  })
+    path: "colors.color",
+    model: "color",
+  }).populate({
+    path: "colors.images",
+    model: "file",
+  });
   next();
 });
 
@@ -112,19 +117,21 @@ const clothesSchema = new mongoose.Schema({
 // Pre-find hook to automatically populate images field
 clothesSchema.pre(/^find/, function (next) {
   this.populate({
-    path: 'colors.color',
-    model: 'color'
+    path: "colors.color",
+    model: "color",
   })
-  .populate({
-    path: 'colors.images',
-    model: 'file'
-  })
-  .populate({
-    path: 'colors.sizes.size',
-    model: 'size'
-  });
+    .populate({
+      path: "colors.images",
+      model: "file",
+    })
+    .populate({
+      path: "colors.sizes.size",
+      model: "size",
+    });
   next();
 });
 
-export const ClothesModel = productModel.discriminator( "clothes",  clothesSchema );
-
+export const ClothesModel = productModel.discriminator(
+  "clothes",
+  clothesSchema
+);
