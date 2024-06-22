@@ -9,7 +9,10 @@ const request = AsyncHandler(async (req, res, next) => {
   const document = new influencerModel(req.body);
   await document.save();
 
-  res.status(200).json(document);
+  return res.status(200).json({
+    message: "Send Sucessfully",
+    document
+  });
 });
 
 const GetAll = AsyncHandler(async (req, res, next) => {

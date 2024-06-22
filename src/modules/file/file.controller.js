@@ -5,9 +5,11 @@ import { ApiFetcher } from "../../utils/Fetcher.js";
 
 const Insert = AsyncHandler(async (req, res, next) => {
   const data = await FileModel.insertMany(req.body) 
-  return res.status(200).json(data);
+  return res.status(200).json({
+    message: "Added Sucessfully",
+    document
+  });
 });
-
 const GetAll = AsyncHandler(async (req, res, next) => {
   // Define the populate array, you can adjust this as per your requirements
   const populateArray = [];
