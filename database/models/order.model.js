@@ -14,6 +14,7 @@ const schema = new mongoose.Schema(
           default: 1,
         },
         price: Number,
+        product:{ type: mongoose.Types.ObjectId, ref: "product" }
       },
     ],
     totalOrderPrice: Number,
