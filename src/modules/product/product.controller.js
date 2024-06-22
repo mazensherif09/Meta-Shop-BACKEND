@@ -2,7 +2,11 @@ import slugify from "slugify";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
 import { Uploader } from "../../utils/cloudnairy.js";
-import { productModel, ClothesModel,  DecorModel } from "./../../../database/models/product.model.js";
+import {
+  productModel,
+  ClothesModel,
+  DecorModel,
+} from "./../../../database/models/product.model.js";
 import {
   FindAll,
   FindOne,
@@ -29,14 +33,14 @@ const addproduct = AsyncHandler(async (req, res, next) => {
   } else if (product_Type === "decor") {
     product = new DecorModel(req.body);
   } else {
-    return res.status(400).send("Invalid type");
+    return res.status(400).send("Invalid category");
   }
- 
-   await product.save();
-   return res.status(201).send({
-    message:"Product saved successfully",
-    data:product});
 
+  await product.save();
+  return res.status(201).send({
+    message: "Product saved successfully",
+    data: product,
+  });
 });
 
 const getallproduct = AsyncHandler(async (req, res, next) => {
@@ -120,10 +124,13 @@ const getallproduct = AsyncHandler(async (req, res, next) => {
 });
 
 const getOneproduct = AsyncHandler(async (req, res, next) => {
-  const document = await productModel.findOne({slug: req.params.slug});
+  const document = await productModel.find({
+    $or: [{ slug: req.body.slug }, { _id: req.body.slug }],
+  });
   if (!document) return next(new AppError(Errormassage, 404));
   return res.json(document);
 });
+
 const updateproduct = updateOne(productModel, Errormassage);
 const deleteproduct = deleteOne(productModel, Errormassage);
 export {

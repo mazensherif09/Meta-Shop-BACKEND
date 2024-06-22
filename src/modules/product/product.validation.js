@@ -60,7 +60,10 @@ const paramsIdVal = Joi.object({
   id: ObjectIdVal,
 });
 const paramsSlugVal = Joi.object({
-  slug: Joi.string().min(3).max(300).required(),
+  slug: Joi.alternatives().try(
+    Joi.string().min(3).max(300).required(),
+    Joi.string().hex().length(24).required()
+  ).required()
 });
 
 export { ProductSchemaVal, UpdateproductSchemaVal, paramsIdVal, paramsSlugVal };
