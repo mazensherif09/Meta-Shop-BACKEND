@@ -14,7 +14,7 @@ const addColor = AsyncHandler(async (req, res, next) => {
   const document = new colorModel(req.body);
   await document.save();
 
-  res.status(200).json({
+  return res.status(200).json({
     succses: true,
     data: document,
   });
@@ -46,7 +46,7 @@ const getColors = AsyncHandler(async (req, res, next) => {
   // Calculate pagination metadata
   const pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
 
-  res.status(200).json({
+  return res.status(200).json({
     succses: true,
     data,
     metadata: {
@@ -61,7 +61,7 @@ const deleteColor = AsyncHandler(async (req, res, next) => {
   const document = await colorModel.findByIdAndDelete({ _id: req.params?.id });
   if (!document) next(new AppError(`Color is not found`, 401));
 
-  res.status(200).json({
+  return res.status(200).json({
     succses: true,
     data: document,
   });
@@ -71,7 +71,7 @@ const updateColor = AsyncHandler(async (req, res, next) => {
   const document = await colorModel.findByIdAndUpdate({ _id: req.params?.id }, req.body);
   if (!document) next(new AppError(`Color is not found`, 401));
 
-  res.status(200).json({
+ return res.status(200).json({
     succses: true,
     data: document,
   });

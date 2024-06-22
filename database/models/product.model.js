@@ -84,13 +84,13 @@ clothesSchema.pre(/^find/, function (next) {
 export const ClothesModel = productModel.discriminator( "clothes",  clothesSchema );
 
 
-// File Schema
-const fileSchema = new mongoose.Schema({
-  filename: { type: String, required: true },
-  filepath: { type: String, required: true },
-  mimetype: { type: String, required: true },
-  size: { type: Number, required: true },
-  createdAt: { type: Date, default: Date.now },
-});
+// // File Schema
+// const fileSchema = new mongoose.Schema({
+//   filename: { type: String, required: true },
+//   filepath: { type: String, required: true },
+//   mimetype: { type: String, required: true },
+//   size: { type: Number, required: true },
+//   createdAt: { type: Date, default: Date.now },
+// });
 
-export const FileModel = productModel.discriminator("file", fileSchema);
+// export const FileModel = productModel.discriminator("file", fileSchema);

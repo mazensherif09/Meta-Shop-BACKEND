@@ -21,6 +21,7 @@ import sizesRouter from "./sizes/sizes.routes.js";
 import influncerRouter from "./influncer/influncer.routes.js";
 import singleTypeRouter from "./singleType/singleType.routes.js";
 import  testRouter  from "./test/test.route.js";
+import { fileRouter } from "./file/file.routes.js";
 
 export const bootstrap = (app, express) => {
   const mainroute = "/api"; // main route
@@ -48,6 +49,7 @@ export const bootstrap = (app, express) => {
   });
   app.use(`${mainroute}/auth`, AuthRouter); // middlewar for
   app.use(`${mainroute}/users`, UserRouter);
+  app.use(`${mainroute}/files`, fileRouter);
   app.use(`${mainroute}/carts`, cartRouter);
   app.use(`${mainroute}/categories`, categoryRouter);
   app.use(`${mainroute}/subcategories`, SubCategoryRouter);
