@@ -37,8 +37,29 @@ const schema = new mongoose.Schema(
     subcategory: { type: ObjectId, ref: "subcategory"} ,
     category: { type: ObjectId, ref: "category" },
   },
-  { discriminatorKey: "categoryType", collection: "product" } 
+  { timestamps: true }
 );
+
+// Pre-find hook to automatically populate images field
+schema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'colors.color',
+    model: 'color'
+  })
+  .populate({
+    path: 'colors.images',
+    model: 'file'
+  })
+  .populate({
+    path: 'colors.sizes.size',
+    model: 'size'
+  })
+  .populate({
+    path: 'category',
+    model: 'category'
+  });
+  next();
+});
 
 export const productModel = mongoose.model("product", schema);
 
@@ -55,6 +76,19 @@ const techSchema = new mongoose.Schema({
       images: [{ type: ObjectId, ref: "file" }],
     },
   ],
+});
+
+// Pre-find hook to automatically populate images field
+techSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'colors.color',
+    model: 'color'
+  })
+  .populate({
+    path: 'colors.images',
+    model: 'file'
+  })
+  next();
 });
 
 export const TechModel = productModel.discriminator("tech", techSchema);
@@ -77,7 +111,18 @@ const clothesSchema = new mongoose.Schema({
 
 // Pre-find hook to automatically populate images field
 clothesSchema.pre(/^find/, function (next) {
-  this.populate("colors.images");
+  this.populate({
+    path: 'colors.color',
+    model: 'color'
+  })
+  .populate({
+    path: 'colors.images',
+    model: 'file'
+  })
+  .populate({
+    path: 'colors.sizes.size',
+    model: 'size'
+  });
   next();
 });
 

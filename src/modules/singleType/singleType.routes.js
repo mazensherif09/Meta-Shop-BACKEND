@@ -19,11 +19,10 @@ const singleTypeRouter = express.Router();
 singleTypeRouter
   .route("/")
   .post(insert)
-  .get(getPage);
-
 
 singleTypeRouter
   .route("/:id")
+  .get(getPage)
   .put(updatePage)
   .delete(validation(paramsIdVal), deletePag);
 

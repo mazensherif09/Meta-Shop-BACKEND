@@ -5,6 +5,7 @@ import {
   clearCart,
   getLoggedCart,
   removeItemCart,
+  boundary
 } from "./cart.controller.js";
 import { addCartVal, paramsIdVal } from "./cart.validation.js";
 import { validation } from "../../middleware/globels/validation.js";
@@ -21,6 +22,7 @@ cartRouter
   .delete(protectedRoutesCart, checkCart, clearCart);
 
 cartRouter.post("/applycoupon", protectedRoutes, applyCoupon);
+cartRouter.post("/boundary", boundary);
 
 cartRouter
   .route("/:id")

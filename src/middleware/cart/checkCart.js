@@ -16,13 +16,11 @@ export const checkCart = AsyncHandler(async (req, res, next) => {
     cart = new cartModel({
         items: [],
     });
-
-
-
     if (req?.user?._id) {
       cart.user = req?.user?._id;
     } else {
       const TWO_YEARS_IN_MILLISECONDS = 2 * 365 * 24 * 60 * 60 * 1000;
+      cart = await cart.save();
       res.cookie("cart", cart?._id, {
         maxAge: TWO_YEARS_IN_MILLISECONDS,
         httpOnly: true, // Prevents client-side JavaScript access

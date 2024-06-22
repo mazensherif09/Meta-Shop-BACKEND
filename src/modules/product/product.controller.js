@@ -20,14 +20,16 @@ const addproduct = AsyncHandler(async (req, res, next) => {
   const check = await productModel.findOne({ title: req.body.title });
   if (check) return next(new AppError(` product already exist with same title`, 401));
 
-  req.body.slug = slugify(req.body.title);
+  const slug = slugify(req.body.title);
+  req.body.slug = slug;
+
   // req.body.createdBy = req.user._id;
 
   let product;
   if (categoryType === "clothes") {
-    product = new ClothesModel(rest);
+    product = new ClothesModel({...rest, slug});
   } else if (categoryType === "tech") {
-    product = new TechModel(rest);
+    product = new TechModel({...rest, slug});
   } else {
     return res.status(400).send("Invalid category");
   }
@@ -118,7 +120,11 @@ const getallproduct = AsyncHandler(async (req, res, next) => {
   });
 });
 
-const getOneproduct = FindOne(productModel, Errormassage);
+const getOneproduct = AsyncHandler(async (req, res, next) => {
+  const document = await productModel.findOne({slug: req.params.slug});
+  if (!document) return next(new AppError(Errormassage, 404));
+  return res.json(document);
+});
 const updateproduct = updateOne(productModel, Errormassage);
 const deleteproduct = deleteOne(productModel, Errormassage);
 export {

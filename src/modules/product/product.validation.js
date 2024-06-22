@@ -92,5 +92,9 @@ const UpdateproductSchemaVal = Joi.object({
 const paramsIdVal = Joi.object({
   id: Joi.string().hex().length(24),
 });
+const paramsSlugVal = Joi.object({
+  slug : Joi.string().min(3).max(300).required(),
+});
 
-export { ProductSchemaVal, UpdateproductSchemaVal, paramsIdVal };
+
+export { ProductSchemaVal, UpdateproductSchemaVal, paramsIdVal, paramsSlugVal };

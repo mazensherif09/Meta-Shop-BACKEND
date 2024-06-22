@@ -65,5 +65,8 @@ const applyCoupon = AsyncHandler(async (req, res, next) => {
   await cart.save();
   return res.json({ message: "success", cart });
 });
+const boundary = AsyncHandler(async (req, res, next) => {
+  return res.json({ message: "success"});
+});
 
-export { addToCart, removeItemCart, getLoggedCart, clearCart, applyCoupon };
+export { addToCart, removeItemCart, getLoggedCart, clearCart, applyCoupon, boundary };

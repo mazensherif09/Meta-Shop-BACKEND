@@ -3,7 +3,7 @@ import joi from "joi";
 const addCartVal = joi.object({
   product: joi.string().length(24).hex().required(),
   quantity: joi.number().integer().options({ convert: false }),
-  selected_option: joi.string().required()
+  // selected_option: joi.string().required()
 });
 
 const updateQTYVal = joi.object({
