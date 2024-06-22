@@ -9,6 +9,12 @@ const schema = new mongoose.Schema(
       required: true,
       minLength: [2, "too short category name"],
     },
+    description: {
+      type: String,
+      trim: true,
+      minLength: [2, "too short brand name"],
+      required: true,
+    },
     slug: {
       type: String,
       lowercase: true,
