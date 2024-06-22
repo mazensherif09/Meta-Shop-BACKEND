@@ -2,7 +2,11 @@ import slugify from "slugify";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
 import { Uploader } from "../../utils/cloudnairy.js";
-import { productModel, ClothesModel,  DecorModel } from "./../../../database/models/product.model.js";
+import {
+  productModel,
+  ClothesModel,
+  DecorModel,
+} from "./../../../database/models/product.model.js";
 import {
   FindAll,
   FindOne,
@@ -15,30 +19,31 @@ import { ApiFetcher } from "../../utils/Fetcher.js";
 const Errormassage = "product not found";
 
 const addproduct = AsyncHandler(async (req, res, next) => {
-  const { type, files, ...rest } = req.body;
-  
+  const { category, files, ...rest } = req.body;
+
   const check = await productModel.findOne({ title: req.body.title });
-  if (check) return next(new AppError(` product already exist with same title`, 401));
+  if (check)
+    return next(new AppError(` product already exist with same title`, 401));
 
   const slug = slugify(req.body.title);
   req.body.slug = slug;
 
   // req.body.createdBy = req.user._id;
-   console.log(req?.body);
-  let product;
-  if (type === "clothes") {
-    product = new ClothesModel({...rest, slug});
-  } else if (type === "decor") {
-    product = new DecorModel({...rest, slug});
-  } else {
-    return res.status(400).send("Invalid type");
-  }
- 
-   await product.save();
-   return res.status(201).send({
-    message:"Product saved successfully",
-    data:product});
 
+  let product;
+  if (category === "clothes") {
+    product = new ClothesModel({ ...rest, slug });
+  } else if (category === "decor") {
+    product = new DecorModel({ ...rest, slug });
+  } else {
+    return res.status(400).send("Invalid category");
+  }
+
+  await product.save();
+  return res.status(201).send({
+    message: "Product saved successfully",
+    data: product,
+  });
 });
 
 const getallproduct = AsyncHandler(async (req, res, next) => {
@@ -122,10 +127,13 @@ const getallproduct = AsyncHandler(async (req, res, next) => {
 });
 
 const getOneproduct = AsyncHandler(async (req, res, next) => {
-  const document = await productModel.findOne({slug: req.params.slug});
+  const document = await productModel.find({
+    $or: [{ slug: req.body.slug }, { _id: req.body.slug }],
+  });
   if (!document) return next(new AppError(Errormassage, 404));
   return res.json(document);
 });
+
 const updateproduct = updateOne(productModel, Errormassage);
 const deleteproduct = deleteOne(productModel, Errormassage);
 export {
