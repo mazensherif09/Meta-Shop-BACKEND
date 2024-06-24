@@ -10,8 +10,8 @@ const CategorySchemaVal = Joi.object({
 });
 const UpdateCategorySchemaVal = Joi.object({
   name: Joi.string().min(3).max(30).trim(),
-  id:ObjectIdVal,
-  poster: poster,
+  id: ObjectIdVal,
+  poster: poster.required(),
   description: Joi.string().min(10).max(1500),
 });
 const paramsIdVal = Joi.object({
