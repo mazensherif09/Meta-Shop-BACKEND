@@ -58,7 +58,6 @@ schema.pre(/^find/, function (next) {
     .populate({
       path: "colors.images",
       model: "file",
-      select: "url", 
     })
     .populate({
       path: "colors.sizes.size",
@@ -90,7 +89,6 @@ DecorSchema.pre(/^find/, function (next) {
   }).populate({
     path: "colors.images",
     model: "file",
-    select: "url", 
   });
   // if (this._update.poster) {
   //   // delete this_update.poster
@@ -129,7 +127,6 @@ clothesSchema.pre(/^find/, function (next) {
     .populate({
       path: "colors.images",
       model: "file",
-      select: "url", 
     })
     .populate({
       path: "colors.sizes.size",
