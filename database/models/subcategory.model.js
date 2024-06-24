@@ -27,4 +27,18 @@ const schema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Pre-find hook to automatically populate images field
+schema.pre(/^find/, function (next) {
+  this.populate({
+      path: "category",
+      model: "category",
+    }) 
+     .populate({
+      path: 'poster',
+      model: 'file',
+      select: 'url',
+    });
+  next();
+});
+
 export const SubCategoryModel = mongoose.model("subcategory", schema);

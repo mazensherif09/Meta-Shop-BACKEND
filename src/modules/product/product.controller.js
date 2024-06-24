@@ -91,7 +91,20 @@ const getallproduct = AsyncHandler(async (req, res, next) => {
     );
   }
 
-  // let apiFetcher = new ApiFetcher(pipeline, req.query);
+  // Add lookup for poster
+  pipeline.push({
+    $lookup: {
+      from: "files",
+      localField: "poster",
+      foreignField: "_id",
+      as: "posterImage",
+      pipeline: [
+        {
+          $project: { url: 1, _id: 0 },
+        },
+      ],
+    },
+  });
 
   // Instantiate ApiFetcher with the pipeline and search query
   const apiFetcher = new ApiFetcher(pipeline, req.query);
