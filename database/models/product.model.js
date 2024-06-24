@@ -58,16 +58,22 @@ schema.pre(/^find/, function (next) {
     .populate({
       path: "colors.images",
       model: "file",
+      select: "url", 
     })
     .populate({
       path: "colors.sizes.size",
       model: "size",
       options: { strictPopulate: false, }, // Disable strictPopulate for this path if needed
     })
-    this.populate({
+    .populate({
       path: "category",
       model: "category",
-    }).populate('poster');
+    }) 
+     .populate({
+      path: 'poster',
+      model: 'file',
+      select: 'url' // Select only the url field
+    });
   next();
 });
 export const productModel = mongoose.model("product", schema);
@@ -89,6 +95,7 @@ DecorSchema.pre(/^find/, function (next) {
   }).populate({
     path: "colors.images",
     model: "file",
+    select: "url", 
   });
   next();
 });
@@ -118,6 +125,7 @@ clothesSchema.pre(/^find/, function (next) {
     .populate({
       path: "colors.images",
       model: "file",
+      select: "url", 
     })
     .populate({
       path: "colors.sizes.size",
