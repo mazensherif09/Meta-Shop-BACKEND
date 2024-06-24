@@ -67,7 +67,9 @@ schema.pre(/^find/, function (next) {
   this.populate({
     path: "category",
     model: "category",
-  }).populate("poster");
+  })
+  .populate("poster")
+  .populate("subcategory")
   next();
 });
 export const productModel = mongoose.model("product", schema);
