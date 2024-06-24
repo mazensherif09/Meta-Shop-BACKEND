@@ -106,6 +106,13 @@ const getallproduct = AsyncHandler(async (req, res, next) => {
     },
   });
 
+  // Add a stage to replace the posterImage array with its first element
+  pipeline.push({
+    $addFields: {
+      posterImage: { $arrayElemAt: ["$posterImage", 0] },
+    },
+  });
+
   // Instantiate ApiFetcher with the pipeline and search query
   const apiFetcher = new ApiFetcher(pipeline, req.query);
 
