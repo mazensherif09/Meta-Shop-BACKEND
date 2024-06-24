@@ -3,7 +3,7 @@ import { productTypes } from "../../src/assets/enums/productTypes.js";
 const ObjectId = mongoose.Schema.Types.ObjectId;
 const schema = new mongoose.Schema(
   {
-    title: {
+    name: {
       type: String,
       unique: [true, "name is required"],
       trim: true,

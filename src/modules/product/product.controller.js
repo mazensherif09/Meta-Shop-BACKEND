@@ -20,12 +20,12 @@ import mongoose from "mongoose";
 const Errormassage = "product not found";
 
 const addproduct = AsyncHandler(async (req, res, next) => {
-  const { type, files } = req.body;
+  const { type } = req.body;
 
-  const check = await productModel.findOne({ title: req.body.title });
+  const check = await productModel.findOne({ name: req.body.name });
   if (check)
-    return next(new AppError(` product already exist with same title`, 401));
-  req.body.slug = slugify(req.body.title);
+    return next(new AppError(` product already exist with same name`, 401));
+  req.body.slug = slugify(req.body.name);
 
   // req.body.createdBy = req.user._id;
   let product;
