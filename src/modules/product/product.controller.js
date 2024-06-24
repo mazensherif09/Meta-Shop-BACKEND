@@ -97,7 +97,7 @@ const getallproduct = AsyncHandler(async (req, res, next) => {
       from: "files",
       localField: "poster",
       foreignField: "_id",
-      as: "posterImage",
+      as: "poster",
       pipeline: [
         {
           $project: { url: 1, _id: 0 },
@@ -105,11 +105,11 @@ const getallproduct = AsyncHandler(async (req, res, next) => {
       ],
     },
   });
-
+//
   // Add a stage to replace the posterImage array with its first element
   pipeline.push({
     $addFields: {
-      posterImage: { $arrayElemAt: ["$posterImage", 0] },
+      posterImage: { $arrayElemAt: ["$poster", 0] },
     },
   });
 
