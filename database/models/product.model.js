@@ -37,6 +37,10 @@ const schema = new mongoose.Schema(
     createdBy: { type: ObjectId, ref: "user" },
     subcategory: { type: ObjectId, ref: "subcategory" },
     category: { type: ObjectId, ref: "category" },
+    poster:{
+      type: ObjectId,
+      ref: "file",
+    },
     type: {
       type: String,
       enum: Object.values(productTypes),
@@ -58,16 +62,15 @@ schema.pre(/^find/, function (next) {
     .populate({
       path: "colors.sizes.size",
       model: "size",
+      options: { strictPopulate: false, }, // Disable strictPopulate for this path if needed
     })
-    .populate({
+    this.populate({
       path: "category",
       model: "category",
-    });
+    }).populate('poster');
   next();
 });
-
 export const productModel = mongoose.model("product", schema);
-
 // Tech Schema
 const DecorSchema = new mongoose.Schema({
   colors: [
@@ -78,7 +81,6 @@ const DecorSchema = new mongoose.Schema({
     },
   ],
 });
-
 // Pre-find hook to automatically populate images field
 DecorSchema.pre(/^find/, function (next) {
   this.populate({
@@ -90,9 +92,7 @@ DecorSchema.pre(/^find/, function (next) {
   });
   next();
 });
-
 export const DecorModel = productModel.discriminator("decor", DecorSchema);
-
 // Clothes Schema
 const clothesSchema = new mongoose.Schema({
   colors: [
@@ -122,6 +122,7 @@ clothesSchema.pre(/^find/, function (next) {
     .populate({
       path: "colors.sizes.size",
       model: "size",
+      options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
     });
   next();
 });

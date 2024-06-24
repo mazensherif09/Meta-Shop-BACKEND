@@ -33,7 +33,7 @@ export const bootstrap = (app, express) => {
   };
   //process.env.mode !== "dev" ? corsOptions :
   app.use(logger()); // logging requests in terminal
-  app.use(cors( { origin: 'http://127.0.0.1:3000',credentials:true})); // Use the CORS middleware with the specified options
+  app.use(cors( {   origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],credentials:true})); // Use the CORS middleware with the specified options
   app.use(helmet()); //  Use helmet to enhance your app's security and for handle XSS attacks
   app.use(express.json()); // middlewar  for buffer
   app.use(cookieParser()); // for handle cookies

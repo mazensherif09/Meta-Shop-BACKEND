@@ -15,7 +15,7 @@ const clothesVal = Joi.array().items(
 const decorVal = Joi.array()
   .items(
     Joi.object({
-      color: ObjectIdVal.required(), // Validate ObjectId
+      color: ObjectIdVal, // Validate ObjectId
       images: Joi.array().items(ObjectIdVal.required()), // Validate ObjectId
       stock: Joi.number().min(0).default(0),
     })
@@ -29,6 +29,7 @@ const ProductSchemaVal = Joi.object({
   quantity: Joi.number().min(0).optional(),
   isFeatured: Joi.boolean(),
   puplish: Joi.boolean(),
+  poster:ObjectIdVal,
   category: ObjectIdVal,
   subcategory: ObjectIdVal,
   type: Joi.string().valid("clothes", "decor"),
@@ -40,13 +41,14 @@ const ProductSchemaVal = Joi.object({
 });
 const UpdateproductSchemaVal = Joi.object({
   id: ObjectIdVal,
-  title: Joi.string().min(3).max(300).required().trim(),
-  description: Joi.string().min(15).max(1500).required(),
-  price: Joi.number().min(0).required(),
+  title: Joi.string().min(3).max(300).trim(),
+  description: Joi.string().min(15).max(1500),
+  price: Joi.number().min(0),
   discount: Joi.number().default(0),
   quantity: Joi.number().min(0).optional(),
   isFeatured: Joi.boolean(),
   puplish: Joi.boolean(),
+  poster:ObjectIdVal,
   category: ObjectIdVal,
   subcategory: ObjectIdVal,
   type: Joi.string().valid("clothes", "decor"),

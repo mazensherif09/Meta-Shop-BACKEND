@@ -9,12 +9,11 @@ export const validation = (schema) => {
     }
     if (req?.files && Object.values(req?.files).length === 0)
       req.files = undefined;
-
     const { error } = schema.validate(
       { ...files, ...req.body, ...req.params, ...req.query },
       { abortWarly: false }
     );
-    console.log("🚀 ~ return ~ error:", error)
+    console.log("🚀 ~ return ~ error:", req?.body)
     if (!error) {
       next();
     } else {

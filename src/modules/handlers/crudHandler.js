@@ -58,7 +58,7 @@ export const FindOne = (model, Errormassage) => {
 export const updateOne = (model, Errormassage) => {
   return AsyncHandler(async (req, res, next) => {
     const document = await model.findByIdAndUpdate(
-      { _id: req.params.id },
+      req.params.id ,
       req.body,
       { new: true }
     );

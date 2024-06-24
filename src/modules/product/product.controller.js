@@ -15,15 +15,16 @@ import {
 } from "../handlers/crudHandler.js";
 import { addLookup } from "../../utils/addLookup.js";
 import { ApiFetcher } from "../../utils/Fetcher.js";
+import mongoose from "mongoose";
 
 const Errormassage = "product not found";
 
 const addproduct = AsyncHandler(async (req, res, next) => {
   const { type, files } = req.body;
 
-  
   const check = await productModel.findOne({ title: req.body.title });
-  if (check) return next(new AppError(` product already exist with same title`, 401));
+  if (check)
+    return next(new AppError(` product already exist with same title`, 401));
   req.body.slug = slugify(req.body.title);
 
   // req.body.createdBy = req.user._id;
@@ -124,14 +125,51 @@ const getallproduct = AsyncHandler(async (req, res, next) => {
 });
 
 const getOneproduct = AsyncHandler(async (req, res, next) => {
-  const document = await productModel.find({
-    $or: [{ slug: req.body.slug }, { _id: req.body.slug }],
-  });
+  let query;
+  if (mongoose.Types.ObjectId.isValid(req.params.slug)) {
+    query = { _id: req.params.slug };
+  } else {
+    query = { slug: req.params.slug };
+  }
+
+  const document = await productModel.findOne(query);
   if (!document) return next(new AppError(Errormassage, 404));
   return res.json(document);
 });
 
-const updateproduct = updateOne(productModel, Errormassage);
+const updateproduct = AsyncHandler(async (req, res, next) => {
+  // Find the product first to determine its type
+  const product = await productModel.findById(req.params.id);
+  if (!product) {
+    next(new AppError("Product not found", 404));
+  }
+
+  let model;
+  switch (product?.type) {
+    case "decor":
+      model = DecorModel;
+      break;
+    case "clothes":
+      model = ClothesModel;
+      break;
+    default:
+      model = productModel;
+  }
+
+  const updatedProduct = await model.findByIdAndUpdate(
+    req.params.id,
+    req?.body,
+    {
+      new: true,
+    }
+  );
+  if (!updatedProduct) return next(new AppError(Errormassage, 404));
+
+  return res.status(200).json({
+    message: "Updated Sucessfully",
+    data: updatedProduct,
+  });
+});
 const deleteproduct = deleteOne(productModel, Errormassage);
 export {
   addproduct,

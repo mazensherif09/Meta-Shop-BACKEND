@@ -5,22 +5,25 @@ import { ApiFetcher } from "../../utils/Fetcher.js";
 import { Uploader, deleteFileCloudinary } from "../../utils/cloudnairy.js";
 
 const Insert = AsyncHandler(async (req, res, next) => {
-  if (!req.files || req.files.length === 0) {
+  const { files } = req.files;
+  if (!files || files === 0) {
     return next(new AppError("No files uploaded", 400));
   }
 
   const uploadResults = await Promise.all(
-    req.files.map((file) => Uploader(file.path))
+    files.map(async (file) => {
+      try {
+        return {
+          ...(await Uploader(file.path)),
+          filename: file?.filename,
+          size:file?.size,
+          mimetype: file?.mimetype,
+          originalname: file?.originalname,
+        };
+      } catch (error) {}
+    })
   );
-
-  const fileDocs = uploadResults.map((result) => ({
-    filename: "files",
-    public_id: result.public_id,
-    url: result.url,
-  }));
-
-  const savedFiles = await FileModel.insertMany(fileDocs);
-
+  const savedFiles = await FileModel.insertMany(uploadResults?.filter(Boolean));
   res.status(201).json({
     data: savedFiles,
   });
@@ -64,19 +67,15 @@ const GetOne = AsyncHandler(async (req, res, next) => {
   return res.status(200).json(file);
 });
 const Delete = AsyncHandler(async (req, res, next) => {
-  const { public_id } = req.body;
+  let id = req.params.id;
+  const deletedFile = await FileModel.findByIdAndDelete(id, {
+    new: true,
+  });
 
-  const result = await deleteFileCloudinary(public_id);
-
-  if (result.result !== "ok") {
-    return next(new AppError("Failed to delete the file", 400));
-  }
-
-  const deletedFile = await FileModel.findOneAndDelete({ public_id });
   if (!deletedFile) {
-    return next(new AppError("File not found in the database", 404));
+    return next(new AppError("file not found", 404));
   }
-
+  await deleteFileCloudinary(deletedFile?.public_id);
   res.status(200).json({
     message: "File deleted successfully",
   });
