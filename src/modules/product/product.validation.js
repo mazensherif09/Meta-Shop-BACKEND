@@ -1,27 +1,37 @@
 import Joi from "joi";
+import { relationFileVal } from "../file/file.validation.js";
+import { colorSchemaVal } from "../colors/colors.validation.js";
+import { CategorySchemaVal } from "../category/category.validation.js";
+import { subCategorySchemaVal } from "../subcategory/subcategory.validation.js";
 let ObjectIdVal = Joi.string().hex().length(24);
+let imagesVal = Joi.array().items(Joi.alternatives().try(ObjectIdVal, relationFileVal)); // Validate ObjectId
+let colorVal = Joi.alternatives().try(ObjectIdVal, colorSchemaVal);
 const clothesVal = Joi.array().items(
   Joi.object({
-    color: ObjectIdVal, // Validate ObjectId
-    images: Joi.array().items(ObjectIdVal), // Validate ObjectId
+    color: colorVal,
+    images: imagesVal,
     sizes: Joi.array().items(
       Joi.object({
         size: ObjectIdVal.required(), // Validate ObjectId
         stock: Joi.number().min(0),
+        _id: ObjectIdVal,
       })
     ),
+    _id: ObjectIdVal,
   })
 );
 const decorVal = Joi.array()
   .items(
     Joi.object({
-      color: ObjectIdVal, // Validate ObjectId
-      images: Joi.array().items(ObjectIdVal.required()), // Validate ObjectId
+      color: colorVal,
+      images: imagesVal,
       stock: Joi.number().min(0).default(0),
+      _id: ObjectIdVal,
     })
   )
   .optional();
 const ProductSchemaVal = Joi.object({
+  _id: ObjectIdVal,
   title: Joi.string().min(3).max(300).required().trim(),
   description: Joi.string().min(15).max(1500).required(),
   price: Joi.number().min(0).required(),
@@ -29,15 +39,17 @@ const ProductSchemaVal = Joi.object({
   quantity: Joi.number().min(0).optional(),
   isFeatured: Joi.boolean(),
   puplish: Joi.boolean(),
-  poster:ObjectIdVal,
-  category: ObjectIdVal,
-  subcategory: ObjectIdVal,
-  type: Joi.string().valid("clothes", "decor"),
+  poster: Joi.alternatives().try(ObjectIdVal, relationFileVal),
+  category: Joi.alternatives().try(ObjectIdVal, CategorySchemaVal).required(),
+  subcategory: Joi.alternatives()
+    .try(ObjectIdVal, subCategorySchemaVal)
+    .required(),
+  type: Joi.string().valid("clothes", "decor").required(),
   colors: Joi.when("category", {
     is: "clothes",
     then: clothesVal,
     otherwise: decorVal,
-  }).optional(),
+  }).required(),
 });
 const UpdateproductSchemaVal = Joi.object({
   id: ObjectIdVal,
@@ -48,24 +60,26 @@ const UpdateproductSchemaVal = Joi.object({
   quantity: Joi.number().min(0).optional(),
   isFeatured: Joi.boolean(),
   puplish: Joi.boolean(),
-  poster:ObjectIdVal,
-  category: ObjectIdVal,
-  subcategory: ObjectIdVal,
+  poster: Joi.alternatives().try(ObjectIdVal, relationFileVal),
+  category: Joi.alternatives().try(ObjectIdVal, CategorySchemaVal),
+  subcategory: Joi.alternatives().try(ObjectIdVal, subCategorySchemaVal),
   type: Joi.string().valid("clothes", "decor"),
   colors: Joi.when("category", {
     is: "clothes",
     then: clothesVal,
     otherwise: decorVal,
-  }).optional(),
+  }),
 });
 const paramsIdVal = Joi.object({
   id: ObjectIdVal,
 });
 const paramsSlugVal = Joi.object({
-  slug: Joi.alternatives().try(
-    Joi.string().min(3).max(300).required(),
-    Joi.string().hex().length(24).required()
-  ).required()
+  slug: Joi.alternatives()
+    .try(
+      Joi.string().min(3).max(300).required(),
+      Joi.string().hex().length(24).required()
+    )
+    .required(),
 });
 
 export { ProductSchemaVal, UpdateproductSchemaVal, paramsIdVal, paramsSlugVal };

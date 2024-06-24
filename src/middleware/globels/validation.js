@@ -13,7 +13,6 @@ export const validation = (schema) => {
       { ...files, ...req.body, ...req.params, ...req.query },
       { abortWarly: false }
     );
-    console.log("🚀 ~ return ~ error:", req?.body)
     if (!error) {
       next();
     } else {

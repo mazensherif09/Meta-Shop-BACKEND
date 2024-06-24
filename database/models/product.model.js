@@ -37,7 +37,7 @@ const schema = new mongoose.Schema(
     createdBy: { type: ObjectId, ref: "user" },
     subcategory: { type: ObjectId, ref: "subcategory" },
     category: { type: ObjectId, ref: "category" },
-    poster:{
+    poster: {
       type: ObjectId,
       ref: "file",
     },
@@ -62,12 +62,12 @@ schema.pre(/^find/, function (next) {
     .populate({
       path: "colors.sizes.size",
       model: "size",
-      options: { strictPopulate: false, }, // Disable strictPopulate for this path if needed
-    })
-    this.populate({
-      path: "category",
-      model: "category",
-    }).populate('poster');
+      options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
+    });
+  this.populate({
+    path: "category",
+    model: "category",
+  }).populate("poster");
   next();
 });
 export const productModel = mongoose.model("product", schema);
@@ -77,7 +77,7 @@ const DecorSchema = new mongoose.Schema({
     {
       color: { type: ObjectId, ref: "color" },
       images: [{ type: ObjectId, ref: "file" }],
-      stock:{type:Number, min:0, default:0 }
+      stock: { type: Number, min: 0, default: 0 },
     },
   ],
 });
@@ -90,6 +90,15 @@ DecorSchema.pre(/^find/, function (next) {
     path: "colors.images",
     model: "file",
   });
+  // if (this._update.poster) {
+  //   // delete this_update.poster
+  //   this._update = {
+  //     $unset: { poster: 1 },
+  //     $set: this._update.$set,
+  //     $setOnInsert: this._update.$setOnInsert,
+  //   };
+    
+  // }
   next();
 });
 export const DecorModel = productModel.discriminator("decor", DecorSchema);
@@ -131,6 +140,3 @@ export const ClothesModel = productModel.discriminator(
   "clothes",
   clothesSchema
 );
-
-
-

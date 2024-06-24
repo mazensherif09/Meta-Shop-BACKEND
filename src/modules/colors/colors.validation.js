@@ -3,6 +3,8 @@ import Joi from "joi";
 const colorSchemaVal = Joi.object({
   name: Joi.string().min(3).max(30).required().trim(),
   code: Joi.string().min(2).max(30).required().trim(),
+  _id:Joi.string().hex().length(24)
+  
 });
 const updateColorSchemaVal = Joi.object({
   id: Joi.string().hex().length(24),
