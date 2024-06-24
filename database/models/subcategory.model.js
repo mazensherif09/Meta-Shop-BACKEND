@@ -21,7 +21,6 @@ const schema = new mongoose.Schema(
       required: true,
     },
     poster: { type: ObjectId, ref: "file" },
-    category: { type: ObjectId, ref: "category" },
     createdBy: { type: ObjectId, ref: "user" },
   },
   { timestamps: true }
@@ -29,14 +28,10 @@ const schema = new mongoose.Schema(
 
 // Pre-find hook to automatically populate images field
 schema.pre(/^find/, function (next) {
-  this.populate({
-      path: "category",
-      model: "category",
-    }) 
+  this
      .populate({
       path: 'poster',
       model: 'file',
-      select: 'url',
     });
   next();
 });

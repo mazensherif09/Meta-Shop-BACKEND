@@ -8,6 +8,7 @@ const subCategorySchemaVal = Joi.object({
   category: Joi.alternatives().try(ObjectIdVal, CategorySchemaVal),
   description: Joi.string().min(10).max(1500).required(),
   poster: poster,
+  _id:ObjectIdVal,
 });
 const UpdatesubCategorySchemaVal = Joi.object({
   id: ObjectIdVal,
