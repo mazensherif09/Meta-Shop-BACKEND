@@ -5,13 +5,18 @@ import { ApiFetcher } from "../../utils/Fetcher.js";
 
 const request = AsyncHandler(async (req, res, next) => {
   // req.body.influencer = req.user._id;
+  let check = await influencerModel.findOne({
+    socialName: req.body.socialName,
+  });
+  if (check)
+    return next(new AppError(`Influncer socialName is already in use`, 404));
 
-  const document = new influencerModel(req.body);
-  await document.save();
+  const influencer = new influencerModel(req.body);
+  await influencer.save();
 
   return res.status(200).json({
     message: "Send Sucessfully",
-    document
+    influencer,
   });
 });
 
@@ -58,10 +63,10 @@ const Delete = AsyncHandler(async (req, res, next) => {
   const document = await influencerModel.findByIdAndDelete({
     _id: req.params?.id,
   });
-  if (!document) next(new AppError(`Influncer is not found`, 401));
+  if (!document) return next(new AppError(`Influncer is not found`, 401));
 
   return res.status(200).json({
-    message: "Deleted Sucessfully"
+    message: "Deleted Sucessfully",
   });
 });
 
@@ -71,11 +76,11 @@ const Update = AsyncHandler(async (req, res, next) => {
     { _id: req.params?.id },
     req.body
   );
-  if (!document) next(new AppError(`Influncer not found`, 401));
+  if (!document) return next(new AppError(`Influncer not found`, 401));
 
   return res.status(200).json({
     message: "Updated Sucessfully",
-    document
+    document,
   });
 });
 
