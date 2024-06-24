@@ -26,4 +26,13 @@ const schema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Pre-find hook to automatically populate images field
+schema.pre(/^find/, function (next) {
+  this.populate({
+    path: "influencer",
+    model: "user",
+  })
+  next();
+});
+
 export const influencerModel = mongoose.model("influencer", schema);

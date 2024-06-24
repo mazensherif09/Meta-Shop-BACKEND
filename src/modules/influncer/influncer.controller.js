@@ -59,6 +59,13 @@ const GetAll = AsyncHandler(async (req, res, next) => {
   });
 });
 
+const GetOne = AsyncHandler(async (req, res, next) => {
+  const document = await influencerModel.findById(req.params.id);
+  if (!document) return next(new AppError("influencer not found", 404));
+  
+  return res.json(document);
+});
+
 const Delete = AsyncHandler(async (req, res, next) => {
   const document = await influencerModel.findByIdAndDelete({
     _id: req.params?.id,
@@ -84,4 +91,4 @@ const Update = AsyncHandler(async (req, res, next) => {
   });
 });
 
-export { request, GetAll, Delete, Update };
+export { request, GetAll, Delete, Update, GetOne };

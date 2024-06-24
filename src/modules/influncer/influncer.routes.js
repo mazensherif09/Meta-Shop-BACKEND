@@ -5,7 +5,7 @@ import {
   paramsIdVal,
 } from "./influncer.validation.js";
 import { validation } from "../../middleware/globels/validation.js";
-import { request, GetAll, Delete, Update } from "./influncer.controller.js";
+import { request, GetAll, Delete, Update , GetOne} from "./influncer.controller.js";
 
 import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
 
@@ -18,6 +18,7 @@ influncerRouter
 
 influncerRouter
   .route("/:id")
+  .get(validation(paramsIdVal), GetOne)
   .put(validation(updateInfluncerSchemaVal), Update)
   .delete(validation(paramsIdVal), Delete);
 
