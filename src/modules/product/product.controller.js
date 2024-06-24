@@ -109,7 +109,7 @@ const getallproduct = AsyncHandler(async (req, res, next) => {
   // Add a stage to replace the posterImage array with its first element
   pipeline.push({
     $addFields: {
-      posterImage: { $arrayElemAt: ["$poster", 0] },
+      poster: { $arrayElemAt: ["$poster", 0] },
     },
   });
 
