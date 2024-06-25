@@ -32,29 +32,9 @@ singleTypeRouter.post(
   insert
 );
 
-singleTypeRouter.put(
-  "/landing",
-  protectedRoutes,
-  authorized(enumRoles.admin),
-  updatePage
-);
-
-singleTypeRouter.put(
-  "/about-us",
-  protectedRoutes,
-  authorized(enumRoles.admin),
-  updatePage
-);
-
-singleTypeRouter.put(
-  "/warning",
-  protectedRoutes,
-  authorized(enumRoles.admin),
-  updatePage
-);
-
-singleTypeRouter.route("/landing").get(getPage);
-singleTypeRouter.route("/about-us").get(getPage);
-singleTypeRouter.route("/warning").get(getPage);
+singleTypeRouter
+  .route("/:key")
+  .put(protectedRoutes, authorized(enumRoles.admin), updatePage)
+  .get(getPage);
 
 export default singleTypeRouter;
