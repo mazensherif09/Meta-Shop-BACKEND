@@ -34,16 +34,16 @@ const signIn = AsyncHandler(async (req, res, next) => {
   let user = await UserModel.findOne({ email });
   if (user && bcrypt.compareSync(password, user.password)) {
     if (user?.isblocked) return res.json({ message: "User is blocked" });
-    res.cookie("token", jwt.sign(
-      { _id: user?._id, role: user?.role },
-      process.env.SECRETKEY,
-      {
+    res.cookie(
+      "token",
+      jwt.sign({ _id: user?._id, role: user?.role }, process.env.SECRETKEY, {
         expiresIn: 365 * 24 * 60 * 60 * 1000,
+      }),
+      {
+        maxAge: 365 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
       }
-    ), {
-      maxAge: 365 * 24 * 60 * 60 * 1000,
-      httpOnly: true,
-    });
+    );
     return res.status(200).json({
       message: `welcome ${user.fullName}`,
       data: {
@@ -144,6 +144,17 @@ const softdelete = AsyncHandler(async (req, res, next) => {
   });
   return res.status(200).json({ message: "success" });
 });
+const verfiySession = AsyncHandler(async (req, res, next) => {
+  const user = req.user;
+  return res.status(200).json({
+    _id: user?._id,
+    fullName: user?.fullName,
+    email: user?.email,
+    role: user?.role,
+    phone: user?.phone,
+    confirmEmail: user.confirmEmail,
+  });
+});
 export {
   signUp,
   signIn,
@@ -154,6 +165,7 @@ export {
   verfiyEmail,
   unsubscribe,
   FPsendEmail,
+  verfiySession,
   ResetPassword,
   changepassword,
   tokenForgetPassword,

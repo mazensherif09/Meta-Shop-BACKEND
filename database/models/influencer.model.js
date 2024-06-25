@@ -3,7 +3,7 @@ import { influencers } from "../../src/assets/enums/influeners.js";
 
 const schema = new mongoose.Schema(
   {
-    socialName: { type: String, trim: true, required: true },
+    socialAccounts: { type: String, trim: true, required: true },
     state: {
       type: String,
       enum: Object.values(influencers),
@@ -12,11 +12,6 @@ const schema = new mongoose.Schema(
     coupon: { type: mongoose.Types.ObjectId, ref: "coupon" },
     influencer: { type: mongoose.Types.ObjectId, ref: "user" },
     createdBy: { type: mongoose.Types.ObjectId, ref: "user" },
-    count: {
-      type: Number,
-      default: 0,
-      min: 0,
-    },
     balance: {
       type: Number,
       default: 0,
@@ -31,7 +26,7 @@ schema.pre(/^find/, function (next) {
   this.populate({
     path: "influencer",
     model: "user",
-  })
+  });
   next();
 });
 
