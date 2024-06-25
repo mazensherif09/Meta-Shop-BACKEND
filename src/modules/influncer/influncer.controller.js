@@ -2,10 +2,11 @@ import { influencerModel } from "../../../database/models/influencer.model.js";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
 import { ApiFetcher } from "../../utils/Fetcher.js";
+import { UserModel } from "../../../database/models/user.model.js";
 
 const request = AsyncHandler(async (req, res, next) => {
   let check = await influencerModel.findOne({
-    socialName: req.body.socialName,
+    socialAccount: req.body.socialAccount,
   });
   if (check)
     return next(new AppError(`Influncer socialName is already in use`, 404));
@@ -13,6 +14,10 @@ const request = AsyncHandler(async (req, res, next) => {
   req.body.influencer = req.user._id;
   const influencer = new influencerModel(req.body);
   await influencer.save();
+
+  await UserModel.findByIdAndUpdate(req.user._id, {
+    influencer: influencer._id,
+  });
 
   return res.status(200).json({
     message: "Send Sucessfully",

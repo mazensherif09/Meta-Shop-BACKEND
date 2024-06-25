@@ -17,9 +17,10 @@ cartRouter
   .post(protectedRoutesCart, validation(addCartVal), checkCart, addToCart)
   .get(protectedRoutesCart, checkCart, getLoggedCart)
   .patch(protectedRoutesCart, checkCart, clearCart);
+
 cartRouter
   .route("/:id")
-  .delete(
+  .put(
     protectedRoutesCart,
     validation(paramsIdVal),
     checkCart,

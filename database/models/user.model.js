@@ -37,14 +37,14 @@ schema.pre("save", async function (next) {
   next();
 });
 
-// Pre-find hook to automatically populate field
-schema.pre(/^find/, function (next) {
-  this.populate({
-    path: "influencer",
-    model: "influencer",
-  })
+
+// Middleware to populate influencer field on find queries
+const autoPopulateInfluencer = function (next) {
+  this.populate("influencer");
   next();
-});
+};
+
+schema.pre(/^find/, autoPopulateInfluencer);
 
 
 export const UserModel = mongoose.model("user", schema);

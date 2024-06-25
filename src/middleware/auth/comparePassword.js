@@ -6,7 +6,7 @@ export const comparePassword = async (req, res, next) => {
   if (!bcrypt.compareSync(currentpassword, req?.user?.password))
     return next(new AppError("current password wrong !", 401));
   if (bcrypt.compareSync(newpassword, req?.user?.password))
-    next(
+    return  next(
       new AppError(
         "The password cannot be changed because it is the same as the current password",
         401

@@ -52,7 +52,7 @@ AuthRouter.put("/update-me",validation(updateVal), protectedRoutes, updateuser) 
 AuthRouter.route(`/:id`)
   .delete(protectedRoutes, authorized(enumRoles.admin), deleteUser); // delete user
 AuthRouter.put(
-  `/resetPassword`,
+  `/update-password`,
   validation(updatePasswordVal),
   protectedRoutes,
   comparePassword,
