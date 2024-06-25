@@ -5,7 +5,6 @@ export const authorized = (permissions) => {
   return AsyncHandler(async (req, res, next) => {
     if (!permissions.includes(req.user.role))
       return next(new AppError("you are not authorized"));
-
     next();
   });
 };

@@ -13,7 +13,8 @@ const updateuser = AsyncHandler(async (req, res, next) => {
 });
 const deleteUser = AsyncHandler(async (req, res, next) => {
   let user = req.user;
-  if (user._id === req?.params?.id) return res.json({ message: "cann't delete your own self" });
+  if (user._id === req?.params?.id)
+    return res.json({ message: "cann't delete your own self" });
 
   await UserModel.findByIdAndDelete(req?.params?.id);
   res.json({ message: "sucess" });
@@ -61,4 +62,16 @@ const getAllUsers = AsyncHandler(async (req, res, next) => {
     },
   });
 });
-export { updateuser, deleteUser, softdelete, createuser, getAllUsers };
+const findOneUser = AsyncHandler(async (req, res, next) => {
+  const document = await UserModel.findById({ _id: req.params.id }).select('-password');
+  if (!document) return next(new AppError("user not found", 404));
+  return res.status(200).json(document);
+});
+export {
+  updateuser,
+  deleteUser,
+  softdelete,
+  createuser,
+  getAllUsers,
+  findOneUser,
+};

@@ -7,6 +7,7 @@ import {
   softdelete,
   createuser,
   getAllUsers,
+  findOneUser,
 } from "./user.controller.js";
 import { validation } from "../../middleware/globels/validation.js";
 import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
@@ -24,6 +25,7 @@ UserRouter.route("/")
   )
   .get(getAllUsers);
 UserRouter.route("/:id")
+  .get(protectedRoutes, authorized(enumRoles.admin), findOneUser)
   .put(validation(updateVal), updateuser) // update user
   .delete(protectedRoutes, authorized(enumRoles.admin), deleteUser); // delete user
 
