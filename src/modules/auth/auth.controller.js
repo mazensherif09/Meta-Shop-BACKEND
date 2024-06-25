@@ -128,7 +128,7 @@ const changepassword = AsyncHandler(async (req, res, next) => {
 });
 const updateuser = AsyncHandler(async (req, res, next) => {
   const { _id } = req.user;
-  const data = await UserModel.findByIdAndUpdate(_id, req.body);
+  const data = await UserModel.findByIdAndUpdate(_id, req.body).select("-password");
   return res.status(200).json({ message: "sucess", data });
 });
 const deleteUser = AsyncHandler(async (req, res, next) => {
