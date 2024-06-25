@@ -2,7 +2,6 @@ import { sizeModel } from "../../../database/models/size.model.js";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
 import { ApiFetcher } from "../../utils/Fetcher.js";
-import { convertObjectKeys } from "../../utils/convertObjectKeys.js";
 
 const addSize = AsyncHandler(async (req, res, next) => {
   const checkDocument = await sizeModel.findOne({ name: req.body?.name });
