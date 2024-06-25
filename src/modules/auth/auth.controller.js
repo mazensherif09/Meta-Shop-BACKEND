@@ -14,9 +14,19 @@ const signUp = AsyncHandler(async (req, res, next) => {
     { id: user?._id, role: user?.role },
     process.env.SECRETKEY
   );
+  res.cookie("token", token, {
+    maxAge: 365 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+  });
   return res.status(200).json({
-    message: "we sent verfiy massage to your email please confirm your email",
-    token,
+    message: `welcome ${user?.fullName}`,
+    data: {
+      _id: user?._id,
+      fullName: user?.fullName,
+      email: user?.email,
+      role: user?.role,
+      phone: user?.phone,
+    },
   });
 });
 const signIn = AsyncHandler(async (req, res, next) => {
@@ -24,12 +34,26 @@ const signIn = AsyncHandler(async (req, res, next) => {
   let user = await UserModel.findOne({ email });
   if (user && bcrypt.compareSync(password, user.password)) {
     if (user?.isblocked) return res.json({ message: "User is blocked" });
-    const { _id } = user;
-    let token = jwt.sign(
-      { id: user?._id, role: user?.role },
-      process.env.SECRETKEY
-    );
-    return res.status(200).json({ token });
+    res.cookie("token", jwt.sign(
+      { _id: user?._id, role: user?.role },
+      process.env.SECRETKEY,
+      {
+        expiresIn: 365 * 24 * 60 * 60 * 1000,
+      }
+    ), {
+      maxAge: 365 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+    });
+    return res.status(200).json({
+      message: `welcome ${user.fullName}`,
+      data: {
+        _id: user?._id,
+        fullName: user?.fullName,
+        email: user?.email,
+        role: user?.role,
+        phone: user?.phone,
+      },
+    });
   } else {
     return next(new AppError(`Incorrect email or password`, 401));
   }

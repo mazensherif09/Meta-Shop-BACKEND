@@ -20,7 +20,7 @@ import colorsRouter from "./colors/colors.routes.js";
 import sizesRouter from "./sizes/sizes.routes.js";
 import influncerRouter from "./influncer/influncer.routes.js";
 import singleTypeRouter from "./singleType/singleType.routes.js";
-import  testRouter  from "./test/test.route.js";
+
 import { fileRouter } from "./file/file.routes.js";
 
 export const bootstrap = (app, express) => {
@@ -60,7 +60,6 @@ export const bootstrap = (app, express) => {
   app.use(`${mainroute}/coupon`, couponRouter);
   app.use(`${mainroute}/influncer`, influncerRouter);
   app.use(`${mainroute}/pages`, singleTypeRouter);
-  app.use(`${mainroute}/test`, testRouter);
   // End  Endpoints ------------------------------------------- |
   dbConnection(); // database connection
 
