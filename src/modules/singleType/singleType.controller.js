@@ -11,7 +11,7 @@ import { ApiFetcher } from "../../utils/Fetcher.js";
 
 const insert = AsyncHandler(async (req, res, next) => {
   // req.body.influencer = req.user._id;
-  // req.body.createdBy = req.user._id;
+  req.body.createdBy = req.user._id;
   // Attempt to insert or update a document
 
   const { PageType,  } = req.body;
@@ -44,16 +44,6 @@ const getPage = AsyncHandler(async (req, res, next) => {
   return res.status(200).json(document);
 });
 
-const deletePag = AsyncHandler(async (req, res, next) => {
-  const document = await SingleTypeModel.findByIdAndDelete({
-    _id: req.params?.id,
-  });
-  if (!document) next(new AppError(`Page is not found`, 401));
-
-  res.status(200).json({
-    message: "Deleted Sucessfully",
-  });
-});
 
 const updatePage = AsyncHandler(async (req, res, next) => {
   // req.body.createdBy = req.user._id;
@@ -69,4 +59,4 @@ const updatePage = AsyncHandler(async (req, res, next) => {
   });
 });
 
-export { insert, getPage, deletePag, updatePage };
+export { insert, getPage, updatePage };

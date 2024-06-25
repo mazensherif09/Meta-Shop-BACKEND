@@ -8,6 +8,7 @@ const addSize = AsyncHandler(async (req, res, next) => {
   const checkDocument = await sizeModel.findOne({ name: req.body?.name });
   if (checkDocument) next(new AppError(`Name is already in use`, 401));
 
+  req.body.createdBy = req.user._id;
   const document = new sizeModel(req.body);
   await document.save();
 

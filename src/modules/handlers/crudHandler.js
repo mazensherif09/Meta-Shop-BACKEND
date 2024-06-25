@@ -10,6 +10,8 @@ export const InsertOne = (model, Errormassage, slug, check) => {
       const checkDocument = await model.findOne(checkObject);
       if (checkDocument) return next(new AppError(Errormassage, 401));
     }
+
+    req.body.createdBy = req.user._id;
     req.body.slug = slugify(req.body[slug]);
     const document = new model(req.body);
     await document.save();

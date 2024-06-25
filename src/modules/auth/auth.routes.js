@@ -26,6 +26,8 @@ import {
 import { validation } from "../../middleware/globels/validation.js";
 import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
 import { comparePassword } from "../../middleware/auth/comparePassword.js";
+import { authorized } from "../../middleware/globels/authorized.js";
+import { enumRoles } from "../../assets/enums/Roles_permissions.js";
 
 const AuthRouter = express.Router();
 AuthRouter.post(`/signup`, validation(signupschemaVal), checkEmailuser, signUp); //sign up :)
@@ -45,7 +47,7 @@ AuthRouter.post(`/logout`, protectedRoutes, logout); // log out
 AuthRouter.delete("/softdelete", protectedRoutes, softdelete); // soft delete => account will be blocked (cant log in if  account blocked)
 AuthRouter.route(`/:id`)
   .put(validation(updateVal), protectedRoutes, updateuser) // update user
-  .delete(protectedRoutes, deleteUser); // delete user
+  .delete(protectedRoutes , authorized(enumRoles.admin), deleteUser); // delete user
 AuthRouter.put(
   `/resetPassword`,
   validation(updatePasswordVal),

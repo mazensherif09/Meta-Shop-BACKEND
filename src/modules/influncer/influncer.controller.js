@@ -4,13 +4,13 @@ import { AppError } from "../../utils/AppError.js";
 import { ApiFetcher } from "../../utils/Fetcher.js";
 
 const request = AsyncHandler(async (req, res, next) => {
-  // req.body.influencer = req.user._id;
   let check = await influencerModel.findOne({
     socialName: req.body.socialName,
   });
   if (check)
     return next(new AppError(`Influncer socialName is already in use`, 404));
 
+  req.body.influencer = req.user._id;
   const influencer = new influencerModel(req.body);
   await influencer.save();
 
@@ -60,9 +60,10 @@ const GetAll = AsyncHandler(async (req, res, next) => {
 });
 
 const GetOne = AsyncHandler(async (req, res, next) => {
-  const document = await influencerModel.findById(req.params.id);
+  let user = req.user;
+  const document = await influencerModel.findById({ user: user._id });
   if (!document) return next(new AppError("influencer not found", 404));
-  
+
   return res.json(document);
 });
 
@@ -78,7 +79,7 @@ const Delete = AsyncHandler(async (req, res, next) => {
 });
 
 const Update = AsyncHandler(async (req, res, next) => {
-  // req.body.createdBy = req.user._id;
+  req.body.createdBy = req.user._id;
   const document = await influencerModel.findByIdAndUpdate(
     { _id: req.params?.id },
     req.body
