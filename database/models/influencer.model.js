@@ -3,7 +3,7 @@ import { influencers } from "../../src/assets/enums/influeners.js";
 
 const schema = new mongoose.Schema(
   {
-    socialAccounts: { type: String, trim: true, required: true },
+    socialAccount: { type: String, trim: true, required: true },
     state: {
       type: String,
       enum: Object.values(influencers),

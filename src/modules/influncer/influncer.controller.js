@@ -3,13 +3,16 @@ import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
 import { ApiFetcher } from "../../utils/Fetcher.js";
 
+
+
 const request = AsyncHandler(async (req, res, next) => {
   let check = await influencerModel.findOne({
-    socialName: req.body.socialName,
+    socialAccount: req.body.socialAccount,
   });
   if (check)
     return next(new AppError(`Influncer socialName is already in use`, 404));
 
+ 
   req.body.influencer = req.user._id;
   const influencer = new influencerModel(req.body);
   await influencer.save();
