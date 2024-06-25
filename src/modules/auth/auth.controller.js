@@ -156,13 +156,14 @@ const softdelete = AsyncHandler(async (req, res, next) => {
 });
 const verfiySession = AsyncHandler(async (req, res, next) => {
   const user = req.user;
+  
   return res.status(200).json({
     _id: user?._id,
     fullName: user?.fullName,
     email: user?.email,
     role: user?.role,
     phone: user?.phone,
-    confirmEmail: user.confirmEmail,
+    confirmEmail: user?.confirmEmail,
   });
 });
 export {

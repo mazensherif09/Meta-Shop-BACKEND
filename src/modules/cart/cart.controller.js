@@ -9,10 +9,11 @@ const addToCart = AsyncHandler(async (req, res, next) => {
   if (!product) return next(new AppError("Product not found", 404));
   const { color = null, size = null } = req.body;
   let cart = req?.cart;
-  const item = cart.items.find((v) =>
-    v?.product?._id?.toString() === product?._id?.toString() &&
-    v?.color?._id?.toString() === color?.toString() &&
-    v?.size?._id?.toString() === size?.toString()
+  const item = cart.items.find(
+    (v) =>
+      v?.product?._id?.toString() === product?._id?.toString() &&
+      v?.color?._id?.toString() === color?.toString() &&
+      v?.size?._id?.toString() === size?.toString()
   );
   if (item) {
     item.quantity += 1;
@@ -41,7 +42,8 @@ const removeItemCart = AsyncHandler(async (req, res, next) => {
       }
     );
   }
-  if (!query) return next(new AppError("something went wrong try again later."));
+  if (!query)
+    return next(new AppError("something went wrong try again later."));
   let cart = await cartModel.findOneAndUpdate(
     query,
     { $pull: { items: { _id: req?.params?.id } } },
