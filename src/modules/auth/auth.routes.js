@@ -47,7 +47,7 @@ AuthRouter.post(`/logout`, protectedRoutes, logout); // log out
 AuthRouter.delete("/softdelete", protectedRoutes, softdelete); // soft delete => account will be blocked (cant log in if  account blocked)
 AuthRouter.route(`/:id`)
   .put(validation(updateVal), protectedRoutes, updateuser) // update user
-  .delete(protectedRoutes , authorized(enumRoles.admin), deleteUser); // delete user
+  .delete(protectedRoutes, authorized(enumRoles.admin), deleteUser); // delete user
 AuthRouter.put(
   `/resetPassword`,
   validation(updatePasswordVal),
