@@ -7,29 +7,41 @@ import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 const addToCart = AsyncHandler(async (req, res, next) => {
   let product = await productModel.findById(req?.body?.product);
   if (!product) return next(new AppError("Product not found", 404));
+  const { color = null, size = null } = req.body;
   let cart = req?.cart;
-  let item = cart.items.find(
-    (item) =>
-      item?.selected_option == req?.body?.selected_option &&
-      item?.product?.toString() == req?.body?.product?.toString()
+  const item = cart.items.find((v) =>
+    v?.product?._id?.toString() === product?._id?.toString() &&
+    v?.color?._id?.toString() === color?.toString() &&
+    v?.size?._id?.toString() === size?.toString()
   );
   if (item) {
     item.quantity += 1;
   } else {
     cart.items.push({
-      ...req.body,
+      product: req?.body?.product,
+      color: color,
+      size: size,
     });
   }
   await cart.save();
   return res.status(200).json(cart);
 });
 const removeItemCart = AsyncHandler(async (req, res, next) => {
-  let query = req?.user?._id
-    ? { user: req?.user?._id }
-    : req?.cookies?.cart
-    ? { _id: req?.cookies?.cart }
-    : null;
-  if (!query)  return next(new AppError("something went wrong try again later."));
+  let query = req?.user?._id ? { user: req.user._id } : null;
+  if (!query) {
+    await jwt.verify(
+      req.cookies.cart,
+      process.env.SECRETKEY,
+      async (err, decoded) => {
+        if (decoded?.cart) {
+          query = {
+            _id: decoded?.cart,
+          };
+        }
+      }
+    );
+  }
+  if (!query) return next(new AppError("something went wrong try again later."));
   let cart = await cartModel.findOneAndUpdate(
     query,
     { $pull: { items: { _id: req?.params?.id } } },
@@ -45,7 +57,7 @@ const getLoggedCart = AsyncHandler(async (req, res, next) => {
 });
 const clearCart = AsyncHandler(async (req, res, next) => {
   let cart = req?.cart;
-  cart.cartItems = [];
+  cart.items = [];
   await cart.save();
   if (!cart) return next(new AppError("something went wrong try again later."));
   return res.json(cart);
@@ -66,7 +78,14 @@ const applyCoupon = AsyncHandler(async (req, res, next) => {
   return res.json({ message: "success", cart });
 });
 const boundary = AsyncHandler(async (req, res, next) => {
-  return res.status(200).json({ message: "success"});
+  return res.status(200).json({ message: "success" });
 });
 
-export { addToCart, removeItemCart, getLoggedCart, clearCart, applyCoupon, boundary };
+export {
+  addToCart,
+  removeItemCart,
+  getLoggedCart,
+  clearCart,
+  applyCoupon,
+  boundary,
+};

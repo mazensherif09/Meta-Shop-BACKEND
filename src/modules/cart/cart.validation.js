@@ -3,7 +3,8 @@ import joi from "joi";
 const addCartVal = joi.object({
   product: joi.string().length(24).hex().required(),
   quantity: joi.number().integer().options({ convert: false }),
-  // selected_option: joi.string().required()
+  size: joi.string().length(24).hex(),
+  color: joi.string().length(24).hex().required(),
 });
 
 const updateQTYVal = joi.object({
@@ -12,7 +13,7 @@ const updateQTYVal = joi.object({
 });
 
 const paramsIdVal = joi.object({
-  id: joi.string().length(24).hex().required()
+  id: joi.string().length(24).hex().required(),
 });
 
 export { addCartVal, paramsIdVal, updateQTYVal };
