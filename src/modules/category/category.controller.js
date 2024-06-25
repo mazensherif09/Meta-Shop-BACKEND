@@ -36,7 +36,6 @@ const getallCategoryies = AsyncHandler(async (req, res, next) => {
   const pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
 
   res.status(200).json({
-    success: true,
     data,
     metadata: {
       ...apiFetcher.metadata,
