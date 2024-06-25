@@ -11,7 +11,7 @@ const schema = new mongoose.Schema(
     phone: Number,
     pincode: Number,
     isresetPassword: { type: Boolean, default: false },
-    // role:  { type: mongoose.Types.ObjectId, ref: "user_roles", default: null },
+    // roles:  { type: mongoose.Types.ObjectId, ref: "user_roles", default: null },
     role: {
       type: String,
       enum: [...Object.values(enumRoles)],
