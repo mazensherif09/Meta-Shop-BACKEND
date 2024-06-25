@@ -76,11 +76,10 @@ landingSchema.pre(/^find/, function (next) {
   this.populate({
     path: "topCategories",
     model: "category",
-  })
-  .populate({
+  }).populate({
     path: "sliderLanding.images",
     model: "file",
-  })
+  });
   next();
 });
 
@@ -124,22 +123,23 @@ export const aboutPageModel = SingleTypeModel.discriminator(
 );
 
 // products_Page Schema
-const productsPageSchema = new mongoose.Schema({
-  title: {
-    type: String,
+const warningSchema = new mongoose.Schema({
+  active: {
+    type: Boolean,
     required: true,
-    trim: true,
-    minLength: [2, "Title is too short"],
   },
-  description: {
+  message: {
     type: String,
     required: true,
     trim: true,
-    minLength: [10, "Description is too short"],
+  },
+  date: {
+    type: Date,
+    required: true,
   },
 });
-export const productsPageModel = SingleTypeModel.discriminator(
-  "products_page",
-  productsPageSchema
+export const warningPageModel = SingleTypeModel.discriminator(
+  "warning",
+  warningSchema
 );
 // warning messages that will be displayed when develment team is upgrading in system
