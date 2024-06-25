@@ -132,7 +132,7 @@ const changepassword = AsyncHandler(async (req, res, next) => {
       httpOnly: true,
     }
   );
-  res.status(200).json(token);
+  return res.status(200).json({message: "sucess"});
 });
 const updateuser = AsyncHandler(async (req, res, next) => {
   const { _id } = req.user;
