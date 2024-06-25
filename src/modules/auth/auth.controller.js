@@ -128,8 +128,8 @@ const changepassword = AsyncHandler(async (req, res, next) => {
 });
 const updateuser = AsyncHandler(async (req, res, next) => {
   const { _id } = req.user;
-  await UserModel.findByIdAndUpdate(_id, req.body);
-  return res.status(200).json({ message: "sucess" });
+  const data = await UserModel.findByIdAndUpdate(_id, req.body);
+  return res.status(200).json({ message: "sucess", data });
 });
 const deleteUser = AsyncHandler(async (req, res, next) => {
   const { _id } = req.user;
