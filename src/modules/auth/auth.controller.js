@@ -117,18 +117,28 @@ const logout = AsyncHandler(async (req, res, next) => {
   return res.json({ message: "success" });
 });
 const changepassword = AsyncHandler(async (req, res, next) => {
-  const { _id } = req.user;
-  let token = jwt.sign({ user: _id }, process.env.SECRETKEY);
+  const user = req.user;
   await UserModel.findByIdAndUpdate(_id, {
     password: bcrypt.hashSync(req.body.newpassword, 8),
     passwordChangedAt: Date.now(),
   });
-
+  res.cookie(
+    "token",
+    jwt.sign({ _id: user?._id, role: user?.role }, process.env.SECRETKEY, {
+      expiresIn: 365 * 24 * 60 * 60 * 1000,
+    }),
+    {
+      maxAge: 365 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+    }
+  );
   res.status(200).json(token);
 });
 const updateuser = AsyncHandler(async (req, res, next) => {
   const { _id } = req.user;
-  const data = await UserModel.findByIdAndUpdate(_id, req.body).select("-password");
+  const data = await UserModel.findByIdAndUpdate(_id, req.body).select(
+    "-password"
+  );
   return res.status(200).json({ message: "sucess", data });
 });
 const deleteUser = AsyncHandler(async (req, res, next) => {
