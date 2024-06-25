@@ -99,6 +99,13 @@ const checkCoupon = AsyncHandler(async (req, res, next) => {
     return res.status(400).json({ message: "Coupon has expired" });
   }
 
+  // Create a new entry in the coupon history
+  const newCouponHistory  = new couponhistoryModel({
+    user: req.user._id,
+    coupon: coupon._id,
+  });
+  await newCouponHistory.save();
+
   // Coupon is valid
   return res.status(200).json(coupon);
 });
