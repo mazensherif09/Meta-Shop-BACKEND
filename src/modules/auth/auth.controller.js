@@ -25,16 +25,11 @@ const signIn = AsyncHandler(async (req, res, next) => {
   if (user && bcrypt.compareSync(password, user.password)) {
     if (user?.isblocked) return res.json({ message: "User is blocked" });
     const { _id } = user;
-    if (user?.confirmEmail) {
-      await UserModel.findByIdAndUpdate(_id, { isActive: true });
-      let token = jwt.sign(
-        { id: user?._id, role: user?.role },
-        process.env.SECRETKEY
-      );
-      return res.status(200).json({ token });
-    } else {
-      next(new AppError(`Can not sign in without verfiy email`, 401));
-    }
+    let token = jwt.sign(
+      { id: user?._id, role: user?.role },
+      process.env.SECRETKEY
+    );
+    return res.status(200).json({ token });
   } else {
     return next(new AppError(`Incorrect email or password`, 401));
   }
