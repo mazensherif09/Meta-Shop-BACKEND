@@ -1,9 +1,6 @@
-import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { UserModel } from "../../../database/models/user.model.js";
 import { ApiFetcher } from "../../utils/Fetcher.js";
-
 
 const createuser = AsyncHandler(async (req, res, next) => {
   const user = new UserModel(req.body);
@@ -15,7 +12,6 @@ const updateuser = AsyncHandler(async (req, res, next) => {
   return res.json({ message: "sucess" });
 });
 const deleteUser = AsyncHandler(async (req, res, next) => {
-
   // let user = req.user;
   // if (user._id === req?.params?.id) return res.json({ message: "ezay ya khawal"});
 
@@ -32,10 +28,10 @@ const softdelete = AsyncHandler(async (req, res, next) => {
 const getAllUsers = AsyncHandler(async (req, res, next) => {
   // Define the populate array, you can adjust this as per your requirements
   const populateArray = [];
- 
+
   let filterObject = {};
-  if (req.query.filters) {  
-     filterObject = req.query.filters;
+  if (req.query.filters) {
+    filterObject = req.query.filters;
   }
 
   let apiFetcher = new ApiFetcher(
@@ -54,7 +50,7 @@ const getAllUsers = AsyncHandler(async (req, res, next) => {
 
   // Calculate pagination metadata
   const pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
- 
+
   res.status(200).json({
     success: true,
     data,
@@ -64,5 +60,5 @@ const getAllUsers = AsyncHandler(async (req, res, next) => {
       total,
     },
   });
- })
-export {  updateuser, deleteUser, softdelete,createuser,getAllUsers };
+});
+export { updateuser, deleteUser, softdelete, createuser, getAllUsers };
