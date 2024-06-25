@@ -22,16 +22,19 @@ import {
   updateuser,
   deleteUser,
   changepassword,
+  verfiySession,
 } from "./auth.controller.js";
 import { validation } from "../../middleware/globels/validation.js";
 import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
 import { comparePassword } from "../../middleware/auth/comparePassword.js";
 import { authorized } from "../../middleware/globels/authorized.js";
 import { enumRoles } from "../../assets/enums/Roles_permissions.js";
+import { handleVerfiySession } from "../../middleware/auth/handleVerfiySession.js";
 
 const AuthRouter = express.Router();
 AuthRouter.post(`/signup`, validation(signupschemaVal), checkEmailuser, signUp); //sign up :)
 AuthRouter.post(`/signin`, validation(signinSchemaVal), signIn); //log in :)
+AuthRouter.get(`/session`, handleVerfiySession, protectedRoutes, verfiySession);
 AuthRouter.get("/verify/:token", verfiyEmail); // verfiy Email :)
 AuthRouter.get(`/unsubscribe/:token`, unsubscribe); // unsubscribe  :)
 AuthRouter.post(`/forget-password`, validation(ForgetPasswordVal), FPsendEmail); // send email for reset password !
@@ -47,7 +50,7 @@ AuthRouter.post(`/logout`, protectedRoutes, logout); // log out
 AuthRouter.delete("/softdelete", protectedRoutes, softdelete); // soft delete => account will be blocked (cant log in if  account blocked)
 AuthRouter.route(`/:id`)
   .put(validation(updateVal), protectedRoutes, updateuser) // update user
-  .delete(protectedRoutes , authorized(enumRoles.admin), deleteUser); // delete user
+  .delete(protectedRoutes, authorized(enumRoles.admin), deleteUser); // delete user
 AuthRouter.put(
   `/resetPassword`,
   validation(updatePasswordVal),
