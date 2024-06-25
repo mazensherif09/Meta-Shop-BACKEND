@@ -5,11 +5,24 @@ import { AppError } from "../../utils/AppError.js";
 import { forgetPasswordEmail } from "../../services/mails/forgetPassword/forgetPassword.Email.js";
 import { confirmEmail } from "../../services/mails/confirmation/confirmation.email.js";
 import { UserModel } from "../../../database/models/user.model.js";
+import { cartModel } from "../../../database/models/cart.model.js";
 import { generateSecurePin } from "../../utils/genratePinCode.js";
 
 const signUp = AsyncHandler(async (req, res, next) => {
   const user = new UserModel(req.body);
   await user.save(); // save the user body after updating
+
+  jwt.verify(req.cookies.cart, process.env.SECRETKEY, async (err, decoded) => {
+    if (decoded?.cart) {
+      await cartModel.findOneAndUpdate(
+        { _id: decoded?.cart },
+        {
+          user: user._id,
+        }
+      );
+    }
+  });
+
   let token = jwt.sign(
     { _id: user?._id, role: user?.role },
     process.env.SECRETKEY
@@ -18,6 +31,10 @@ const signUp = AsyncHandler(async (req, res, next) => {
     maxAge: 365 * 24 * 60 * 60 * 1000,
     httpOnly: true,
   });
+
+  // Fetch the updated cart details
+  let updatedCart = await cartModel.findOne({ user: user._id });
+
   return res.status(200).json({
     message: `welcome ${user?.fullName}`,
     data: {
@@ -27,6 +44,7 @@ const signUp = AsyncHandler(async (req, res, next) => {
       role: user?.role,
       phone: user?.phone,
     },
+    cart: updatedCart,
   });
 });
 const signIn = AsyncHandler(async (req, res, next) => {
@@ -132,7 +150,7 @@ const changepassword = AsyncHandler(async (req, res, next) => {
       httpOnly: true,
     }
   );
-  return res.status(200).json({message: "sucess"});
+  return res.status(200).json({ message: "sucess" });
 });
 const updateuser = AsyncHandler(async (req, res, next) => {
   const { _id } = req.user;
@@ -156,7 +174,7 @@ const softdelete = AsyncHandler(async (req, res, next) => {
 });
 const verfiySession = AsyncHandler(async (req, res, next) => {
   const user = req.user;
-  
+
   return res.status(200).json({
     _id: user?._id,
     fullName: user?.fullName,
