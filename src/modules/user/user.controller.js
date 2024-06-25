@@ -1,6 +1,7 @@
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { UserModel } from "../../../database/models/user.model.js";
 import { ApiFetcher } from "../../utils/Fetcher.js";
+import { enumRoles } from "../../assets/enums/Roles_permissions.js";
 
 const createuser = AsyncHandler(async (req, res, next) => {
   const user = new UserModel(req.body);
@@ -31,8 +32,13 @@ const getAllUsers = AsyncHandler(async (req, res, next) => {
   const populateArray = [];
 
   let filterObject = {};
+  if (!req?.query?.filters?.role) {
+    filterObject = {
+      role: { $eq: enumRoles.user },
+    };
+  }
   if (req.query.filters) {
-    filterObject = req.query.filters;
+    filterObject = { ...req.query.filters, ...filterObject };
   }
 
   let apiFetcher = new ApiFetcher(
@@ -63,7 +69,9 @@ const getAllUsers = AsyncHandler(async (req, res, next) => {
   });
 });
 const findOneUser = AsyncHandler(async (req, res, next) => {
-  const document = await UserModel.findById({ _id: req.params.id }).select('-password');
+  const document = await UserModel.findById({ _id: req.params.id }).select(
+    "-password"
+  );
   if (!document) return next(new AppError("user not found", 404));
   return res.status(200).json(document);
 });

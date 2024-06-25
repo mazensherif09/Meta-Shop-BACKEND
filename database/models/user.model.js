@@ -34,24 +34,9 @@ const schema = new mongoose.Schema(
 
 schema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, 8);
-
-  // // Set default role if roles array is empty
-  // if (this.roles.length === 0) {
-  //   const defaultRole = await mongoose.model("user_roles").findOne({ roleName: "user" });
-  //   if (defaultRole) {
-  //     this.roles = [defaultRole._id];
-  //   }
-  // }
-
   next();
 });
 
-
-// Middleware to populate roles field on find queries
-// const autoPopulateRoles = function (next) {
-//   this.populate("roles");
-//   next();
-// };
 
 // Middleware to populate influencer field on find queries
 const autoPopulateInfluencer = function (next) {
@@ -60,5 +45,6 @@ const autoPopulateInfluencer = function (next) {
 };
 
 schema.pre(/^find/, autoPopulateInfluencer);
+
 
 export const UserModel = mongoose.model("user", schema);
