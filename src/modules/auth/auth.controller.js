@@ -11,7 +11,7 @@ const signUp = AsyncHandler(async (req, res, next) => {
   const user = new UserModel(req.body);
   await user.save(); // save the user body after updating
   let token = jwt.sign(
-    { id: user?._id, role: user?.role },
+    { _id: user?._id, role: user?.role },
     process.env.SECRETKEY
   );
   res.cookie("token", token, {
