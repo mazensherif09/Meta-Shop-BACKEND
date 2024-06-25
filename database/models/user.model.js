@@ -20,6 +20,7 @@ const schema = new mongoose.Schema(
     confirmEmail: { type: Boolean, default: false },
     isActive: { type: Boolean, default: false },
     isblocked: { type: Boolean, default: false },
+    influencer: { type: mongoose.Types.ObjectId, ref: "influencer" },
     addresses: [
       {
         street: String,
@@ -42,6 +43,15 @@ schema.pre("save", async function (next) {
   //   }
   // }
 
+  next();
+});
+
+// Pre-find hook to automatically populate field
+schema.pre(/^find/, function (next) {
+  this.populate({
+    path: "influencer",
+    model: "influencer",
+  })
   next();
 });
 
