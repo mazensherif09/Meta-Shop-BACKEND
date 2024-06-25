@@ -124,7 +124,7 @@ export const aboutPageModel = SingleTypeModel.discriminator(
 
 // products_Page Schema
 const warningSchema = new mongoose.Schema({
-  active: {
+  publish: {
     type: Boolean,
     required: true,
   },

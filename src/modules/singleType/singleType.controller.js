@@ -3,7 +3,7 @@ import {
   productsPageModel,
   aboutPageModel,
   landingPageModel,
-  questionPageModel,
+  warningPageModel,
 } from "../../../database/models/singleType.js";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
@@ -14,21 +14,19 @@ const insert = AsyncHandler(async (req, res, next) => {
   req.body.createdBy = req.user._id;
   // Attempt to insert or update a document
 
-  const { PageType,  } = req.body;
+  const { PageType } = req.body;
 
   const check = await SingleTypeModel.findOne({ key: req.body.key });
   if (check)
     return next(new AppError(`page already exist with same title`, 401));
 
   let page;
-  if (PageType === "question") {
-    page = new questionPageModel( req.body, req.body.key);
+  if (PageType === "warning") {
+    page = new warningPageModel( req.body, req.body.key);
   } else if (PageType === "landing") {
     page = new landingPageModel( req.body, req.body.key);
   } else if (PageType === "about_us") {
     page = new aboutPageModel( req.body, req.body.key);
-  } else if (PageType === "products_page") {
-    page = new productsPageModel( req.body, req.body.key);
   } else {
     return res.status(400).send("Invalid Page Type");
   }
