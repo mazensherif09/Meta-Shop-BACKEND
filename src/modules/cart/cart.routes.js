@@ -16,7 +16,7 @@ cartRouter
   .route("/")
   .post(protectedRoutesCart, validation(addCartVal), checkCart, addToCart)
   .get(protectedRoutesCart, checkCart, getLoggedCart)
-  .delete(protectedRoutesCart, checkCart, clearCart);
+  .patch(protectedRoutesCart, checkCart, clearCart);
 cartRouter
   .route("/:id")
   .delete(

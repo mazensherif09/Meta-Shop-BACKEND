@@ -5,7 +5,7 @@ import { UserModel } from "../../../database/models/user.model.js";
 
 export const protectedRoutesCart = AsyncHandler(async (req, res, next) => {
   // 1-token is exist or not
-  let { token } = req.headers;
+  let token = req.headers.token  || req.cookies.token;
   // 2-verfiy token
   if (token) {
     jwt.verify(token, process.env.SECRETKEY, async (err, decoded) => {
