@@ -5,21 +5,39 @@ import {
   paramsIdVal,
 } from "./influncer.validation.js";
 import { validation } from "../../middleware/globels/validation.js";
-import { request, GetAll, Delete, Update , GetOne} from "./influncer.controller.js";
+import {
+  request,
+  GetAll,
+  Delete,
+  Update,
+  GetOne,
+} from "./influncer.controller.js";
 
 import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
+import { authorized } from "../../middleware/globels/authorized.js";
+import { enumRoles } from "../../assets/enums/Roles_permissions.js";
 
 const influncerRouter = express.Router();
 
 influncerRouter
   .route("/")
-  .post(validation(influncerSchemaVal), request)
-  .get(GetAll);
+  .post(validation(influncerSchemaVal), protectedRoutes, request)
+  .get(protectedRoutes, authorized(enumRoles.admin), GetAll);
 
 influncerRouter
   .route("/:id")
-  .get(validation(paramsIdVal), GetOne)
-  .put(validation(updateInfluncerSchemaVal), Update)
-  .delete(validation(paramsIdVal), Delete);
+  .get(protectedRoutes, GetOne)
+  .put(
+    validation(updateInfluncerSchemaVal),
+    protectedRoutes,
+    authorized(enumRoles.admin),
+    Update
+  )
+  .delete(
+    validation(paramsIdVal),
+    protectedRoutes,
+    authorized(enumRoles.admin),
+    Delete
+  );
 
 export default influncerRouter;

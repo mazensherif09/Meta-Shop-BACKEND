@@ -8,7 +8,6 @@ import { UserModel } from "../../../database/models/user.model.js";
 import { generateSecurePin } from "../../utils/genratePinCode.js";
 
 const signUp = AsyncHandler(async (req, res, next) => {
-  const email = await confirmEmail(req.body.email);
   const user = new UserModel(req.body);
   await user.save(); // save the user body after updating
   let token = jwt.sign(

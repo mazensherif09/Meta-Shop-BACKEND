@@ -15,9 +15,8 @@ const updateuser = AsyncHandler(async (req, res, next) => {
   return res.json({ message: "sucess" });
 });
 const deleteUser = AsyncHandler(async (req, res, next) => {
-
-  // let user = req.user;
-  // if (user._id === req?.params?.id) return res.json({ message: "ezay ya khawal"});
+  let user = req.user;
+  if (user._id === req?.params?.id) return res.json({ message: "ezay ya khawal"});
 
   await UserModel.findByIdAndDelete(req?.params?.id);
   res.json({ message: "sucess" });

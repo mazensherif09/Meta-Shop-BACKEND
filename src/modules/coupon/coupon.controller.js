@@ -1,4 +1,5 @@
 import { couponModel } from "../../../database/models/coupon.model.js";
+import { couponhistoryModel } from "../../../database/models/coupon_history.js";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
 import { ApiFetcher } from "../../utils/Fetcher.js";
@@ -7,12 +8,13 @@ const Insert = AsyncHandler(async (req, res, next) => {
   const checkDocument = await couponModel.findOne({ text: req.body?.text });
   if (checkDocument) next(new AppError(`Coupon is already in use`, 401));
 
+  req.body.createdBy = req.user._id;
   const document = new couponModel(req.body);
   await document.save();
 
   return res.status(200).json({
     message: "Added Sucessfully",
-    document
+    document,
   });
 });
 
@@ -64,7 +66,7 @@ const Delete = AsyncHandler(async (req, res, next) => {
 
   return res.status(200).json({
     message: "Deleted Sucessfully",
-    document
+    document,
   });
 });
 
@@ -88,16 +90,17 @@ const checkCoupon = AsyncHandler(async (req, res, next) => {
   // Check if the coupon exists
   if (!coupon) return next(new AppError(`Coupon not found`, 401));
 
+  const user = await couponhistoryModel.findById({ user: req.user._id });
+  if (user) return next(new AppError(`Coupon used before`, 401));
+
   // Check if the coupon is expired
   const currentDate = new Date();
   if (coupon.expires && coupon.expires < currentDate) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Coupon has expired" });
+    return res.status(400).json({ message: "Coupon has expired" });
   }
 
   // Coupon is valid
   return res.status(200).json(coupon);
 });
 
-export { Insert, GetAll, Delete, Update, checkCoupon , getOne};
+export { Insert, GetAll, Delete, Update, checkCoupon, getOne };

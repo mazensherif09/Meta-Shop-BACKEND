@@ -9,18 +9,18 @@ import {
 } from "./cart.controller.js";
 import { addCartVal, paramsIdVal } from "./cart.validation.js";
 import { validation } from "../../middleware/globels/validation.js";
-import { protectedRoutesCart } from "../../middleware/cart/protectedRoutesCart.js";
 import { checkCart } from "../../middleware/cart/checkCart.js";
+import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
 const cartRouter = express.Router();
 cartRouter
   .route("/")
-  .post(protectedRoutesCart, validation(addCartVal), checkCart, addToCart)
-  .get(protectedRoutesCart, checkCart, getLoggedCart)
-  .delete(protectedRoutesCart, checkCart, clearCart);
+  .post(protectedRoutes, validation(addCartVal), checkCart, addToCart)
+  .get(protectedRoutes, checkCart, getLoggedCart)
+  .delete(protectedRoutes, checkCart, clearCart);
 cartRouter
   .route("/:id")
   .delete(
-    protectedRoutesCart,
+    protectedRoutes,
     validation(paramsIdVal),
     checkCart,
     removeItemCart

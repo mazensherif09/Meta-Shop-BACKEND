@@ -11,20 +11,36 @@ import {
   UpdateCategorySchemaVal,
   paramsIdVal,
 } from "./category.validation.js";
-import { fileUploadSingle } from "../../services/FileUpload/FileUpload.js";
 import { SubCategoryRouter } from "../subcategory/subCategory.routes.js";
-import { categoryModel } from "../../../database/models/category.model.js";
 import { validation } from "../../middleware/globels/validation.js";
+import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
+import { authorized } from "../../middleware/globels/authorized.js";
+import { enumRoles } from "../../assets/enums/Roles_permissions.js";
 
 const categoryRouter = express.Router();
 categoryRouter.use("/:category/subcategories", SubCategoryRouter);
 categoryRouter
   .route("/")
-  .post(validation(CategorySchemaVal), addCategory)
+  .post(
+    validation(CategorySchemaVal),
+    protectedRoutes,
+    authorized(enumRoles.admin),
+    addCategory
+  )
   .get(getallCategoryies);
 categoryRouter
   .route("/:id")
   .get(validation(paramsIdVal), getOneCategory)
-  .put(validation(UpdateCategorySchemaVal), updateCategorty)
-  .delete(validation(paramsIdVal), deleteCategory);
+  .put(
+    validation(UpdateCategorySchemaVal),
+    protectedRoutes,
+    authorized(enumRoles.admin),
+    updateCategorty
+  )
+  .delete(
+    validation(paramsIdVal),
+    protectedRoutes,
+    authorized(enumRoles.admin),
+    deleteCategory
+  );
 export { categoryRouter };

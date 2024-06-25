@@ -1,6 +1,5 @@
 import express from "express";
 import { validation } from "../../middleware/globels/validation.js";
-import { fileUploadfields } from "../../services/FileUpload/FileUpload.js";
 import {
   addproduct,
   getallproduct,
@@ -14,11 +13,9 @@ import {
   paramsIdVal,
   paramsSlugVal,
 } from "./product.validation.js";
-import { handleMediaProduct } from "../../middleware/handleProduct.js";
-
-import { ownerMiddlewar } from "../../middleware/ownerMiddlewar.js";
-import { handlePermissions } from "../../middleware/handlepermissions.js";
 import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
+import { authorized } from "../../middleware/globels/authorized.js";
+import { enumRoles } from "../../assets/enums/Roles_permissions.js";
 
 const productRouter = express.Router();
 
@@ -26,6 +23,8 @@ productRouter
   .route("/")
   .post(
     validation(ProductSchemaVal), // check validation
+    protectedRoutes,
+    authorized(enumRoles.admin),
     addproduct
   )
   .get(getallproduct);
@@ -36,7 +35,14 @@ productRouter
   .route("/:id")
   .put(
     validation(UpdateproductSchemaVal), // check validation
+    protectedRoutes,
+    authorized(enumRoles.admin),
     updateproduct // finally update product
   )
-  .delete(validation(paramsIdVal), deleteproduct);
+  .delete(
+    validation(paramsIdVal),
+    protectedRoutes,
+    authorized(enumRoles.admin),
+    deleteproduct
+  );
 export { productRouter };
