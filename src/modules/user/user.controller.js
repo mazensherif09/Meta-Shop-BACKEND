@@ -6,7 +6,16 @@ import { enumRoles } from "../../assets/enums/Roles_permissions.js";
 const createuser = AsyncHandler(async (req, res, next) => {
   const user = new UserModel(req.body);
   await user.save();
-  return res.json({ message: "sucess" });
+  return res.json({ message: "sucess",data:{
+    _id:user._id,
+    name:user.name,
+    email:user.email,
+    role:user.role,
+    isActive:user.isActive,
+    isblocked:user.isblocked,
+    createdAt:user.createdAt,
+    updatedAt:user.updatedAt
+  } });
 });
 const updateuser = AsyncHandler(async (req, res, next) => {
   await UserModel.findByIdAndUpdate(req?.params?.id, req?.body);
