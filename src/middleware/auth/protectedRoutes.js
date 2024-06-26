@@ -9,9 +9,9 @@ export const protectedRoutes = AsyncHandler(async (req, res, next) => {
   if (!token) return next(new AppError("Token is not provided", 401));
   try {
     // 2- Verify token
-    const decoded =  jwt.verify(token, process.env.SECRETKEY);
+    const decoded = jwt.verify(token, process.env.SECRETKEY);
     // 3- Check if user exists
-    const user = await UserModel.findById(decoded._id);
+    const user = await UserModel.findById(decoded._id).populate("cart");
     if (!user) return next(new AppError("User is not found", 401));
     // 4- Check if user is blocked
     if (user.isblocked) return next(new AppError("User is blocked", 401));
