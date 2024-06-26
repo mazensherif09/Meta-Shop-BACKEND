@@ -5,10 +5,9 @@ import jwt from "jsonwebtoken";
 
 export const checkCart = AsyncHandler(async (req, res, next) => {
   let query = req?.user?._id ? { user: req.user._id } : null;
-  console.log(req.cookies.cart)
   if (!query) {
     await jwt.verify(
-      req.cookie.cart,
+      req.cookies.cart,
       process.env.SECRETKEY,
       async (err, decoded) => {
   
