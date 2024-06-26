@@ -94,7 +94,7 @@ const signIn = AsyncHandler(async (req, res, next) => {
         role: user?.role,
         phone: user?.phone,
       },
-      cart: updatedCart,
+      cart: cart || user?.cart,
     });
   } else {
     return next(new AppError(`Incorrect email or password`, 401));
