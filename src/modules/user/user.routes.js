@@ -23,7 +23,7 @@ UserRouter.route("/")
     validation(updateVal),
     createuser
   )
-  .get(getAllUsers);
+  .get(protectedRoutes, authorized(enumRoles.admin), getAllUsers);
 UserRouter.route("/:id")
   .get(protectedRoutes, authorized(enumRoles.admin), findOneUser)
   .put(validation(updateVal), updateuser) // update user
