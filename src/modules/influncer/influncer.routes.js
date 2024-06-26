@@ -16,13 +16,14 @@ import {
 import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
 import { authorized } from "../../middleware/globels/authorized.js";
 import { enumRoles } from "../../assets/enums/Roles_permissions.js";
+import { AttributedTo } from "../../middleware/AttributedTo.js";
 
 const influncerRouter = express.Router();
 
 influncerRouter
   .route("/")
   .post(validation(influncerSchemaVal), protectedRoutes, request)
-  .get(protectedRoutes, authorized(enumRoles.admin), GetAll);
+  .get(protectedRoutes, authorized(enumRoles.admin), AttributedTo, GetAll);
 
 influncerRouter
   .route("/:id")
@@ -31,12 +32,14 @@ influncerRouter
     validation(updateInfluncerSchemaVal),
     protectedRoutes,
     authorized(enumRoles.admin),
+    AttributedTo,
     Update
   )
   .delete(
     validation(paramsIdVal),
     protectedRoutes,
     authorized(enumRoles.admin),
+    AttributedTo,
     Delete
   );
 

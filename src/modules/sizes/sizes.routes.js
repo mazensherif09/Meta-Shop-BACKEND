@@ -16,6 +16,7 @@ import {
 import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
 import { authorized } from "../../middleware/globels/authorized.js";
 import { enumRoles } from "../../assets/enums/Roles_permissions.js";
+import { AttributedTo } from "../../middleware/AttributedTo.js";
 
 const sizesRouter = express.Router();
 
@@ -25,6 +26,7 @@ sizesRouter
     validation(sizeSchemaVal),
     protectedRoutes,
     authorized(enumRoles.admin),
+    AttributedTo,
     addSize
   )
   .get(getSizes);
@@ -36,12 +38,14 @@ sizesRouter
     validation(updatesizeSchemaVal),
     protectedRoutes,
     authorized(enumRoles.admin),
+    AttributedTo,
     updateSize
   )
   .delete(
     validation(paramsIdVal),
     protectedRoutes,
     authorized(enumRoles.admin),
+    AttributedTo,
     deleteSize
   );
 
