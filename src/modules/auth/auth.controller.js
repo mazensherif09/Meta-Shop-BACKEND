@@ -62,26 +62,28 @@ const signIn = AsyncHandler(async (req, res, next) => {
       }
     );
 
-    let cart = null
-    jwt.verify(req.cookies.cart,process.env.SECRETKEY,
+    let cart = null;
+    jwt.verify(
+      req.cookies.cart,
+      process.env.SECRETKEY,
       async (err, decoded) => {
         if (decoded?.cart) {
-          cart = await cartModel.findById(decoded?.cart) 
+          cart = await cartModel.findById(decoded?.cart);
         }
       }
     );
-  
-    if (cart,uset?.cart) {
-      
+
+    if (cart) {
+      let loaclItems = await handleproductIsAvailable(cart?.items);
+      cart.items = loaclItems;
+      if (user?.cart) {
+        cart.items = handleMerageCartItems(loaclItems, user?.cart?.items);
+      }
+      cart = await cartModel.findByIdAndUpdate(cart._id, {
+        items: cart?.items,
+        user: user?._id,
+      });
     }
-
-
-
-
-
-
-
-
 
     return res.status(200).json({
       message: `welcome ${user.fullName}`,
