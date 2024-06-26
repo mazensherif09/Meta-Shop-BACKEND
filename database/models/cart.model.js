@@ -1,10 +1,9 @@
 import mongoose from "mongoose";
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
-
 const cartItemSchema = new mongoose.Schema({
   product: { type: ObjectId, ref: "product", required: true },
-  quantity: { type: Number, default:1, min: 1 },
+  quantity: { type: Number, default: 1, min: 1 },
   color: { type: ObjectId, ref: "color" }, // Optional: to track specific color variants
   size: { type: ObjectId, ref: "size" }, // Optional: to track specific size variants
 });
@@ -32,6 +31,5 @@ schema.pre(/^find/, function (next) {
     });
   next();
 });
-
 
 export const cartModel = mongoose.model("cart", schema);
