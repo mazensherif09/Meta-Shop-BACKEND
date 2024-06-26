@@ -57,11 +57,9 @@ const getAllUsers = AsyncHandler(async (req, res, next) => {
   // Exclude the current user from the query
   filterObject._id = { $ne: req.user._id };
 
-  let apiFetcher = new ApiFetcher(
-    UserModel.find(filterObject).select("-password"),
-    req.query
-  );
+  let apiFetcher = new ApiFetcher(UserModel.find(filterObject), req.query);
   apiFetcher.filter().search().sort().select();
+
   // Execute the modified query and get total count
   const total = await UserModel.countDocuments(apiFetcher.queryOrPipeline);
 
@@ -84,6 +82,7 @@ const getAllUsers = AsyncHandler(async (req, res, next) => {
     },
   });
 });
+
 const findOneUser = AsyncHandler(async (req, res, next) => {
   let user = req.user;
   if (user?._id?.toString() === req?.params?.id)
