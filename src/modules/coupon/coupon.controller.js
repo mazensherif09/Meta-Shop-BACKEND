@@ -24,12 +24,12 @@ const GetAll = AsyncHandler(async (req, res, next) => {
 
   let filterObject = {};
   if (req.query.filters) {
-    filterObject = req.query.filters;
+    filterObject = { ...req.query.filters, ...filterObject };
   }
 
-  let apiFetcher = new ApiFetcher(couponModel.find(filterObject), req.query);
 
-  apiFetcher.search().sort().select().populate(populateArray);
+  let apiFetcher = new ApiFetcher(couponModel.find(filterObject), req.query);
+  apiFetcher.filter().search().sort().select();
 
   // Execute the modified query and get total count
   const total = await couponModel.countDocuments(apiFetcher.queryOrPipeline);
@@ -43,7 +43,8 @@ const GetAll = AsyncHandler(async (req, res, next) => {
   // Calculate pagination metadata
   const pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
 
-  return res.status(200).json({
+  res.status(200).json({
+    success: true,
     data,
     metadata: {
       ...apiFetcher.metadata,

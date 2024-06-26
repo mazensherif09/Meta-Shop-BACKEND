@@ -26,42 +26,38 @@ const request = AsyncHandler(async (req, res, next) => {
 });
 
 const GetAll = AsyncHandler(async (req, res, next) => {
-  // Define the populate array, you can adjust this as per your requirements
-  const populateArray = [];
+   // Define the populate array, you can adjust this as per your requirements
+   const populateArray = [];
 
-  let filterObject = {};
-  if (req.query.filters) {
-    filterObject = req.query.filters;
-  }
-
-  let apiFetcher = new ApiFetcher(
-    influencerModel.find(filterObject),
-    req.query
-  );
-  apiFetcher.filter().search().sort().select();
-  // Execute the modified query and get total count
-  const total = await influencerModel.countDocuments(
-    apiFetcher.queryOrPipeline
-  );
-
-  // Apply pagination after getting total count
-  apiFetcher.pagination();
-
-  // Execute the modified query to fetch data
-  const data = await apiFetcher.queryOrPipeline.exec();
-
-  // Calculate pagination metadata
-  const pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
-
-  res.status(200).json({
-    success: true,
-    data,
-    metadata: {
-      ...apiFetcher.metadata,
-      pages,
-      total,
-    },
-  });
+   let filterObject = {};
+   if (req.query.filters) {
+     filterObject = { ...req.query.filters, ...filterObject };
+   }
+ 
+   let apiFetcher = new ApiFetcher(influencerModel.find(filterObject), req.query);
+   apiFetcher.filter().search().sort().select();
+ 
+   // Execute the modified query and get total count
+   const total = await influencerModel.countDocuments(apiFetcher.queryOrPipeline);
+ 
+   // Apply pagination after getting total count
+   apiFetcher.pagination();
+ 
+   // Execute the modified query to fetch data
+   const data = await apiFetcher.queryOrPipeline.exec();
+ 
+   // Calculate pagination metadata
+   const pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
+ 
+   res.status(200).json({
+     success: true,
+     data,
+     metadata: {
+       ...apiFetcher.metadata,
+       pages,
+       total,
+     },
+   });
 });
 
 const GetOne = AsyncHandler(async (req, res, next) => {
