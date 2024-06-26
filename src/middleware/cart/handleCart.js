@@ -4,16 +4,19 @@ export const handleMerageCartItems = (item1, item2) => {
   let array = [...item1, ...item2];
   array.forEach((val, ind) => {
     let isDeublicated = array.find(
-      (val2, ind2) => val?.product?.id === val2?.product?.id && ind !== ind2
+      (val2, ind2) =>
+        val?.product?._id?.toString() === val2?.product?._id?.toString() &&
+        val?.color?._id?.toString() === val2?.color?.toString() &&
+        val?.size?._id?.toString() === val2?.size?.toString() &&
+        ind !== ind2
     );
     if (isDeublicated) {
       isDeublicated.QTY += val?.QTY;
       array.splice(ind, 1);
     }
   });
-
   array.forEach((val, ind) => {
-    val.product = val?.product?.id || null;
+    val.product = val?.product?._id || null;
     delete val["id"];
   });
   return array;
