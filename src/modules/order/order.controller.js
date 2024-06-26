@@ -4,6 +4,7 @@ import { productModel } from "../../../database/models/product.model.js";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
 import Stripe from "stripe";
+import { ApiFetcher } from "../../utils/Fetcher.js";
 
 const stripe = new Stripe('sk_test....');
 
@@ -58,7 +59,7 @@ const getAllOrders = AsyncHandler(async (req, res, next) => {
     filterObject = req.query.filters;
   }
 
-  let apiFetcher = new ApiFetcher(orderModel.find(filterObject), req.query);
+  let apiFetcher = new ApiFetcher(orderModel.find({ user: req.user._id }), req.query);
   apiFetcher.filter().search().sort().select();
   // Execute the modified query and get total count
   const total = await orderModel.countDocuments(apiFetcher.queryOrPipeline);
