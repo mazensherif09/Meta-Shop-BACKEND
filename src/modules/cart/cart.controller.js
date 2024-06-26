@@ -59,7 +59,7 @@ const removeItemCart = AsyncHandler(async (req, res, next) => {
 });
 const getLoggedCart = AsyncHandler(async (req, res, next) => {
   let cart = req?.cart;
-  return res.status(200).json(cart);
+  return res.json(cart);
 });
 const clearCart = AsyncHandler(async (req, res, next) => {
   let cart = req?.cart;
