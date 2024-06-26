@@ -7,6 +7,10 @@ import { confirmEmail } from "../../services/mails/confirmation/confirmation.ema
 import { UserModel } from "../../../database/models/user.model.js";
 import { cartModel } from "../../../database/models/cart.model.js";
 import { generateSecurePin } from "../../utils/genratePinCode.js";
+import {
+  handleMerageCartItems,
+  handleproductIsAvailable,
+} from "../../middleware/cart/handleCart.js";
 
 const signUp = AsyncHandler(async (req, res, next) => {
   const user = new UserModel(req.body);
@@ -14,12 +18,7 @@ const signUp = AsyncHandler(async (req, res, next) => {
 
   jwt.verify(req.cookies.cart, process.env.SECRETKEY, async (err, decoded) => {
     if (decoded?.cart) {
-      await cartModel.findOneAndUpdate(
-        { _id: decoded?.cart },
-        {
-          user: user._id,
-        }
-      );
+      await cartModel.findByIdAndUpdate(decoded?.cart, { user: user._id });
     }
   });
 
@@ -50,7 +49,7 @@ const signUp = AsyncHandler(async (req, res, next) => {
 const signIn = AsyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
   let user = await UserModel.findOne({ email });
-  
+
   if (user && bcrypt.compareSync(password, user.password)) {
     if (user?.isblocked) return res.json({ message: "User is blocked" });
     res.cookie(
@@ -63,6 +62,24 @@ const signIn = AsyncHandler(async (req, res, next) => {
         httpOnly: true,
       }
     );
+
+    let cart = null;
+    jwt.verify(
+      req.cookies.cart,
+      process.env.SECRETKEY,
+      async (err, decoded) => {
+        if (decoded?.cart) {
+          cart = await cartModel.findById(decoded?.cart, { user: user._id });
+        }
+      }
+    );
+    let loaclItems = await handleproductIsAvailable(items);
+    let allItems = handleMerageCartItems(loaclItems, cart?.items);
+
+    let updatedCart = await cartModel.findByIdAndUpdate(cart._id, {
+      items: allItems,
+    });
+
     return res.status(200).json({
       message: `welcome ${user.fullName}`,
       data: {
@@ -72,6 +89,7 @@ const signIn = AsyncHandler(async (req, res, next) => {
         role: user?.role,
         phone: user?.phone,
       },
+      cart: updatedCart,
     });
   } else {
     return next(new AppError(`Incorrect email or password`, 401));
