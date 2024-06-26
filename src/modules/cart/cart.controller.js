@@ -3,7 +3,7 @@ import { productModel } from "../../../database/models/product.model.js";
 import { AppError } from "../../utils/AppError.js";
 import { couponModel } from "../../../database/models/coupon.model.js";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
-import  jwt  from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
 const addToCart = AsyncHandler(async (req, res, next) => {
   let product = await productModel.findById(req?.body?.product);
@@ -28,7 +28,7 @@ const addToCart = AsyncHandler(async (req, res, next) => {
   await cart.save();
 
   // Populate the product details in the cart items
-  await cart.populate('items.product');
+  await cart.populate("items.product");
 
   return res.status(200).json(cart);
 });
