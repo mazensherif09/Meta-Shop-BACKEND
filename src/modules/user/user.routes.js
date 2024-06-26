@@ -15,10 +15,12 @@ import { enumRoles } from "../../assets/enums/Roles_permissions.js";
 import {  userInsertVal,
   userUpdateVal} from './user.vailadtion.js'
 import { checkEmailuser } from "../../middleware/auth/checkUser.js";
+import { setUserIds } from "../../middleware/setUserIds.js";
 const UserRouter = express.Router();
 // start registration routes
 UserRouter.route("/")
   .post(
+    validation(userVal),
     protectedRoutes,
     authorized(enumRoles.admin),
     validation(userInsertVal),

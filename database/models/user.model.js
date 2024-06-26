@@ -21,6 +21,8 @@ const schema = new mongoose.Schema(
     isActive: { type: Boolean, default: false },
     isblocked: { type: Boolean, default: false },
     influencer: { type: mongoose.Types.ObjectId, ref: "influencer" },
+    createdBy: { type: mongoose.Types.ObjectId, ref: "user" },
+    updatedBy: { type: mongoose.Types.ObjectId, ref: "user" },
     addresses: [
       {
         street: String,
