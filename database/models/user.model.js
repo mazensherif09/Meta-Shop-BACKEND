@@ -39,20 +39,13 @@ schema.pre("save", async function (next) {
   next();
 });
 
-
 schema.virtual("cart", {
   ref: "cart",
   localField: "_id",
   foreignField: "user",
 });
-
 // Middleware to populate related fields on find queries
 const autoPopulateFields = function (next) {
-  // this.populate("influencer")
-  //   .populate({
-  //     path: "createdBy",
-  //     select: "fullName _id",
-  //   })
     this.populate({
       path: "updatedBy",
       select: "fullName _id",
