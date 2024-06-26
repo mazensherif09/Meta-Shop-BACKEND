@@ -50,6 +50,7 @@ const signUp = AsyncHandler(async (req, res, next) => {
 const signIn = AsyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
   let user = await UserModel.findOne({ email });
+  
   if (user && bcrypt.compareSync(password, user.password)) {
     if (user?.isblocked) return res.json({ message: "User is blocked" });
     res.cookie(

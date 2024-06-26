@@ -40,10 +40,10 @@ schema.pre("save", async function (next) {
 });
 
 // Middleware to exclude password field from all find queries
-const excludePassword = function (next) {
-  this.select("-password");
-  next();
-};
+// const excludePassword = function (next) {
+//   this.select("-password");
+//   next();
+// };
 
 // Middleware to populate related fields on find queries
 const autoPopulateFields = function (next) {
@@ -59,7 +59,7 @@ const autoPopulateFields = function (next) {
   next();
 };
 
-schema.pre(/^find/, excludePassword);
+// schema.pre(/^find/, excludePassword);
 schema.pre(/^find/, autoPopulateFields);
 
 export const UserModel = mongoose.model("user", schema);
