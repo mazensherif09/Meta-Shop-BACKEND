@@ -14,6 +14,15 @@ const userVal = Joi.object({
   _id: Joi.string().hex().length(24),
   isBlocked:Joi.boolean(),
 });
+const userUpdateVal = Joi.object({
+  id: Joi.string().hex().length(24).required(),
+  fullName: Joi.string().min(3).max(30).optional(),
+  email: Joi.string().email().optional(),
+  role: Joi.string().messages().optional(),
+  phone: Joi.string().optional(),
+  password: Joi.string().min(8).max(50).optional(),
+  isBlocked:Joi.boolean().optional(),
+});
 const updatePasswordVal = Joi.object({
   newpassword: Joi.string()
     .pattern(/^[A-Z][a-z0-9#@]{8,30}$/)
@@ -36,4 +45,5 @@ export {
   updatePasswordVal,
   authResetPasswordVal,
   userVal,
+  userUpdateVal
 };
