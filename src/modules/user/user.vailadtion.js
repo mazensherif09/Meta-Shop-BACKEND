@@ -4,24 +4,25 @@ import Joi from "joi";
 const ForgetPasswordVal = Joi.object({
   email: Joi.string().email().required(),
 });
-const userVal = Joi.object({
+const userInsertVal = Joi.object({
+  id: Joi.string().hex().length(24).required(),
+  fullName: Joi.string().min(3).max(30).required(),
+  email: Joi.string().email().required(),
+  role: Joi.string().messages(),
+  phone: Joi.string().required().required(),
+  password: Joi.string().min(8).max(50).required(),
+  _id: Joi.string().hex().length(24),
+  isblocked:Joi.boolean(),
+});
+const userUpdateVal = Joi.object({
   id: Joi.string().hex().length(24),
   fullName: Joi.string().min(3).max(30),
   email: Joi.string().email(),
   role: Joi.string().messages(),
-  phone: Joi.string().required(),
+  phone: Joi.string(),
   password: Joi.string().min(8).max(50),
   _id: Joi.string().hex().length(24),
-  isBlocked:Joi.boolean(),
-});
-const userUpdateVal = Joi.object({
-  id: Joi.string().hex().length(24).required(),
-  fullName: Joi.string().min(3).max(30).optional(),
-  email: Joi.string().email().optional(),
-  role: Joi.string().messages().optional(),
-  phone: Joi.string().optional(),
-  password: Joi.string().min(8).max(50).optional(),
-  isBlocked:Joi.boolean().optional(),
+  isblocked:Joi.boolean(),
 });
 const updatePasswordVal = Joi.object({
   newpassword: Joi.string()
@@ -44,6 +45,6 @@ export {
   ForgetPasswordVal,
   updatePasswordVal,
   authResetPasswordVal,
-  userVal,
+  userInsertVal,
   userUpdateVal
 };

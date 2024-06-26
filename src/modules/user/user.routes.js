@@ -12,16 +12,17 @@ import { validation } from "../../middleware/globels/validation.js";
 import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
 import { authorized } from "../../middleware/globels/authorized.js";
 import { enumRoles } from "../../assets/enums/Roles_permissions.js";
-import { userVal , userUpdateVal} from "./user.vailadtion.js";
+import {  userInsertVal,
+  userUpdateVal} from './user.vailadtion.js'
 import { checkEmailuser } from "../../middleware/auth/checkUser.js";
 import { AttributedTo } from "../../middleware/AttributedTo.js";
 const UserRouter = express.Router();
 // start registration routes
 UserRouter.route("/")
   .post(
-    validation(userVal),
     protectedRoutes,
     authorized(enumRoles.admin),
+    validation(userInsertVal),
     AttributedTo,
     checkEmailuser,
     createuser
@@ -29,6 +30,7 @@ UserRouter.route("/")
   .get(protectedRoutes, authorized(enumRoles.admin), getAllUsers);
 UserRouter.route("/:id")
   .get(protectedRoutes, authorized(enumRoles.admin), findOneUser)
+  .put(validation(userUpdateVal), updateuser) // update user
   .put(
     validation(userUpdateVal),
     protectedRoutes,
