@@ -2,20 +2,24 @@ import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { UserModel } from "../../../database/models/user.model.js";
 import { ApiFetcher } from "../../utils/Fetcher.js";
 import { enumRoles } from "../../assets/enums/Roles_permissions.js";
+import { AppError } from "../../utils/AppError.js";
 
 const createuser = AsyncHandler(async (req, res, next) => {
   const user = new UserModel(req.body);
   await user.save();
-  return res.json({ message: "sucess",data:{
-    _id:user._id,
-    name:user.name,
-    email:user.email,
-    role:user.role,
-    isActive:user.isActive,
-    isblocked:user.isblocked,
-    createdAt:user.createdAt,
-    updatedAt:user.updatedAt
-  } });
+  return res.json({
+    message: "sucess",
+    data: {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      isActive: user.isActive,
+      isblocked: user.isblocked,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    },
+  });
 });
 const updateuser = AsyncHandler(async (req, res, next) => {
   await UserModel.findByIdAndUpdate(req?.params?.id, req?.body);
@@ -82,8 +86,8 @@ const getAllUsers = AsyncHandler(async (req, res, next) => {
 });
 const findOneUser = AsyncHandler(async (req, res, next) => {
   let user = req.user;
-  if (user._id === req?.params?.id)
-    return res.json({ message: "can't find your self" });
+  if (user?._id?.toString() === req?.params?.id)
+    return next(new AppError("not found", 404));
 
   const document = await UserModel.findById({ _id: req.params.id }).select(
     "-password"
