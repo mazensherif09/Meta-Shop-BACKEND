@@ -10,6 +10,7 @@ export const checkCart = AsyncHandler(async (req, res, next) => {
       req.cookies.cart,
       process.env.SECRETKEY,
       async (err, decoded) => {
+  
         if (decoded?.cart) {
           query = {
             _id: decoded?.cart,
