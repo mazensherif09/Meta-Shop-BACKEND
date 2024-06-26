@@ -17,6 +17,7 @@ import { validation } from "../../middleware/globels/validation.js";
 import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
 import { authorized } from "../../middleware/globels/authorized.js";
 import { enumRoles } from "../../assets/enums/Roles_permissions.js";
+import { AttributedTo } from "../../middleware/AttributedTo.js";
 
 const SubCategoryRouter = express.Router({ mergeParams: true });
 SubCategoryRouter.route("/")
@@ -24,6 +25,7 @@ SubCategoryRouter.route("/")
     validation(subCategorySchemaVal),
     protectedRoutes,
     authorized(enumRoles.admin),
+    AttributedTo,
     addSubCategory
   )
   .get(getAllSubCategoryies);
@@ -33,12 +35,14 @@ SubCategoryRouter.route("/:id")
     validation(UpdatesubCategorySchemaVal),
     protectedRoutes,
     authorized(enumRoles.admin),
+    AttributedTo,
     updateSubCategorty
   )
   .delete(
     validation(paramsIdVal),
     protectedRoutes,
     authorized(enumRoles.admin),
+    AttributedTo,
     deleteSubCategory
   );
 export { SubCategoryRouter };

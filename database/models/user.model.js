@@ -39,14 +39,19 @@ schema.pre("save", async function (next) {
   next();
 });
 
-
-// Middleware to populate influencer field on find queries
-const autoPopulateInfluencer = function (next) {
-  this.populate("influencer");
+// Middleware to populate related fields on find queries
+const autoPopulateFields = function (next) {
+  this.populate("influencer")
+    .populate({
+      path: "createdBy",
+      select: "fullName _id",
+    })
+    .populate({
+      path: "updatedBy",
+      select: "fullName _id",
+    });
   next();
 };
-
-schema.pre(/^find/, autoPopulateInfluencer);
-
+schema.pre(/^find/, autoPopulateFields);
 
 export const UserModel = mongoose.model("user", schema);

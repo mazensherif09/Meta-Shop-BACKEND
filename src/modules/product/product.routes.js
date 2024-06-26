@@ -16,6 +16,7 @@ import {
 import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
 import { authorized } from "../../middleware/globels/authorized.js";
 import { enumRoles } from "../../assets/enums/Roles_permissions.js";
+import { AttributedTo } from "../../middleware/AttributedTo.js";
 
 const productRouter = express.Router();
 
@@ -25,6 +26,7 @@ productRouter
     validation(ProductSchemaVal), // check validation
     protectedRoutes,
     authorized(enumRoles.admin),
+    AttributedTo,
     addproduct
   )
   .get(getallproduct);
@@ -37,12 +39,14 @@ productRouter
     validation(UpdateproductSchemaVal), // check validation
     protectedRoutes,
     authorized(enumRoles.admin),
+    AttributedTo,
     updateproduct // finally update product
   )
   .delete(
     validation(paramsIdVal),
     protectedRoutes,
     authorized(enumRoles.admin),
+    AttributedTo,
     deleteproduct
   );
 export { productRouter };
