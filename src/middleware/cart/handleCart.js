@@ -22,8 +22,9 @@ export const handleMerageCartItems = (item1, item2) => {
   return array;
 };
 export const handleproductIsAvailable = async (items) => {
+  console.log("🚀 ~ handleproductIsAvailable ~ items:", items)
   const entries = await productModel.findMany({
-    filters: { _id: { $in: items.map((val) => val.product?._id) } },
+    filters: { _id: { $in: items.map((val) => val?.product?._id) } },
   });
   let result = [];
   items.forEach((val, ind) => {

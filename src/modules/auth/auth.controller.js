@@ -48,8 +48,7 @@ const signUp = AsyncHandler(async (req, res, next) => {
 });
 const signIn = AsyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
-  let user = await UserModel.findOne({ email });
-
+  let user = await UserModel.findOne({ email }).populate("cart");
   if (user && bcrypt.compareSync(password, user.password)) {
     if (user?.isblocked) return res.json({ message: "User is blocked" });
     res.cookie(
@@ -63,22 +62,26 @@ const signIn = AsyncHandler(async (req, res, next) => {
       }
     );
 
-    let cart = null;
-    jwt.verify(
-      req.cookies.cart,
-      process.env.SECRETKEY,
+    let cart = null
+    jwt.verify(req.cookies.cart,process.env.SECRETKEY,
       async (err, decoded) => {
         if (decoded?.cart) {
-          cart = await cartModel.findById(decoded?.cart, { user: user._id });
+          cart = await cartModel.findById(decoded?.cart) 
         }
       }
     );
-    let loaclItems = await handleproductIsAvailable(cart?.items);
-    let allItems = handleMerageCartItems(loaclItems, cart?.items);
+  
+    if (cart,uset?.cart) {
+      
+    }
 
-    let updatedCart = await cartModel.findByIdAndUpdate(cart._id, {
-      items: allItems,
-    });
+
+
+
+
+
+
+
 
     return res.status(200).json({
       message: `welcome ${user.fullName}`,
