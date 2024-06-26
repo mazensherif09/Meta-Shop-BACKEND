@@ -14,10 +14,8 @@ const schema = new mongoose.Schema(
     count: { type: Number, default: 0, required: true, min: 0 },
     createdBy: { type: mongoose.Types.ObjectId, ref: "user" },
     updatedBy: { type: mongoose.Types.ObjectId, ref: "user" },
-    relatedTo: { type: mongoose.Types.ObjectId, ref: "user" },
   },
   { timestamps: true }
 );
-// handle pre populate
 
 export const couponModel = mongoose.model("coupon", schema);

@@ -10,7 +10,7 @@ const schema = new mongoose.Schema(
       default: influencers.pending,
     },
     coupon: { type: mongoose.Types.ObjectId, ref: "coupon" },
-    influencer: { type: mongoose.Types.ObjectId, ref: "user" },
+    relatedTo: { type: mongoose.Types.ObjectId, ref: "user" },
     createdBy: { type: mongoose.Types.ObjectId, ref: "user" },
     balance: {
       type: Number,
@@ -21,12 +21,9 @@ const schema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Pre-find hook to automatically populate images field
+// // Pre-find hook to automatically populate images field
 schema.pre(/^find/, function (next) {
-  this.populate({
-    path: "influencer",
-    model: "user",
-  });
+  this.populate('relatedTo');
   next();
 });
 
