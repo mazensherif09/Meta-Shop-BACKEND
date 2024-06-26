@@ -34,11 +34,12 @@ const GetAll = AsyncHandler(async (req, res, next) => {
 
   let filterObject = {};
   if (req.query.filters) {
-    filterObject = req.query.filters;
+    filterObject = { ...req.query.filters, ...filterObject };
   }
 
   let apiFetcher = new ApiFetcher(FileModel.find(filterObject), req.query);
   apiFetcher.filter().search().sort().select();
+
   // Execute the modified query and get total count
   const total = await FileModel.countDocuments(apiFetcher.queryOrPipeline);
 
