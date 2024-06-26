@@ -24,7 +24,7 @@ UserRouter.route("/")
     checkEmailuser,
     createuser
   )
-  .get(getAllUsers);
+  .get(protectedRoutes, authorized(enumRoles.admin), getAllUsers);
 UserRouter.route("/:id")
   .get(protectedRoutes, authorized(enumRoles.admin), findOneUser)
   .put(validation(userVal), updateuser) // update user
