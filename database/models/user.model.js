@@ -8,7 +8,7 @@ const schema = new mongoose.Schema(
     email: { type: String, trim: true, required: true, unique: true },
     password: { type: String, required: true },
     passwordChangedAt: Date,
-    phone: Number,
+    phone: { type: String, trim: true},
     pincode: Number,
     isresetPassword: { type: Boolean, default: false },
     // roles:  { type: mongoose.Types.ObjectId, ref: "user_roles", default: null },
