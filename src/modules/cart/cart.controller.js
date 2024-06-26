@@ -3,6 +3,7 @@ import { productModel } from "../../../database/models/product.model.js";
 import { AppError } from "../../utils/AppError.js";
 import { couponModel } from "../../../database/models/coupon.model.js";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
+import  jwt  from 'jsonwebtoken';
 
 const addToCart = AsyncHandler(async (req, res, next) => {
   let product = await productModel.findById(req?.body?.product);
@@ -25,6 +26,10 @@ const addToCart = AsyncHandler(async (req, res, next) => {
     });
   }
   await cart.save();
+
+  // Populate the product details in the cart items
+  await cart.populate('items.product');
+
   return res.status(200).json(cart);
 });
 const removeItemCart = AsyncHandler(async (req, res, next) => {
@@ -50,12 +55,11 @@ const removeItemCart = AsyncHandler(async (req, res, next) => {
     { new: true }
   );
   if (!cart) return next(new AppError("something went wrong try again later."));
-  cart = await cart.populate("items.product").execPopulate();
   return res.status(200).json(cart);
 });
 const getLoggedCart = AsyncHandler(async (req, res, next) => {
   let cart = req?.cart;
-  return res.status(200).json(cart);
+  return res.json(cart);
 });
 const clearCart = AsyncHandler(async (req, res, next) => {
   let cart = req?.cart;

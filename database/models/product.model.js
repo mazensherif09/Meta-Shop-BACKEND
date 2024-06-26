@@ -64,12 +64,9 @@ schema.pre(/^find/, function (next) {
       model: "size",
       options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
     });
-  this.populate({
-    path: "category",
-    model: "category",
-  })
-  .populate("poster")
-  .populate("subcategory")
+  this.populate("category")
+    .populate("poster")
+    .populate("subcategory");
   next();
 });
 export const productModel = mongoose.model("product", schema);
@@ -99,7 +96,7 @@ DecorSchema.pre(/^find/, function (next) {
   //     $set: this._update.$set,
   //     $setOnInsert: this._update.$setOnInsert,
   //   };
-    
+
   // }
   next();
 });
