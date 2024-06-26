@@ -8,7 +8,7 @@ const schema = new mongoose.Schema(
     email: { type: String, trim: true, required: true, unique: true },
     password: { type: String, required: true },
     passwordChangedAt: Date,
-    phone: { type: String, trim: true},
+    phone: { type: String, trim: true },
     pincode: Number,
     isresetPassword: { type: Boolean, default: false },
     // roles:  { type: mongoose.Types.ObjectId, ref: "user_roles", default: null },
@@ -39,6 +39,12 @@ schema.pre("save", async function (next) {
   next();
 });
 
+// Middleware to exclude password field from all find queries
+const excludePassword = function (next) {
+  this.select("-password");
+  next();
+};
+
 // Middleware to populate related fields on find queries
 const autoPopulateFields = function (next) {
   this.populate("influencer")
@@ -52,6 +58,8 @@ const autoPopulateFields = function (next) {
     });
   next();
 };
+
+schema.pre(/^find/, excludePassword);
 schema.pre(/^find/, autoPopulateFields);
 
 export const UserModel = mongoose.model("user", schema);

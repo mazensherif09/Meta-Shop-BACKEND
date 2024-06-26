@@ -74,7 +74,7 @@ export class ApiFetcher {
       this.searchQuery.fields.split(",").forEach((field) => {
         fields[field] = 1;
       });
-
+      
       if (this.isPipeline) {
         this.queryOrPipeline.push({ $project: fields });
       } else {
@@ -110,7 +110,11 @@ export class ApiFetcher {
 
   // Populate method for aggregation pipelines
   populateAggregation(populateArray) {
-    if (populateArray && Array.isArray(populateArray) && populateArray.length > 0) {
+    if (
+      populateArray &&
+      Array.isArray(populateArray) &&
+      populateArray.length > 0
+    ) {
       populateArray.forEach((pop) => {
         this.queryOrPipeline.push({
           $lookup: {
@@ -130,7 +134,11 @@ export class ApiFetcher {
 
   // Populate method for find queries
   populateFind(populateArray) {
-    if (populateArray && Array.isArray(populateArray) && populateArray.length > 0) {
+    if (
+      populateArray &&
+      Array.isArray(populateArray) &&
+      populateArray.length > 0
+    ) {
       this.queryOrPipeline.populate(populateArray);
     }
     return this;
