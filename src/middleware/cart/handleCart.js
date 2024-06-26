@@ -22,13 +22,13 @@ export const handleproductIsAvailable = async (items) => {
   const entries = await productModel.findMany({
     filters: { _id: { $in: items.map((val) => val.product?._id) } },
   });
+  let result = [];
   items.forEach((val, ind) => {
     const product = entries.find((val2) => val?.product?._id === val2?._id);
     if (product) {
       val.product = product;
-    } else {
-      val.product = null;
+      items.push(val);
     }
   });
-  return items;
+  return result;
 };
