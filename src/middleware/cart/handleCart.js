@@ -11,12 +11,12 @@ export const handleMerageCartItems = (item1, item2) => {
         ind !== ind2
     );
     if (isDeublicated) {
-      isDeublicated.QTY += val?.QTY;
+      isDeublicated.quantity += val?.quantity;
       array.splice(ind, 1);
     }
   });
   array.forEach((val, ind) => {
-    val.product = val?.product?._id || null;
+    val.product = val?.product?.id || null;
     delete val["id"];
   });
   return array;
