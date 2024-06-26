@@ -73,7 +73,7 @@ const signIn = AsyncHandler(async (req, res, next) => {
         }
       }
     );
-    let loaclItems = await handleproductIsAvailable(items);
+    let loaclItems = await handleproductIsAvailable(cart?.items);
     let allItems = handleMerageCartItems(loaclItems, cart?.items);
 
     let updatedCart = await cartModel.findByIdAndUpdate(cart._id, {
