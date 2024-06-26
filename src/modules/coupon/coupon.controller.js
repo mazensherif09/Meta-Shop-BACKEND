@@ -5,7 +5,7 @@ import { AppError } from "../../utils/AppError.js";
 import { ApiFetcher } from "../../utils/Fetcher.js";
 
 const Insert = AsyncHandler(async (req, res, next) => {
-  const checkDocument = await couponModel.findOne({ text: req.body?.text });
+  const checkDocument = await couponModel.findOne({ code: req.body?.code });
   if (checkDocument) next(new AppError(`Coupon is already in use`, 401));
 
   req.body.createdBy = req.user._id;
@@ -14,7 +14,7 @@ const Insert = AsyncHandler(async (req, res, next) => {
 
   return res.status(200).json({
     message: "Added Sucessfully",
-    document,
+    data:document,
   });
 });
 
@@ -66,7 +66,7 @@ const Delete = AsyncHandler(async (req, res, next) => {
 
   return res.status(200).json({
     message: "Deleted Sucessfully",
-    document,
+    data:document,
   });
 });
 
@@ -79,7 +79,7 @@ const Update = AsyncHandler(async (req, res, next) => {
 
   return res.status(200).json({
     message: "Updated Sucessfully",
-    document,
+    data:document,
   });
 });
 
