@@ -23,7 +23,14 @@ const schema = new mongoose.Schema(
 
 // // Pre-find hook to automatically populate images field
 schema.pre(/^find/, function (next) {
-  this.populate('relatedTo');
+  this.populate({
+    path: 'relatedTo',
+    select: '_id fullName'
+  })
+  this.populate({
+    path: 'coupon',
+    select: '_id code'
+  })
   next();
 });
 

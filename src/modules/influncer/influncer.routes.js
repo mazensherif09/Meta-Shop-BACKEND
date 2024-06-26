@@ -1,13 +1,15 @@
 import express from "express";
 import {
-  influncerSchemaVal,
+  requestForBenfluencerVal,
+  InfluncerVal,
   updateInfluncerSchemaVal,
   paramsIdVal,
 } from "./influncer.validation.js";
 import { validation } from "../../middleware/globels/validation.js";
 import {
-  request,
+  InsertOne,
   GetAll,
+  requestForBenfluencer,
   Delete,
   Update,
   GetOne,
@@ -21,10 +23,17 @@ import { AttributedTo } from "../../middleware/AttributedTo.js";
 const influncerRouter = express.Router();
 
 influncerRouter
-  .route("/")
-  .post(validation(influncerSchemaVal), protectedRoutes, request)
-  .get(protectedRoutes, authorized(enumRoles.admin), AttributedTo, GetAll);
+  .route("/request")
+  .post(
+    validation(requestForBenfluencerVal),
+    protectedRoutes,
+    requestForBenfluencer
+  );
 
+influncerRouter
+  .route("/")
+  .get(protectedRoutes, authorized(enumRoles.admin), AttributedTo, GetAll)
+  .post(validation(InfluncerVal), protectedRoutes, InsertOne);
 influncerRouter
   .route("/:id")
   .get(protectedRoutes, GetOne)
