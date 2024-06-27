@@ -28,11 +28,11 @@ const schema = new mongoose.Schema(
 
 // Pre-find hook to automatically populate images field
 schema.pre(/^find/, function (next) {
-  this
-     .populate({
-      path: 'poster',
-      model: 'file',
-    });
+  this.populate({
+    path: "poster",
+    model: "file",
+    select: "_id url mimetype", // Example fields to select from the 'color' model
+  });
   next();
 });
 

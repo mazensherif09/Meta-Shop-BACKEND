@@ -105,7 +105,7 @@ const getallproduct = AsyncHandler(async (req, res, next) => {
       ],
     },
   });
-//
+  //
   // Add a stage to replace the posterImage array with its first element
   pipeline.push({
     $addFields: {
@@ -176,6 +176,7 @@ const updateproduct = AsyncHandler(async (req, res, next) => {
       model = productModel;
   }
 
+  console.log("🚀 ~ updateproduct ~ req?.body:", req?.body?.colors[0]?.sizes);
   const updatedProduct = await model.findByIdAndUpdate(
     req.params.id,
     req?.body,

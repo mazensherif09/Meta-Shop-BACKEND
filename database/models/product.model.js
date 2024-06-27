@@ -54,19 +54,37 @@ schema.pre(/^find/, function (next) {
   this.populate({
     path: "colors.color",
     model: "color",
+    select: "_id code name",
   })
     .populate({
       path: "colors.images",
       model: "file",
+      select: "_id url mimetype", // Example fields to select from the 'color' model
+    })
+    .populate({
+      path: "poster",
+      model: "file",
+      select: "_id url mimetype", // Example fields to select from the 'color' model
     })
     .populate({
       path: "colors.sizes.size",
       model: "size",
+      select: "_id name", // Example fields to select from the 'color' model
+      options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
+    })
+    .populate({
+      path: "category",
+      model: "category",
+      select: "_id name slug", // Example fields to select from the 'color' model
+      options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
+    })
+    .populate({
+      path: "subcategory",
+      model: "subcategory",
+      select: "_id name slug", // Example fields to select from the 'color' model
       options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
     });
-  this.populate("category")
-    .populate("poster")
-    .populate("subcategory");
+
   next();
 });
 export const productModel = mongoose.model("product", schema);
