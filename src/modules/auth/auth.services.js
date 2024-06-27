@@ -73,15 +73,16 @@ const handleCartSignIn = async (user, req, res) => {
                 { user: user._id },
                 { new: true }
             );
+            res.cookie("cart", "", {
+                maxAge: 0,
+                httpOnly: true,
+            });
         } catch (error) { }
     }
     if (!cart) {
         cart = await cartModel.create({ user });
     }
-    res.cookie("cart", "", {
-        maxAge: 0,
-        httpOnly: true,
-    });
+
     return cart;
 };
 
