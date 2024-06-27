@@ -15,7 +15,20 @@ const schema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
+schema.pre(/^find/, function (next) {
+  this.populate({
+    path: "topCategories",
+    model: "category",
+    select: "_id name poster", // Example fields to select from the 'color' model
+    options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
+  }).populate({
+    path: "sliderLanding.poster",
+    model: "file",
+    select: "_id url", // Example fields to select from the 'color' model
+    options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
+  });
+  next();
+});
 export const SingleTypeModel = mongoose.model("singletype", schema);
 
 // Q&A_Page Schema
@@ -70,25 +83,16 @@ const landingSchema = new mongoose.Schema({
     },
   ],
   topCategories: [{ type: ObjectId, ref: "category" }],
-  newInPoster: { type: ObjectId, ref: "file" },
-  newTitle: {
-    type: String,
-    trim: true,
-    minLength: [1, "too short brand name"],
-    required: true,
-  },
+  // newInPoster: { type: ObjectId, ref: "file" },
+  // newTitle: {
+  //   type: String,
+  //   trim: true,
+  //   minLength: [1, "too short brand name"],
+  //   required: true,
+  // },
 });
 
-landingSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: "topCategories",
-    model: "category",
-  }).populate({
-    path: "sliderLanding.images",
-    model: "file",
-  });
-  next();
-});
+
 
 export const landingPageModel = SingleTypeModel.discriminator(
   "landing",

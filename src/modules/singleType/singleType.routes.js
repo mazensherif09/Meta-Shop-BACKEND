@@ -10,14 +10,18 @@ import { insert, getPage, updatePage } from "./singleType.controller.js";
 import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
 import { authorized } from "../../middleware/globels/authorized.js";
 import { enumRoles } from "../../assets/enums/Roles_permissions.js";
-import { AttributedTo } from "../../middleware/AttributedTo.js";
-
+import { AttributedTo } from "../../middleware/globels/AttributedTo.js";
+import { keyHandler } from "../../middleware/singleType/singleType.js";
+import { tokenDetector } from "../../middleware/auth/tokenDetector.js"
 const singleTypeRouter = express.Router();
-
+// get rouets
+singleTypeRouter.route("/:key").get(tokenDetector, getPage);
+// post routes
 singleTypeRouter.post(
   "/landing",
   protectedRoutes,
   authorized(enumRoles.admin),
+  keyHandler("landing"),
   AttributedTo,
   insert
 );
@@ -25,6 +29,7 @@ singleTypeRouter.post(
   "/about-us",
   protectedRoutes,
   authorized(enumRoles.admin),
+  keyHandler("about-us"),
   AttributedTo,
   insert
 );
@@ -32,13 +37,19 @@ singleTypeRouter.post(
   "/warning",
   protectedRoutes,
   authorized(enumRoles.admin),
+  keyHandler("warning"),
   AttributedTo,
   insert
 );
-
+// put toutes
 singleTypeRouter
-  .route("/:key")
-  .put(protectedRoutes, authorized(enumRoles.admin),  AttributedTo, updatePage)
-  .get(getPage);
+  .route("/landing")
+  .put(protectedRoutes, authorized(enumRoles.admin), AttributedTo, updatePage);
+singleTypeRouter
+  .route("/about-us")
+  .put(protectedRoutes, authorized(enumRoles.admin), AttributedTo, updatePage);
+singleTypeRouter
+  .route("/warning")
+  .put(protectedRoutes, authorized(enumRoles.admin), AttributedTo, updatePage);
 
 export default singleTypeRouter;

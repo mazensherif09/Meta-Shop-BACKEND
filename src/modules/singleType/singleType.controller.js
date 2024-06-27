@@ -9,45 +9,56 @@ import { AppError } from "../../utils/AppError.js";
 import { ApiFetcher } from "../../utils/Fetcher.js";
 
 const insert = AsyncHandler(async (req, res, next) => {
-  // req.body.influencer = req.user._id;
-  req.body.createdBy = req.user._id;
-  // Attempt to insert or update a document
-
-  const { key } = req.body;
-
-  const check = await SingleTypeModel.findOne({ key: req.body.key });
+  const key = req.key;
+  req.body.key = key;
+  const check = await SingleTypeModel.findOne({ key });
   if (check)
     return next(new AppError(`page already exist with same title`, 401));
 
-  let page;
-  if (key === "warning") {
-    page = new warningPageModel(req.body);
-  } else if (key === "landing") {
-    page = new landingPageModel(req.body);
-  } else if (key === "about_us") {
-    page = new aboutPageModel(req.body);
-  } else {
-    return res.status(400).send("Invalid Page Type");
-  }
+  let Model;
+  console.log(req.body);
 
-  await page.save();
-  res.status(201).send(page);
+  switch (key) {
+    case "warning":
+      Model = new warningPageModel(req.body);
+      break;
+    case "about_us":
+      Model = new aboutPageModel(req.body);
+      break;
+    case "landing":
+      Model = new landingPageModel(req.body);
+      break;
+    default:
+      return res.status(400).send("Invalid Page Type");
+  }
+  await Model.save();
+  return res.status(201).send({
+    message: "page saved successfully",
+    data: Model,
+  });
 });
 
 const getPage = AsyncHandler(async (req, res, next) => {
-  const document = await SingleTypeModel.findOne({ key: req.params?.key })
-  .populate("createdBy", "fullName")
-  .populate("updatedBy", "fullName")
-  if (!document) next(new AppError(`Page is not found`, 401));
+  let query = { key: req.params.key };
+  let document = null;
+  if (req?.user?.role == "admin") {
+    document = await SingleTypeModel.findOne(query)
+      .populate("createdBy", "fullName")
+      .populate("updatedBy", "fullName");
+  } else {
+    document = await SingleTypeModel.findOne(query);
+  }
 
+  if (!document) return next(new AppError(`Page is not found`, 404));
   return res.status(200).json(document);
 });
 
 const updatePage = AsyncHandler(async (req, res, next) => {
   // Find the single Model first to determine its type
-  const singleModel = await SingleTypeModel.findOne(req.params.key);
+  let key = req.params.key
+  const singleModel = await SingleTypeModel.findOne({key});
   if (!singleModel) {
-    next(new AppError("Page not found", 404));
+    return next(new AppError("Page not found", 404));
   }
 
   let model;
@@ -65,18 +76,18 @@ const updatePage = AsyncHandler(async (req, res, next) => {
       model = singleModel;
   }
 
-  const updatedModel = await model.findOneAndUpdate(
-    { key: req.params.key },
+  const data = await model.findByIdAndUpdate(
+    singleModel?._id,
     req?.body,
     {
       new: true,
     }
   );
-  if (!updatedModel) return next(new AppError("Page not found", 404));
+  if (!data) return next(new AppError("Page not found", 404));
 
   return res.status(200).json({
     message: "Updated Sucessfully",
-    data: updatedProduct,
+    data,
   });
 });
 

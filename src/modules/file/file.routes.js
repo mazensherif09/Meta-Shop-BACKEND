@@ -9,7 +9,7 @@ import { deleteSchema, uploadSchema } from "./file.validation.js";
 import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
 import { authorized } from "../../middleware/globels/authorized.js";
 import { enumRoles } from "../../assets/enums/Roles_permissions.js";
-import { AttributedTo } from "../../middleware/AttributedTo.js";
+import { AttributedTo } from "../../middleware/globels/AttributedTo.js";
 
 const fileRouter = express.Router();
 fileRouter
