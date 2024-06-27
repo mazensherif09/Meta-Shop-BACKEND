@@ -4,7 +4,7 @@ import {
   colorSchemaVal,
   updateColorSchemaVal,
 } from "../colors/colors.validation.js";
-import { CategorySchemaVal } from "../category/category.validation.js";
+import { CategorySchemaVal, UpdateCategorySchemaVal } from "../category/category.validation.js";
 import { subCategorySchemaVal } from "../subcategory/subcategory.validation.js";
 import { updatesizeSchemaVal } from "../sizes/sizes.validation.js";
 let ObjectIdVal = Joi.string().hex().length(24);
@@ -47,10 +47,10 @@ const ProductSchemaVal = Joi.object({
   isFeatured: Joi.boolean(),
   puplish: Joi.boolean(),
   poster: Joi.alternatives().try(ObjectIdVal, relationFileVal),
-  category: Joi.alternatives().try(ObjectIdVal, CategorySchemaVal).required(),
-  // subcategory: Joi.alternatives()
-  //   .try(ObjectIdVal, subCategorySchemaVal)
-  //   .required(),
+  category: Joi.alternatives().try(ObjectIdVal, UpdateCategorySchemaVal).required(),
+  subcategory: Joi.alternatives()
+    .try(ObjectIdVal, UpdateCategorySchemaVal)
+    .required(),
   type: Joi.string().valid("clothes", "decor").required(),
   colors: Joi.when("type", {
     is: "clothes",
@@ -68,8 +68,8 @@ const UpdateproductSchemaVal = Joi.object({
   isFeatured: Joi.boolean(),
   puplish: Joi.boolean(),
   poster: Joi.alternatives().try(ObjectIdVal, relationFileVal),
-  category: Joi.alternatives().try(ObjectIdVal, CategorySchemaVal),
-  subcategory: Joi.alternatives().try(ObjectIdVal, subCategorySchemaVal),
+  category: Joi.alternatives().try(ObjectIdVal, UpdateCategorySchemaVal),
+  subcategory: Joi.alternatives().try(ObjectIdVal, UpdateCategorySchemaVal),
   type: Joi.string().valid("clothes", "decor"),
   colors: Joi.when("type", {
     is: "clothes",
