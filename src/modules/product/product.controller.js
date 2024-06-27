@@ -52,7 +52,7 @@ const getallproduct = AsyncHandler(async (req, res, next) => {
   if (req.query.filters) {
     filterObject = req.query.filters;
   }
-  console.log("🚀 ~ getallproduct ~ filterObject:", filterObject);
+  // console.log("🚀 ~ getallproduct ~ filterObject:", filterObject);
 
   let pipeline = [];
   // Add category lookup if category is provided

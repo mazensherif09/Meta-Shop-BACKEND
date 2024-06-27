@@ -31,12 +31,25 @@ export class ApiFetcher {
   filter() {
     if (this.searchQuery.filter) {
       let filterObject = { ...this.searchQuery.filter };
+      
+
       filterObject = JSON.stringify(filterObject);
       filterObject = filterObject.replace(
         /(gt|gte|lt|lte)/g,
         (match) => "$" + match
       );
       filterObject = JSON.parse(filterObject);
+
+     // Loop through each filter parameter
+     for (const key in filterObject) {
+      // Handle special MongoDB operators if present
+      if (key === "isFeatured" && filterObject[key]["$eq"] === "true") {
+        filterObject[key] = true ; 
+      } else if(key === "isFeatured" && filterObject[key]["$eq"] === "false"){
+        // Default behavior: copy filter value as is
+        filterObject[key] = false;
+      }
+    }
 
       if (this.isPipeline) {
         this.queryOrPipeline.push({ $match: filterObject });
@@ -74,7 +87,7 @@ export class ApiFetcher {
       this.searchQuery.fields.split(",").forEach((field) => {
         fields[field] = 1;
       });
-      
+
       if (this.isPipeline) {
         this.queryOrPipeline.push({ $project: fields });
       } else {
