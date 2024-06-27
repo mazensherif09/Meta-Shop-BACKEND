@@ -43,18 +43,22 @@ const handleConnectCart = async (user, req, res) => {
     let cart = user?.cart;
     if (req.cookies.cart) {
         try {
-            const decoded = await jwt.verify(req.cookies.cart, process.env.SECRETKEY);
+            const decoded = jwt.verify(req.cookies.cart, process.env.SECRETKEY);
             if (decoded?.cart) {
                 const localCart = await cartModel.findByIdAndDelete(decoded.cart, {
                     new: true,
                 });
                 if (localCart) {
-                    cart = await cartModel.findByIdAndUpdate(cart?._id, {
-                        items: handleMerageCartItems(localCart?.items, cart?.items),
-                        user,
-                    },{
-                        new: true,
-                    });
+                    cart = await cartModel.findByIdAndUpdate(
+                        cart?._id,
+                        {
+                            items: handleMerageCartItems(localCart?.items, cart?.items),
+                            user,
+                        },
+                        {
+                            new: true,
+                        }
+                    );
                     res.cookie("cart", "", {
                         maxAge: 0,
                         httpOnly: true,
@@ -64,11 +68,9 @@ const handleConnectCart = async (user, req, res) => {
             }
         } catch (err) {
             console.error("Error handling cart connection:", err);
-            return cart;
         }
-    } else {
-        return cart;
     }
+    return cart;
 };
 const handleCartSignIn = async (user, req, res) => {
     let cart = null;
