@@ -4,6 +4,7 @@ import { AppError } from "../../utils/AppError.js";
 import { ApiFetcher } from "../../utils/Fetcher.js";
 import { UserModel } from "../../../database/models/user.model.js";
 
+
 const InsertOne = AsyncHandler(async (req, res, next) => {
   let check = await influencerModel.findOne({
     socialAccount: req.body.socialAccount,
@@ -31,7 +32,7 @@ const requestForBenfluencer = AsyncHandler(async (req, res, next) => {
   if (check)
     return next(new AppError(`Influncer socialName is already in use`, 404));
 
-  req.body.influencer = req.user._id;
+  req.body.relatedTo = req.user._id;
   const influencer = new influencerModel(req.body);
   await influencer.save();
 
@@ -99,6 +100,10 @@ const Delete = AsyncHandler(async (req, res, next) => {
     _id: req.params?.id,
   });
   if (!document) return next(new AppError(`Influncer is not found`, 401));
+
+  await UserModel.findByIdAndUpdate(req.user._id, {
+    influencer: null,
+  });
 
   return res.status(200).json({
     message: "Deleted Sucessfully",

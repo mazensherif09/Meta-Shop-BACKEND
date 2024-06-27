@@ -174,6 +174,7 @@ const verfiySession = AsyncHandler(async (req, res, next) => {
       role: user?.role,
       phone: user?.phone,
       confirmEmail: user?.confirmEmail,
+      influencer: user?.influencer
     },
     cart: user?.cart,
   });
