@@ -52,7 +52,7 @@ const getallproduct = AsyncHandler(async (req, res, next) => {
   if (req.query.filters) {
     filterObject = req.query.filters;
   }
-  console.log("🚀 ~ getallproduct ~ filterObject:", filterObject)
+  console.log("🚀 ~ getallproduct ~ filterObject:", filterObject);
 
   let pipeline = [];
   // Add category lookup if category is provided
@@ -153,7 +153,7 @@ const getOneproduct = AsyncHandler(async (req, res, next) => {
     query = { slug: req.params.slug };
   }
   let document = null;
-  if (req.user.role == "admin") {
+  if (req?.user?.role == "admin") {
     document = await productModel
       .findOne(query)
       .populate("createdBy", "fullName")
@@ -212,7 +212,7 @@ export {
   getOneproduct,
   updateproduct,
   deleteproduct,
-  getFeatured
+  getFeatured,
 };
 
 /*

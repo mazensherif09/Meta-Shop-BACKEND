@@ -1,6 +1,6 @@
-import { productModel } from "../../database/models/product.model.js";
-import { AppError } from "../utils/AppError.js";
-import { AsyncHandler } from "./globels/AsyncHandler.js";
+import { productModel } from "../../../database/models/product.model.js";
+import { AppError } from "../../utils/AppError.js";
+import { AsyncHandler } from "./AsyncHandler.js";
 
 export const ownerMiddlewar = AsyncHandler(async (req, res, next) => {
   const { id } = req.params;

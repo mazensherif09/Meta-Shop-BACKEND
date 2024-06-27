@@ -9,17 +9,17 @@ import {
 } from "./cart.controller.js";
 import { addCartVal, paramsIdVal } from "./cart.validation.js";
 import { validation } from "../../middleware/globels/validation.js";
-import { protectedRoutesCart } from "../../middleware/cart/protectedRoutesCart.js";
 import { checkCart } from "../../middleware/cart/checkCart.js";
+import {tokenDetector} from "../../middleware/auth/tokenDetector.js";
 const cartRouter = express.Router();
 cartRouter
   .route("/")
-  .post(protectedRoutesCart, validation(addCartVal), checkCart, addToCart)
-  .get(protectedRoutesCart, checkCart, getLoggedCart)
-  .patch(protectedRoutesCart, checkCart, clearCart);
+  .post(tokenDetector, validation(addCartVal), checkCart, addToCart)
+  .get(tokenDetector, checkCart, getLoggedCart)
+  .patch(tokenDetector, checkCart, clearCart);
 
 cartRouter
   .route("/:id")
-  .put(protectedRoutesCart, validation(paramsIdVal), removeItemCart);
+  .put(tokenDetector, validation(paramsIdVal), removeItemCart);
 
 export default cartRouter;

@@ -15,7 +15,7 @@ import { enumRoles } from "../../assets/enums/Roles_permissions.js";
 import {  userInsertVal,
   userUpdateVal} from './user.vailadtion.js'
 import { checkEmailuser } from "../../middleware/auth/checkUser.js";
-import { AttributedTo } from "../../middleware/AttributedTo.js";
+import { AttributedTo } from "../../middleware/globels/AttributedTo.js";
 const UserRouter = express.Router();
 // start registration routes
 UserRouter.route("/")

@@ -10,7 +10,7 @@ import { Insert, Delete, GetAll, Update, getOne } from "./colors.controller.js";
 import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
 import { authorized } from "../../middleware/globels/authorized.js";
 import { enumRoles } from "../../assets/enums/Roles_permissions.js";
-import { AttributedTo } from "../../middleware/AttributedTo.js";
+import { AttributedTo } from "../../middleware/globels/AttributedTo.js";
 
 const colorsRouter = express.Router();
 
