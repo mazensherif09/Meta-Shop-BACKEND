@@ -69,7 +69,11 @@ const landingSchema = new mongoose.Schema({
       images: [{ type: ObjectId, ref: "file" }],
     },
   ],
-
+  sampleProducts: [ {
+      product: { type: ObjectId, ref: "product", required: true },
+    },
+  ],
+  IsFeatured: { type: ObjectId, ref: "file" },
   topCategories: [{ type: ObjectId, ref: "category" }],
 });
 
