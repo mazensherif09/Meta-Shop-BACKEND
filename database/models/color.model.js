@@ -13,6 +13,7 @@ const schema = new Schema({
     unique: true,
   },
   createdBy: { type: ObjectId, ref: "user" },
+  updatedBy: { type: mongoose.Types.ObjectId, ref: "user" },
 },{
   timestamps: true,
 });

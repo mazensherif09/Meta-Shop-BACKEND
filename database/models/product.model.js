@@ -35,6 +35,7 @@ const schema = new mongoose.Schema(
     isFeatured: { type: Boolean, default: true },
     puplish: { type: Boolean, default: false, default: false },
     createdBy: { type: ObjectId, ref: "user" },
+    updatedBy: { type: mongoose.Types.ObjectId, ref: "user" },
     subcategory: { type: ObjectId, ref: "subcategory" },
     category: { type: ObjectId, ref: "category" },
     poster: {

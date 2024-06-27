@@ -11,6 +11,7 @@ const schema = new mongoose.Schema(
       minLength: [1, "too short category name"],
     },
     createdBy: { type: mongoose.Types.ObjectId, ref: "user" },
+    updatedBy: { type: mongoose.Types.ObjectId, ref: "user" },
   },
   { timestamps: true }
 );

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { influencers } from "../../src/assets/enums/influeners.js";
-
+const ObjectId = mongoose.Schema.Types.ObjectId;
 const schema = new mongoose.Schema(
   {
     socialAccount: { type: String, trim: true, required: true },
@@ -17,6 +17,7 @@ const schema = new mongoose.Schema(
       default: 0,
       min: 0,
     },
+    updatedBy: { type: mongoose.Types.ObjectId, ref: "user" },
   },
   { timestamps: true }
 );

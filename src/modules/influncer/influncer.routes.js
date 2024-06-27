@@ -33,7 +33,7 @@ influncerRouter
 influncerRouter
   .route("/")
   .get(protectedRoutes, authorized(enumRoles.admin), AttributedTo, GetAll)
-  .post(validation(InfluncerVal), protectedRoutes, InsertOne);
+  .post(validation(InfluncerVal), protectedRoutes, AttributedTo, InsertOne);
 influncerRouter
   .route("/:id")
   .get(protectedRoutes, GetOne)

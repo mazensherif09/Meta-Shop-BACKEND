@@ -48,9 +48,9 @@ const ProductSchemaVal = Joi.object({
   puplish: Joi.boolean(),
   poster: Joi.alternatives().try(ObjectIdVal, relationFileVal),
   category: Joi.alternatives().try(ObjectIdVal, CategorySchemaVal).required(),
-  subcategory: Joi.alternatives()
-    .try(ObjectIdVal, subCategorySchemaVal)
-    .required(),
+  // subcategory: Joi.alternatives()
+  //   .try(ObjectIdVal, subCategorySchemaVal)
+  //   .required(),
   type: Joi.string().valid("clothes", "decor").required(),
   colors: Joi.when("type", {
     is: "clothes",

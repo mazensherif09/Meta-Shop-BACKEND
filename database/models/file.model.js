@@ -1,5 +1,5 @@
 import mongoose, { Schema, model } from "mongoose";
-
+const ObjectId = mongoose.Schema.Types.ObjectId;
 const schema = new Schema(
   {
     filename: {
@@ -23,7 +23,10 @@ const schema = new Schema(
     originalname: {
       type: String,
     },
+    createdBy: { type: ObjectId, ref: "user" },
+    updatedBy: { type: mongoose.Types.ObjectId, ref: "user" },
   },
+
   {
     timestamps: true,
   }

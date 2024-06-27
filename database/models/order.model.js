@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+const ObjectId = mongoose.Schema.Types.ObjectId;
 const schema = new mongoose.Schema(
   {
     user: { type: mongoose.Types.ObjectId, ref: "user" },

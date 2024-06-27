@@ -17,6 +17,7 @@ const schema = new Schema({
     required: true,
   },
   createdBy: { type: ObjectId, ref: "user" },
+  updatedBy: { type: mongoose.Types.ObjectId, ref: "user" },
 },{
   timestamps: true,
 });
