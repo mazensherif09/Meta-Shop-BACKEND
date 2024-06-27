@@ -10,8 +10,7 @@ const addToCart = AsyncHandler(async (req, res, next) => {
   if (!product) return next(new AppError("Product not found", 404));
   const { color = null, size = null, quantity = 1 } = req.body;
   let cart = req?.cart;
-  const item = cart.items.find(
-    (v) =>
+  const item = cart.items.find((v) =>
       v?.product?._id?.toString() === product?._id?.toString() &&
       v?.color?._id?.toString() === color?.toString() &&
       v?.size?._id?.toString() === size?.toString()
