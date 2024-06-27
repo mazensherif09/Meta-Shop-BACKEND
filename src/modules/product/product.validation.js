@@ -1,13 +1,15 @@
 import Joi from "joi";
 import { relationFileVal } from "../file/file.validation.js";
-import { colorSchemaVal } from "../colors/colors.validation.js";
+import { colorSchemaVal, updateColorSchemaVal } from "../colors/colors.validation.js";
 import { CategorySchemaVal } from "../category/category.validation.js";
 import { subCategorySchemaVal } from "../subcategory/subcategory.validation.js";
-import { sizeSchemaVal } from "../sizes/sizes.validation.js";
+import { updatesizeSchemaVal } from "../sizes/sizes.validation.js";
 let ObjectIdVal = Joi.string().hex().length(24);
-let imagesVal = Joi.array().items(Joi.alternatives().try(ObjectIdVal, relationFileVal)); // Validate ObjectId
-let colorVal = Joi.alternatives().try(ObjectIdVal, colorSchemaVal);
-const sizeVal =Joi.alternatives().try(ObjectIdVal,sizeSchemaVal)
+let imagesVal = Joi.array().items(
+  Joi.alternatives().try(ObjectIdVal, relationFileVal)
+); // Validate ObjectId
+let colorVal = Joi.alternatives().try(ObjectIdVal, updateColorSchemaVal);
+const sizeVal = Joi.alternatives().try(ObjectIdVal, updatesizeSchemaVal);
 const clothesVal = Joi.array().items(
   Joi.object({
     color: colorVal,
@@ -15,7 +17,7 @@ const clothesVal = Joi.array().items(
     sizes: Joi.array().items(
       Joi.object({
         size: Joi.any(), // Validate ObjectId
-        stock: Joi.number().min(0).default(0),
+        stock: Joi.number().min(0),
         _id: ObjectIdVal,
       })
     ),
@@ -66,7 +68,12 @@ const UpdateproductSchemaVal = Joi.object({
   category: Joi.alternatives().try(ObjectIdVal, CategorySchemaVal),
   subcategory: Joi.alternatives().try(ObjectIdVal, subCategorySchemaVal),
   type: Joi.string().valid("clothes", "decor"),
-  colors:Joi.alternatives().try(clothesVal, decorVal)
+  colors: Joi.when("type", {
+    is: "clothes",
+    then: clothesVal,
+    otherwise: decorVal,
+  }),
+  colors: Joi.alternatives().try(clothesVal, decorVal),
 });
 const paramsIdVal = Joi.object({
   id: ObjectIdVal,

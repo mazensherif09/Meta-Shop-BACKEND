@@ -8,6 +8,7 @@ const colorSchemaVal = Joi.object({
 });
 const updateColorSchemaVal = Joi.object({
   id: Joi.string().hex().length(24),
+  _id:Joi.string().hex().length(24),
     name: Joi.string().min(1).max(30).trim(),
     code: Joi.string().min(1).max(30).trim(),
 });
