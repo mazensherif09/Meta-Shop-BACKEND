@@ -46,7 +46,9 @@ const handleConnectCart = async (cart, req, res) => {
                 });
                 if (localCart) {
                     const localItems = await handleproductIsAvailable(localCart.items);
+                    console.log("🚀 ~ handleConnectCart ~ localItems:", localItems)
                     cart.items = handleMerageCartItems(localItems, cart?.items);
+                    console.log("🚀 ~ handleConnectCart ~  cart.items:",  cart.items)
                     await cartModel.findByIdAndUpdate(cart._id, {
                         items: cart.items,
                         user: req.user?._id,
