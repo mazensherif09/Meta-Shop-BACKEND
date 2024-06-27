@@ -14,7 +14,7 @@ const Insert = AsyncHandler(async (req, res, next) => {
 
   return res.status(200).json({
     message: "Added Sucessfully",
-    data:document,
+    data: document,
   });
 });
 
@@ -26,7 +26,6 @@ const GetAll = AsyncHandler(async (req, res, next) => {
   if (req.query.filters) {
     filterObject = { ...req.query.filters, ...filterObject };
   }
-
 
   let apiFetcher = new ApiFetcher(couponModel.find(filterObject), req.query);
   apiFetcher.filter().search().sort().select();
@@ -55,7 +54,10 @@ const GetAll = AsyncHandler(async (req, res, next) => {
 });
 
 const getOne = AsyncHandler(async (req, res, next) => {
-  const document = await couponModel.findById(req.params?.id);
+  const document = await couponModel
+    .findById(req.params?.id)
+    .populate("createdBy", "fullName")
+    .populate("updatedBy", "fullName")
   if (!document) next(new AppError(`Size is not found`, 401));
 
   res.status(200).json(document);
@@ -67,7 +69,7 @@ const Delete = AsyncHandler(async (req, res, next) => {
 
   return res.status(200).json({
     message: "Deleted Sucessfully",
-    data:document,
+    data: document,
   });
 });
 
@@ -80,7 +82,7 @@ const Update = AsyncHandler(async (req, res, next) => {
 
   return res.status(200).json({
     message: "Updated Sucessfully",
-    data:document,
+    data: document,
   });
 });
 
@@ -101,7 +103,7 @@ const checkCoupon = AsyncHandler(async (req, res, next) => {
   }
 
   // Create a new entry in the coupon history
-  const newCouponHistory  = new couponhistoryModel({
+  const newCouponHistory = new couponhistoryModel({
     user: req.user._id,
     coupon: coupon._id,
   });

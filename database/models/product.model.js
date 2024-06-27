@@ -32,7 +32,7 @@ const schema = new mongoose.Schema(
       default: 0,
     },
     sold: Number,
-    isFeatured: { type: Boolean, default: true },
+    isFeatured: { type: Boolean, default: false },
     publish: { type: Boolean, default: false, default: false },
     createdBy: { type: ObjectId, ref: "user" },
     updatedBy: { type: mongoose.Types.ObjectId, ref: "user" },
