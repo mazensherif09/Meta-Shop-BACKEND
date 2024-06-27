@@ -3,7 +3,7 @@ import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
 import { ApiFetcher } from "../../utils/Fetcher.js";
 import { UserModel } from "../../../database/models/user.model.js";
-import { UserModel } from "../../../database/models/user.model.js";
+
 
 const InsertOne = AsyncHandler(async (req, res, next) => {
   let check = await influencerModel.findOne({
