@@ -8,7 +8,7 @@ import jwt from "jsonwebtoken";
 const addToCart = AsyncHandler(async (req, res, next) => {
   let product = await productModel.findById(req?.body?.product);
   if (!product) return next(new AppError("Product not found", 404));
-  const { color = null, size = null } = req.body;
+  const { color = null, size = null, quantity = 1 } = req.body;
   let cart = req?.cart;
   const item = cart.items.find(
     (v) =>
@@ -17,7 +17,7 @@ const addToCart = AsyncHandler(async (req, res, next) => {
       v?.size?._id?.toString() === size?.toString()
   );
   if (item) {
-    item.quantity += 1;
+    item.quantity = quantity;
   } else {
     cart.items.push({
       product: req?.body?.product,
@@ -86,7 +86,6 @@ const applyCoupon = AsyncHandler(async (req, res, next) => {
 const boundary = AsyncHandler(async (req, res, next) => {
   return res.status(200).json({ message: "success" });
 });
-
 
 export {
   addToCart,

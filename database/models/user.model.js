@@ -43,13 +43,18 @@ schema.virtual("cart", {
   ref: "cart",
   localField: "_id",
   foreignField: "user",
+  justOne: true  // Ensures the virtual field returns an object instead of an array
 });
+
+// Ensure virtual fields are serialized
+schema.set('toObject', { virtuals: true });
+schema.set('toJSON', { virtuals: true });
 // Middleware to populate related fields on find queries
 const autoPopulateFields = function (next) {
-    this.populate({
-      path: "updatedBy",
-      select: "fullName _id",
-    });
+  this.populate({
+    path: "updatedBy",
+    select: "fullName _id",
+  });
   next();
 };
 
