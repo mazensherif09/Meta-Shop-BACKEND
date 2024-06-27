@@ -12,10 +12,10 @@ import { authorized } from "../../middleware/globels/authorized.js";
 import { enumRoles } from "../../assets/enums/Roles_permissions.js";
 import { AttributedTo } from "../../middleware/globels/AttributedTo.js";
 import { keyHandler } from "../../middleware/singleType/singleType.js";
-import { tokenDetector } from "../../middleware/auth/tokenDetector.js"
+import { tokenDetector } from "../../middleware/auth/tokenDetector.js";
 const singleTypeRouter = express.Router();
 // get rouets
-singleTypeRouter.route("/:key").get(tokenDetector, getPage);
+
 // post routes
 singleTypeRouter.post(
   "/landing",
@@ -42,14 +42,30 @@ singleTypeRouter.post(
   insert
 );
 // put toutes
-singleTypeRouter
-  .route("/landing")
-  .put(protectedRoutes, authorized(enumRoles.admin), AttributedTo, updatePage);
+singleTypeRouter.route("/landing").put(
+  protectedRoutes,
+  authorized(enumRoles.admin),
+  AttributedTo,
+  keyHandler("landing"),
+  updatePage
+);
 singleTypeRouter
   .route("/about-us")
-  .put(protectedRoutes, authorized(enumRoles.admin), AttributedTo, updatePage);
+  .put(
+    protectedRoutes,
+    authorized(enumRoles.admin),
+    AttributedTo,
+    keyHandler("about-us"),
+    updatePage
+  );
 singleTypeRouter
   .route("/warning")
-  .put(protectedRoutes, authorized(enumRoles.admin), AttributedTo, updatePage);
-
+  .put(
+    protectedRoutes,
+    authorized(enumRoles.admin),
+    AttributedTo,
+    keyHandler("warning"),
+    updatePage
+  );
+singleTypeRouter.get("/:key", tokenDetector, getPage);
 export default singleTypeRouter;

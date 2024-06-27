@@ -55,7 +55,7 @@ const getPage = AsyncHandler(async (req, res, next) => {
 
 const updatePage = AsyncHandler(async (req, res, next) => {
   // Find the single Model first to determine its type
-  let key = req.params.key
+  let key = req.key
   const singleModel = await SingleTypeModel.findOne({key});
   if (!singleModel) {
     return next(new AppError("Page not found", 404));
