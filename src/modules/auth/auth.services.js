@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken";
 import { cartModel } from "../../../database/models/cart.model.js";
 import { productModel } from "../../../database/models/product.model.js";
+import { AppError } from "../../utils/AppError.js";
+
 
 const handleMerageCartItems = (items1 = [], items2 = []) => {
   let array = [...items1, ...items2];
@@ -66,7 +68,7 @@ const handleConnectCart = async (user, req, res) => {
         }
       }
     } catch (err) {
-      console.error("Error handling cart connection:", err);
+     return next(new AppError(`Error handling cart connection`, 401));
     }
   }
   return cart;

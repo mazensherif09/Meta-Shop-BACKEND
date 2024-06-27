@@ -28,7 +28,6 @@ const addToCart = AsyncHandler(async (req, res, next) => {
   const data = await cartModel.findByIdAndUpdate(cart?._id, cart, {
     new: true,
   });
-  console.log("🚀 ~ addToCart ~ data:", data)
 
   return res.status(200).json(data);
 });
