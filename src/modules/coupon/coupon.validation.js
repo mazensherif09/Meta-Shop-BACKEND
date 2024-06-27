@@ -7,7 +7,7 @@ const couponSchemaVal = Joi.object({
 });
 const updateCouponSchemaVal = Joi.object({
   id: Joi.string().hex().length(24),
-  text: Joi.string().min(3).max(30).required().trim(),
+  text: Joi.string().min(1).max(30).required().trim(),
   // expires: Joi.date(),
   discount: Joi.number().integer().options({ convert: false }).required(),
 });

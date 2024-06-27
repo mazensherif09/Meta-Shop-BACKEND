@@ -7,7 +7,7 @@ const schema = new mongoose.Schema(
       unique: [true, "name is required"],
       trim: true,
       required: true,
-      minLength: [2, "too short brand name"],
+      minLength: [1, "too short brand name"],
     },
     expires: Date,
     discount: { type: Number, default: 0, required: true, min: 0, max: 100 },

@@ -14,8 +14,8 @@ const clothesVal = Joi.array().items(
     images: imagesVal,
     sizes: Joi.array().items(
       Joi.object({
-        size: sizeVal, // Validate ObjectId
-        stock: Joi.number().min(0),
+        size: Joi.any(), // Validate ObjectId
+        stock: Joi.number().min(0).default(0),
         _id: ObjectIdVal,
       })
     ),
@@ -34,7 +34,7 @@ const decorVal = Joi.array()
   .optional();
 const ProductSchemaVal = Joi.object({
   _id: ObjectIdVal,
-  name: Joi.string().min(3).max(300).required().trim(),
+  name: Joi.string().min(1).max(300).required().trim(),
   description: Joi.string().min(15).max(1500).required(),
   price: Joi.number().min(0).required(),
   discount: Joi.number().default(0),
@@ -55,8 +55,8 @@ const ProductSchemaVal = Joi.object({
 });
 const UpdateproductSchemaVal = Joi.object({
   id: ObjectIdVal,
-  name: Joi.string().min(3).max(300).trim(),
-  description: Joi.string().min(15).max(1500),
+  name: Joi.string().min(1).max(300).trim(),
+  description: Joi.string().min(1).max(1500),
   price: Joi.number().min(0),
   discount: Joi.number().default(0),
   quantity: Joi.number().min(0).optional(),
@@ -74,7 +74,7 @@ const paramsIdVal = Joi.object({
 const paramsSlugVal = Joi.object({
   slug: Joi.alternatives()
     .try(
-      Joi.string().min(3).max(300).required(),
+      Joi.string().min(1).max(300).required(),
       Joi.string().hex().length(24).required()
     )
     .required(),

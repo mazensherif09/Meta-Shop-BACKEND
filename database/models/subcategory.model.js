@@ -7,12 +7,12 @@ const schema = new mongoose.Schema(
       unique: [true, "name is required"],
       trim: true,
       required: true,
-      minLength: [2, "too short category name"],
+      minLength: [1, "too short category name"],
     },
     description: {
       type: String,
       trim: true,
-      minLength: [2, "too short brand name"],
+      minLength: [1, "too short brand name"],
       required: true,
     },
     slug: {

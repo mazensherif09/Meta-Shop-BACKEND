@@ -8,7 +8,7 @@ const schema = new mongoose.Schema(
       unique: true, // Ensure key is unique
       trim: true,
       required: true,
-      minLength: [2, "too short category name"],
+      minLength: [1, "too short category name"],
     },
     createdBy: { type: mongoose.Types.ObjectId, ref: "user" },
   },
@@ -23,13 +23,13 @@ const questionSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    minLength: [2, "Question is too short"],
+    minLength: [1, "Question is too short"],
   },
   answer: {
     type: String,
     required: true,
     trim: true,
-    minLength: [2, "Answer is too short"],
+    minLength: [1, "Answer is too short"],
   },
 });
 export const questionPageModel = SingleTypeModel.discriminator(
@@ -43,12 +43,12 @@ const landingSchema = new mongoose.Schema({
     type: String,
     trim: true,
     required: true,
-    minLength: [2, "too short brand name"],
+    minLength: [1, "too short brand name"],
   },
   description: {
     type: String,
     trim: true,
-    minLength: [2, "too short brand name"],
+    minLength: [1, "too short brand name"],
     required: true,
   },
   sliderLanding: [
@@ -57,12 +57,12 @@ const landingSchema = new mongoose.Schema({
         type: String,
         trim: true,
         required: true,
-        minLength: [2, "too short brand name"],
+        minLength: [1, "too short brand name"],
       },
       description: {
         type: String,
         trim: true,
-        minLength: [2, "too short brand name"],
+        minLength: [1, "too short brand name"],
         required: true,
       },
       images: [{ type: ObjectId, ref: "file" }],
@@ -94,7 +94,7 @@ const aboutUsSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    minLength: [2, "Title is too short"],
+    minLength: [1, "Title is too short"],
   },
   description: {
     type: String,
@@ -107,12 +107,12 @@ const aboutUsSchema = new mongoose.Schema({
       name: {
         type: String,
         trim: true,
-        minLength: [2, "Name is too short"],
+        minLength: [1, "Name is too short"],
       },
       position: {
         type: String,
         trim: true,
-        minLength: [2, "Position is too short"],
+        minLength: [1, "Position is too short"],
       },
     },
   ],

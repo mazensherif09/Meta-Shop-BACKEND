@@ -7,7 +7,7 @@ const schema = new mongoose.Schema(
       unique: [true, "name is required"],
       trim: true,
       required: true,
-      minLength: [2, "too short brand name"],
+      minLength: [1, "too short brand name"],
     },
     user: { type: mongoose.Types.ObjectId, ref: "user" },
     product: { type: mongoose.Types.ObjectId, ref: "product" },

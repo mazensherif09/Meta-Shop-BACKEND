@@ -2,12 +2,12 @@ import Joi from "joi";
 import { influencers } from "../../assets/enums/influeners.js";
 
 const requestForBenfluencerVal = Joi.object({
-  socialAccount: Joi.string().min(3).max(30),
+  socialAccount: Joi.string().min(1).max(30),
 });
 
 const InfluncerVal = Joi.object({
   id: Joi.string().hex().length(24),
-  socialAccount: Joi.string().min(3).max(30).optional(),
+  socialAccount: Joi.string().min(1).max(30).optional(),
   state: Joi.string()
     .valid(...Object.values(influencers))
     .optional(),
@@ -24,7 +24,7 @@ const InfluncerVal = Joi.object({
 });
 const updateInfluncerSchemaVal = Joi.object({
   id: Joi.string().hex().length(24),
-  socialAccount: Joi.string().min(3).max(30).optional(),
+  socialAccount: Joi.string().min(1).max(30).optional(),
   state: Joi.string()
     .valid(...Object.values(influencers))
     .optional(),
