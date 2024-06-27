@@ -83,13 +83,13 @@ const landingSchema = new mongoose.Schema({
     },
   ],
   topCategories: [{ type: ObjectId, ref: "category" }],
-  // newInPoster: { type: ObjectId, ref: "file" },
-  // newTitle: {
-  //   type: String,
-  //   trim: true,
-  //   minLength: [1, "too short brand name"],
-  //   required: true,
-  // },
+  newInPoster: { type: ObjectId, ref: "file" },
+  newInTitle: {
+    type: String,
+    trim: true,
+    minLength: [1, "too short brand name"],
+    required: true,
+  },
 });
 
 
