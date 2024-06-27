@@ -6,6 +6,7 @@ import {
   getOneproduct,
   updateproduct,
   deleteproduct,
+  getFeatured
 } from "./product.controller.js";
 import {
   ProductSchemaVal,
@@ -30,8 +31,10 @@ productRouter
     addproduct
   )
   .get(getallproduct);
+  productRouter.get("/featured",  getFeatured);
 
 productRouter.get("/:slug", validation(paramsSlugVal), getOneproduct);
+
 
 productRouter
   .route("/:id")

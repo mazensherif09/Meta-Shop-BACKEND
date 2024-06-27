@@ -156,7 +156,7 @@ const getOneproduct = AsyncHandler(async (req, res, next) => {
     document = await productModel
       .findOne(query)
       .populate("createdBy", "fullName")
-      .populate("updatedBy", "fullName")
+      .populate("updatedBy", "fullName");
   } else {
     document = await productModel.findOne(query);
   }
@@ -198,12 +198,20 @@ const updateproduct = AsyncHandler(async (req, res, next) => {
   });
 });
 const deleteproduct = deleteOne(productModel, Errormassage);
+
+const getFeatured = AsyncHandler(async (req, res, next) => {
+  const document = await productModel.find({ isFeatured: true });
+  if (!document) return next(new AppError(Errormassage, 404));
+  return res.json(document);
+});
+
 export {
   addproduct,
   getallproduct,
   getOneproduct,
   updateproduct,
   deleteproduct,
+  getFeatured
 };
 
 /*
