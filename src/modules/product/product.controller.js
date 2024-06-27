@@ -175,8 +175,6 @@ const updateproduct = AsyncHandler(async (req, res, next) => {
     default:
       model = productModel;
   }
-
-  console.log("🚀 ~ updateproduct ~ req?.body:", req?.body?.colors[0]?.sizes);
   const updatedProduct = await model.findByIdAndUpdate(
     req.params.id,
     req?.body,

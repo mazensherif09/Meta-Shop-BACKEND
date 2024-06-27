@@ -10,7 +10,8 @@ const addToCart = AsyncHandler(async (req, res, next) => {
   if (!product) return next(new AppError("Product not found", 404));
   const { color = null, size = null, quantity = 1 } = req.body;
   let cart = req?.cart;
-  const item = cart.items.find((v) =>
+  const item = cart.items.find(
+    (v) =>
       v?.product?._id?.toString() === product?._id?.toString() &&
       v?.color?._id?.toString() === color?.toString() &&
       v?.size?._id?.toString() === size?.toString()
@@ -24,17 +25,16 @@ const addToCart = AsyncHandler(async (req, res, next) => {
       size: size,
     });
   }
-  await cart.save();
+  const data = await cartModel.findByIdAndUpdate(cart?._id, cart, {
+    new: true,
+  });
 
-  // Populate the product details in the cart items
-  await cart.populate("items.product");
-
-  return res.status(200).json(cart);
+  return res.status(200).json(data);
 });
 const removeItemCart = AsyncHandler(async (req, res, next) => {
   let query = req?.user?._id ? { user: req.user._id } : null;
   if (!query) {
-      jwt.verify(
+    jwt.verify(
       req.cookies.cart,
       process.env.SECRETKEY,
       async (err, decoded) => {
@@ -53,6 +53,7 @@ const removeItemCart = AsyncHandler(async (req, res, next) => {
     { $pull: { items: { _id: req?.params?.id } } },
     { new: true }
   );
+
   if (!cart) return next(new AppError("something went wrong try again later."));
   return res.status(200).json(cart);
 });
