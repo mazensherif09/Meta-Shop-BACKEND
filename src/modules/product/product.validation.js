@@ -1,6 +1,9 @@
 import Joi from "joi";
 import { relationFileVal } from "../file/file.validation.js";
-import { colorSchemaVal, updateColorSchemaVal } from "../colors/colors.validation.js";
+import {
+  colorSchemaVal,
+  updateColorSchemaVal,
+} from "../colors/colors.validation.js";
 import { CategorySchemaVal } from "../category/category.validation.js";
 import { subCategorySchemaVal } from "../subcategory/subcategory.validation.js";
 import { updatesizeSchemaVal } from "../sizes/sizes.validation.js";
@@ -80,10 +83,8 @@ const paramsIdVal = Joi.object({
 });
 const paramsSlugVal = Joi.object({
   slug: Joi.alternatives()
-    .try(
-      Joi.string().min(1).max(300).required(),
-      Joi.string().hex().length(24).required()
-    )
+    .try(Joi.string().min(1).max(300).required(),
+      Joi.string().hex().length(24).required())
     .required(),
 });
 
