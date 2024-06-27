@@ -88,9 +88,10 @@ const findOneUser = AsyncHandler(async (req, res, next) => {
   if (user?._id?.toString() === req?.params?.id)
     return next(new AppError("not found", 404));
 
-  const document = await UserModel.findById({ _id: req.params.id }).select(
-    "-password"
-  );
+  const document = await UserModel.findById({ _id: req.params.id })
+    .populate("createdBy", "fullName")
+    .populate("updatedBy", "fullName")
+    .select("-password");
   if (!document) return next(new AppError("user not found", 404));
   return res.status(200).json(document);
 });

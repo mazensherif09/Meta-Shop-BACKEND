@@ -117,7 +117,7 @@ const getallproduct = AsyncHandler(async (req, res, next) => {
   const apiFetcher = new ApiFetcher(pipeline, req.query);
 
   // Apply various methods of ApiFetcher
-  apiFetcher.sort().select().search();
+  apiFetcher.sort().select().search().filter();
 
   // Get total count before executing the final aggregate query
   const total = await apiFetcher.getTotalCount(productModel);
@@ -151,8 +151,16 @@ const getOneproduct = AsyncHandler(async (req, res, next) => {
   } else {
     query = { slug: req.params.slug };
   }
+  let document = null;
+  if (req.user.role == "admin") {
+    document = await productModel
+      .findOne(query)
+      .populate("createdBy", "fullName")
+      .populate("updatedBy", "fullName")
+  } else {
+    document = await productModel.findOne(query);
+  }
 
-  const document = await productModel.findOne(query);
   if (!document) return next(new AppError(Errormassage, 404));
   return res.json(document);
 });
@@ -163,7 +171,7 @@ const updateproduct = AsyncHandler(async (req, res, next) => {
   if (!product) {
     next(new AppError("Product not found", 404));
   }
-   
+
   let model;
   switch (product?.type) {
     case "decor":

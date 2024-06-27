@@ -16,7 +16,7 @@ const Insert = AsyncHandler(async (req, res, next) => {
         return {
           ...(await Uploader(file.path)),
           filename: file?.filename,
-          size:file?.size,
+          size: file?.size,
           mimetype: file?.mimetype,
           originalname: file?.originalname,
         };
@@ -63,7 +63,9 @@ const GetAll = AsyncHandler(async (req, res, next) => {
   });
 });
 const GetOne = AsyncHandler(async (req, res, next) => {
-  const file = await FileModel.findOne(req?.params?.id);
+  const file = await FileModel.findOne({ _id: req?.params?.id })
+  .populate("createdBy", "fullName")
+  .populate("updatedBy", "fullName")
   if (!file) next(new AppError(`File is not found`, 404));
   return res.status(200).json(file);
 });

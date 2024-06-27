@@ -35,7 +35,9 @@ const insert = AsyncHandler(async (req, res, next) => {
 });
 
 const getPage = AsyncHandler(async (req, res, next) => {
-  const document = await SingleTypeModel.findOne({ key: req.params?.key });
+  const document = await SingleTypeModel.findOne({ key: req.params?.key })
+  .populate("createdBy", "fullName")
+  .populate("updatedBy", "fullName")
   if (!document) next(new AppError(`Page is not found`, 401));
 
   return res.status(200).json(document);

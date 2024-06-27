@@ -18,42 +18,45 @@ const addSize = AsyncHandler(async (req, res, next) => {
 });
 
 const getSizes = AsyncHandler(async (req, res, next) => {
-    // Define the populate array, you can adjust this as per your requirements
-    const populateArray = [];
+  // Define the populate array, you can adjust this as per your requirements
+  const populateArray = [];
 
-    let filterObject = {};
-    if (req.query.filters) {
-      filterObject = { ...req.query.filters, ...filterObject };
-    }
-  
-    let apiFetcher = new ApiFetcher(sizeModel.find(filterObject), req.query);
-    apiFetcher.filter().search().sort().select();
-  
-    // Execute the modified query and get total count
-    const total = await sizeModel.countDocuments(apiFetcher.queryOrPipeline);
-  
-    // Apply pagination after getting total count
-    apiFetcher.pagination();
-  
-    // Execute the modified query to fetch data
-    const data = await apiFetcher.queryOrPipeline.exec();
-  
-    // Calculate pagination metadata
-    const pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
-  
-    res.status(200).json({
-      success: true,
-      data,
-      metadata: {
-        ...apiFetcher.metadata,
-        pages,
-        total,
-      },
-    });
+  let filterObject = {};
+  if (req.query.filters) {
+    filterObject = { ...req.query.filters, ...filterObject };
+  }
+
+  let apiFetcher = new ApiFetcher(sizeModel.find(filterObject), req.query);
+  apiFetcher.filter().search().sort().select();
+
+  // Execute the modified query and get total count
+  const total = await sizeModel.countDocuments(apiFetcher.queryOrPipeline);
+
+  // Apply pagination after getting total count
+  apiFetcher.pagination();
+
+  // Execute the modified query to fetch data
+  const data = await apiFetcher.queryOrPipeline.exec();
+
+  // Calculate pagination metadata
+  const pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
+
+  res.status(200).json({
+    success: true,
+    data,
+    metadata: {
+      ...apiFetcher.metadata,
+      pages,
+      total,
+    },
+  });
 });
 
 const getOne = AsyncHandler(async (req, res, next) => {
-  const document = await sizeModel.findById(req.params?.id);
+  const document = await sizeModel
+    .findById(req.params?.id)
+    .populate("createdBy", "fullName")
+    .populate("updatedBy", "fullName")
   if (!document) next(new AppError(`Size is not found`, 401));
 
   res.status(200).json(document);

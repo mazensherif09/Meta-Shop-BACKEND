@@ -13,47 +13,50 @@ const Insert = AsyncHandler(async (req, res, next) => {
 
   return res.status(200).json({
     message: "Added Sucessfully",
-    document
+    document,
   });
 });
 
 const GetAll = AsyncHandler(async (req, res, next) => {
-   // Define the populate array, you can adjust this as per your requirements
-   const populateArray = [];
+  // Define the populate array, you can adjust this as per your requirements
+  const populateArray = [];
 
-   let filterObject = {};
-   if (req.query.filters) {
-     filterObject = { ...req.query.filters, ...filterObject };
-   }
- 
-   let apiFetcher = new ApiFetcher(colorModel.find(filterObject), req.query);
-   apiFetcher.filter().search().sort().select();
- 
-   // Execute the modified query and get total count
-   const total = await colorModel.countDocuments(apiFetcher.queryOrPipeline);
- 
-   // Apply pagination after getting total count
-   apiFetcher.pagination();
- 
-   // Execute the modified query to fetch data
-   const data = await apiFetcher.queryOrPipeline.exec();
- 
-   // Calculate pagination metadata
-   const pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
- 
-   res.status(200).json({
-     success: true,
-     data,
-     metadata: {
-       ...apiFetcher.metadata,
-       pages,
-       total,
-     },
-   });
+  let filterObject = {};
+  if (req.query.filters) {
+    filterObject = { ...req.query.filters, ...filterObject };
+  }
+
+  let apiFetcher = new ApiFetcher(colorModel.find(filterObject), req.query);
+  apiFetcher.filter().search().sort().select();
+
+  // Execute the modified query and get total count
+  const total = await colorModel.countDocuments(apiFetcher.queryOrPipeline);
+
+  // Apply pagination after getting total count
+  apiFetcher.pagination();
+
+  // Execute the modified query to fetch data
+  const data = await apiFetcher.queryOrPipeline.exec();
+
+  // Calculate pagination metadata
+  const pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
+
+  res.status(200).json({
+    success: true,
+    data,
+    metadata: {
+      ...apiFetcher.metadata,
+      pages,
+      total,
+    },
+  });
 });
 
 const getOne = AsyncHandler(async (req, res, next) => {
-  const document = await colorModel.findById(req.params?.id);
+  const document = await colorModel
+    .findById(req.params?.id)
+    .populate("createdBy", "fullName")
+    .populate("updatedBy", "fullName")
   if (!document) next(new AppError(`Size is not found`, 401));
 
   res.status(200).json(document);
@@ -69,12 +72,15 @@ const Delete = AsyncHandler(async (req, res, next) => {
 });
 
 const Update = AsyncHandler(async (req, res, next) => {
-  const document = await colorModel.findByIdAndUpdate({ _id: req.params?.id }, req.body);
+  const document = await colorModel.findByIdAndUpdate(
+    { _id: req.params?.id },
+    req.body
+  );
   if (!document) next(new AppError(`Color is not found`, 401));
 
   return res.status(200).json({
     message: "Updated Sucessfully",
-    document
+    document,
   });
 });
 

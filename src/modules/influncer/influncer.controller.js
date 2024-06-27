@@ -85,7 +85,10 @@ const GetAll = AsyncHandler(async (req, res, next) => {
 });
 
 const GetOne = AsyncHandler(async (req, res, next) => {
-  const document = await influencerModel.findById(req.params.id);
+  const document = await influencerModel
+    .findById(req.params.id)
+    .populate("createdBy", "fullName")
+    .populate("updatedBy", "fullName")
   if (!document) return next(new AppError("influencer not found", 404));
 
   return res.json(document);
