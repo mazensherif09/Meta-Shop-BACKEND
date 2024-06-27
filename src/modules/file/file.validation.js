@@ -28,7 +28,7 @@ const paramsIdVal = Joi.object({
   id: Joi.string().hex().length(24),
 });
 const relationFileVal = Joi.object({
-  _id: Joi.string().hex().length(24),
+  _id: Joi.string().hex().length(24).required(),
   filename: Joi.string(),
   public_id: Joi.string(),
   originalname: Joi.string(),

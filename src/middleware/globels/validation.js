@@ -13,7 +13,7 @@ export const validation = (schema) => {
       { ...files, ...req.body, ...req.params, ...req.query },
       { abortWarly: false }
     );
-    console.log("🚀 ~ return ~ req.body:", req?.body?.colors)
+    console.log("🚀 ~ return ~ req.body:", req?.body)
     console.log("🚀 ~ return ~ error:", error)
     if (!error) {
       next();
