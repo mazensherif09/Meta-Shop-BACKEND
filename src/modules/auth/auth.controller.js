@@ -52,7 +52,7 @@ const signIn = AsyncHandler(async (req, res, next) => {
       }
     );
 
-    let cart = await handleConnectCart(user?.cart, req, res);
+    const cart = await handleConnectCart(user, req, res);
     return res.status(200).json({
       message: `welcome ${user.fullName}`,
       profile: {
@@ -62,7 +62,7 @@ const signIn = AsyncHandler(async (req, res, next) => {
         role: user?.role,
         phone: user?.phone,
       },
-      cart: cart,
+      cart,
     });
   } else {
     return next(new AppError(`Incorrect email or password`, 401));
