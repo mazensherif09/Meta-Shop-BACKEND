@@ -153,7 +153,7 @@ const getOneproduct = AsyncHandler(async (req, res, next) => {
     query = { slug: req.params.slug };
   }
   let document = null;
-  if (req.user.role == "admin") {
+  if (req?.user?.role == "admin") {
     document = await productModel
       .findOne(query)
       .populate("createdBy", "fullName")
