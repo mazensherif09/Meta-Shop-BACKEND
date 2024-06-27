@@ -26,6 +26,7 @@ export const checkCart = AsyncHandler(async (req, res, next) => {
         httpOnly: true, // Prevents client-side JavaScript access
       });
     }
+    await cart.save();
   }
   req.cart = cart;
   return next();
