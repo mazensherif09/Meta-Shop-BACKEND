@@ -33,7 +33,7 @@ const schema = new mongoose.Schema(
     },
     sold: Number,
     isFeatured: { type: Boolean, default: true },
-    puplish: { type: Boolean, default: false, default: false },
+    publish: { type: Boolean, default: false, default: false },
     createdBy: { type: ObjectId, ref: "user" },
     subcategory: { type: ObjectId, ref: "subcategory" },
     category: { type: ObjectId, ref: "category" },
