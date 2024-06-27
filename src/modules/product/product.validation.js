@@ -72,7 +72,7 @@ const UpdateproductSchemaVal = Joi.object({
   discount: Joi.number().default(0),
   quantity: Joi.number().min(0).optional(),
   isFeatured: Joi.boolean(),
-  puplish: Joi.boolean(),
+  publish: Joi.boolean(),
   poster: Joi.alternatives().try(ObjectIdVal, relationFileVal),
   category: Joi.alternatives().try(ObjectIdVal, UpdateCategorySchemaVal),
   subcategory: Joi.alternatives().try(ObjectIdVal, UpdateCategorySchemaVal),
