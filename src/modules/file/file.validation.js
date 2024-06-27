@@ -10,7 +10,7 @@ const fileVal = Joi.object({
   public_id: Joi.string(),
   url: Joi.string(),
   mimetype: Joi.string()
-    .valid("image/jpeg", "image/png", "image/gif")
+    .valid("image/jpeg", "image/png", "image/gif", "image/webp")
     .required(),
   size: Joi.number()
     .max(1024 * 1024 * 10)
