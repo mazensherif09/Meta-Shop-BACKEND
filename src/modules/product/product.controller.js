@@ -163,7 +163,7 @@ const updateproduct = AsyncHandler(async (req, res, next) => {
   if (!product) {
     next(new AppError("Product not found", 404));
   }
-
+   
   let model;
   switch (product?.type) {
     case "decor":

@@ -4,7 +4,10 @@ import {
   colorSchemaVal,
   updateColorSchemaVal,
 } from "../colors/colors.validation.js";
-import { CategorySchemaVal, UpdateCategorySchemaVal } from "../category/category.validation.js";
+import {
+  CategorySchemaVal,
+  UpdateCategorySchemaVal,
+} from "../category/category.validation.js";
 import { subCategorySchemaVal } from "../subcategory/subcategory.validation.js";
 import { updatesizeSchemaVal } from "../sizes/sizes.validation.js";
 let ObjectIdVal = Joi.string().hex().length(24);
@@ -47,7 +50,9 @@ const ProductSchemaVal = Joi.object({
   isFeatured: Joi.boolean(),
   puplish: Joi.boolean(),
   poster: Joi.alternatives().try(ObjectIdVal, relationFileVal),
-  category: Joi.alternatives().try(ObjectIdVal, UpdateCategorySchemaVal).required(),
+  category: Joi.alternatives()
+    .try(ObjectIdVal, UpdateCategorySchemaVal)
+    .required(),
   subcategory: Joi.alternatives()
     .try(ObjectIdVal, UpdateCategorySchemaVal)
     .required(),
@@ -60,6 +65,7 @@ const ProductSchemaVal = Joi.object({
 });
 const UpdateproductSchemaVal = Joi.object({
   id: ObjectIdVal,
+  _id: ObjectIdVal,
   name: Joi.string().min(1).max(300).trim(),
   description: Joi.string().min(1).max(1500),
   price: Joi.number().min(0),
@@ -83,8 +89,10 @@ const paramsIdVal = Joi.object({
 });
 const paramsSlugVal = Joi.object({
   slug: Joi.alternatives()
-    .try(Joi.string().min(1).max(300).required(),
-      Joi.string().hex().length(24).required())
+    .try(
+      Joi.string().min(1).max(300).required(),
+      Joi.string().hex().length(24).required()
+    )
     .required(),
 });
 
