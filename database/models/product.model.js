@@ -133,7 +133,7 @@ clothesSchema.pre(/^find/, function (next) {
     model: "color",
   })
     .populate({
-      path: "colors.images",            
+      path: "colors.images",
       model: "file",
     })
     .populate({

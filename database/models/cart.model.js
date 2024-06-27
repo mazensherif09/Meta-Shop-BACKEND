@@ -20,14 +20,17 @@ schema.pre(/^find/, function (next) {
   this.populate({
     path: "items.product",
     model: "product",
+    options: { strictPopulate: false },
   })
     .populate({
       path: "items.color",
       model: "color",
+      options: { strictPopulate: false },
     })
     .populate({
       path: "items.size",
       model: "size",
+      options: { strictPopulate: false },
     });
   next();
 });
