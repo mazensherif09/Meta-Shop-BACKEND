@@ -42,13 +42,15 @@ singleTypeRouter.post(
   insert
 );
 // put toutes
-singleTypeRouter.route("/landing").put(
-  protectedRoutes,
-  authorized(enumRoles.admin),
-  AttributedTo,
-  keyHandler("landing"),
-  updatePage
-);
+singleTypeRouter
+  .route("/landing")
+  .put(
+    protectedRoutes,
+    authorized(enumRoles.admin),
+    AttributedTo,
+    keyHandler("landing"),
+    updatePage
+  );
 singleTypeRouter
   .route("/about-us")
   .put(
