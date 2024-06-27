@@ -20,11 +20,6 @@ cartRouter
 
 cartRouter
   .route("/:id")
-  .put(
-    protectedRoutesCart,
-    validation(paramsIdVal),
-    checkCart,
-    removeItemCart
-  );
+  .put(protectedRoutesCart, validation(paramsIdVal), removeItemCart);
 
 export default cartRouter;

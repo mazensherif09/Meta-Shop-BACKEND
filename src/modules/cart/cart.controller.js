@@ -34,7 +34,7 @@ const addToCart = AsyncHandler(async (req, res, next) => {
 const removeItemCart = AsyncHandler(async (req, res, next) => {
   let query = req?.user?._id ? { user: req.user._id } : null;
   if (!query) {
-    await jwt.verify(
+      jwt.verify(
       req.cookies.cart,
       process.env.SECRETKEY,
       async (err, decoded) => {
