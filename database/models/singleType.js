@@ -66,11 +66,17 @@ const landingSchema = new mongoose.Schema({
         minLength: [1, "too short brand name"],
         required: true,
       },
-      images: [{ type: ObjectId, ref: "file" }],
+      poster: { type: ObjectId, ref: "file" },
     },
   ],
-  IsFeatured: { type: ObjectId, ref: "file" },
   topCategories: [{ type: ObjectId, ref: "category" }],
+  newInPoster: { type: ObjectId, ref: "file" },
+  newTitle: {
+    type: String,
+    trim: true,
+    minLength: [1, "too short brand name"],
+    required: true,
+  },
 });
 
 landingSchema.pre(/^find/, function (next) {
