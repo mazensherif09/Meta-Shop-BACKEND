@@ -107,15 +107,6 @@ DecorSchema.pre(/^find/, function (next) {
     path: "colors.images",
     model: "file",
   });
-  // if (this._update.poster) {
-  //   // delete this_update.poster
-  //   this._update = {
-  //     $unset: { poster: 1 },
-  //     $set: this._update.$set,
-  //     $setOnInsert: this._update.$setOnInsert,
-  //   };
-
-  // }
   next();
 });
 export const DecorModel = productModel.discriminator("decor", DecorSchema);
