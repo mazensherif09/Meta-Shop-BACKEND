@@ -26,6 +26,7 @@ export const logger = () => {
     return color(mehtod);
   };
   return morgan((tokens, req, res) => {
+    console.log(req);
     const status = tokens.status(req, res);
     const isError = status >= 400;
     const customMessage = isError
