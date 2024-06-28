@@ -1,4 +1,4 @@
-import { subCategoryModel } from "./../../../database/models/subCategory.model.js";
+import { SubCategoryModel } from "./../../../database/models/subCategory.model.js";
 import {
   FindAll,
   FindOne,
@@ -11,7 +11,7 @@ import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 
 const Errormassage = " Category not found";
 const addsubCategory = InsertOne(
-  subCategoryModel,
+  SubCategoryModel,
   "can't create Category with name already exsit ",
   "name",
   true
@@ -25,10 +25,10 @@ const getAllsubCategoryies =  AsyncHandler(async (req, res, next) => {
     filterObject = req.query.filters;
   }
 
-  let apiFetcher = new ApiFetcher(subCategoryModel.find(filterObject), req.query);
+  let apiFetcher = new ApiFetcher(SubCategoryModel.find(filterObject), req.query);
   apiFetcher.filter().search().sort().select();
   // Execute the modified query and get total count
-  const total = await subCategoryModel.countDocuments(apiFetcher.queryOrPipeline);
+  const total = await SubCategoryModel.countDocuments(apiFetcher.queryOrPipeline);
 
   // Apply pagination after getting total count
   apiFetcher.pagination();
@@ -49,9 +49,9 @@ const getAllsubCategoryies =  AsyncHandler(async (req, res, next) => {
     },
   });
 });
-const getOnesubCategory = FindOne(subCategoryModel, Errormassage);
-const updateSubCategorty = updateOne(subCategoryModel, Errormassage);
-const deletesubCategory = deleteOne(subCategoryModel, Errormassage);
+const getOnesubCategory = FindOne(SubCategoryModel, Errormassage);
+const updateSubCategorty = updateOne(SubCategoryModel, Errormassage);
+const deletesubCategory = deleteOne(SubCategoryModel, Errormassage);
 export {
   addsubCategory,
   getAllsubCategoryies,

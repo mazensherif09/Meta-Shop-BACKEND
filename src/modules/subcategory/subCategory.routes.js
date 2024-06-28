@@ -18,8 +18,6 @@ import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
 import { authorized } from "../../middleware/globels/authorized.js";
 import { enumRoles } from "../../assets/enums/Roles_permissions.js";
 import { AttributedTo } from "../../middleware/globels/AttributedTo.js";
-import { addsubCategory, deletesubCategory, getAllsubCategoryies, getOnesubCategory, updateSubCategorty } from "./subCategory.controller.js";
-
 const subCategoryRouter = express.Router({ mergeParams: true });
 subCategoryRouter.route("/")
   .post(
