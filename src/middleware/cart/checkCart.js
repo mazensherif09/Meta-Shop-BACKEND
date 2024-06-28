@@ -27,6 +27,7 @@ export const checkCart = AsyncHandler(async (req, res, next) => {
         secure: process.env === 'pro', // send only over HTTPS
         // domain: process.env.DOMAIN, // parent domain to include subdomains
         sameSite: 'None', // necessary for cross-site cookies
+         path: '/'
       });
     }
     await cart.save();

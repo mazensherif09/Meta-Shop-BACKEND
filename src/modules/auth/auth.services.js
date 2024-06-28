@@ -66,6 +66,7 @@ const handleConnectCart = async (user, req, res) => {
             secure: process.env === 'pro', // send only over HTTPS
             // domain: process.env.DOMAIN, // parent domain to include subdomains
             sameSite: 'None', // necessary for cross-site cookies
+             path: '/'
           });
           return cart;
         }
@@ -92,6 +93,7 @@ const handleCartSignIn = async (user, req, res) => {
         secure: process.env === 'pro', // send only over HTTPS
         // domain: process.env.DOMAIN, // parent domain to include subdomains
         sameSite: 'None', // necessary for cross-site cookies
+         path: '/'
       });
     } catch (error) {}
   }

@@ -25,6 +25,7 @@ const signUp = AsyncHandler(async (req, res, next) => {
     secure: process.env === 'pro', // send only over HTTPS
     // domain: process.env.DOMAIN, // parent domain to include subdomains
     sameSite: 'None', // necessary for cross-site cookies
+     path: '/'
   });
   const cart = await handleCartSignIn(user, req, res);
   return res.status(200).json({
@@ -55,6 +56,7 @@ const signIn = AsyncHandler(async (req, res, next) => {
         secure: process.env === 'pro', // send only over HTTPS
         // domain: process.env.DOMAIN, // parent domain to include subdomains
         sameSite: 'None', // necessary for cross-site cookies
+         path: '/'
       }
     );
 
@@ -149,6 +151,7 @@ const changepassword = AsyncHandler(async (req, res, next) => {
       secure: process.env === 'pro', // send only over HTTPS
       domain: process.env.DOMAIN, // parent domain to include subdomains
       sameSite: 'None', // necessary for cross-site cookies
+       path: '/'
     }
   );
   return res.status(200).json({ message: "sucess" });
