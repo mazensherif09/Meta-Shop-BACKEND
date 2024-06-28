@@ -6,7 +6,7 @@ import { AppError } from "../utils/AppError.js";
 import { dbConnection } from "../../database/dbConnection.js";
 import { categoryRouter } from "./category/category.routes.js";
 
-import { SubCategoryRouter } from "./subcategory/subCategory.routes.js";
+import { subCategoryRouter } from "./subCategory/subCategory.routes.js";
 import { AuthRouter } from "./auth/auth.routes.js";
 import { globalError } from "../middleware/globels/globalError.js";
 import cookieParser from "cookie-parser";
@@ -52,7 +52,7 @@ export const bootstrap = (app, express) => {
   app.use(`${mainroute}/files`, fileRouter);
   app.use(`${mainroute}/carts`, cartRouter);
   app.use(`${mainroute}/categories`, categoryRouter);
-  app.use(`${mainroute}/subcategories`, SubCategoryRouter);
+  app.use(`${mainroute}/subcategories`, subCategoryRouter);
   app.use(`${mainroute}/products`, productRouter);
   app.use(`${mainroute}/orders`, orderRouter);
   app.use(`${mainroute}/sizes`, sizesRouter);

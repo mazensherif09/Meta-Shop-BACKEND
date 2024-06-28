@@ -52,7 +52,7 @@ const ProductSchemaVal = Joi.object({
   category: Joi.alternatives()
     .try(ObjectIdVal, UpdateCategorySchemaVal)
     .required(),
-  subcategory: Joi.alternatives()
+  subCategory: Joi.alternatives()
     .try(ObjectIdVal, UpdateCategorySchemaVal)
     .required(),
   type: Joi.string().valid("clothes", "decor").required(),
@@ -74,7 +74,7 @@ const UpdateproductSchemaVal = Joi.object({
   publish: Joi.boolean(),
   poster: Joi.alternatives().try(ObjectIdVal, relationFileVal),
   category: Joi.alternatives().try(ObjectIdVal, UpdateCategorySchemaVal),
-  subcategory: Joi.alternatives().try(ObjectIdVal, UpdateCategorySchemaVal),
+  subCategory: Joi.alternatives().try(ObjectIdVal, UpdateCategorySchemaVal),
   type: Joi.string().valid("clothes", "decor"),
   colors: Joi.when("type", {
     is: "clothes",

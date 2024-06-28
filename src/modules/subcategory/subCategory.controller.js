@@ -1,4 +1,4 @@
-import { SubCategoryModel } from "./../../../database/models/subcategory.model.js";
+import { subCategoryModel } from "./../../../database/models/subCategory.model.js";
 import {
   FindAll,
   FindOne,
@@ -10,13 +10,13 @@ import { ApiFetcher } from "../../utils/Fetcher.js";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 
 const Errormassage = " Category not found";
-const addSubCategory = InsertOne(
-  SubCategoryModel,
+const addsubCategory = InsertOne(
+  subCategoryModel,
   "can't create Category with name already exsit ",
   "name",
   true
 );
-const getAllSubCategoryies =  AsyncHandler(async (req, res, next) => {
+const getAllsubCategoryies =  AsyncHandler(async (req, res, next) => {
   // Define the populate array, you can adjust this as per your requirements
   const populateArray = [];
 
@@ -25,10 +25,10 @@ const getAllSubCategoryies =  AsyncHandler(async (req, res, next) => {
     filterObject = req.query.filters;
   }
 
-  let apiFetcher = new ApiFetcher(SubCategoryModel.find(filterObject), req.query);
+  let apiFetcher = new ApiFetcher(subCategoryModel.find(filterObject), req.query);
   apiFetcher.filter().search().sort().select();
   // Execute the modified query and get total count
-  const total = await SubCategoryModel.countDocuments(apiFetcher.queryOrPipeline);
+  const total = await subCategoryModel.countDocuments(apiFetcher.queryOrPipeline);
 
   // Apply pagination after getting total count
   apiFetcher.pagination();
@@ -49,13 +49,13 @@ const getAllSubCategoryies =  AsyncHandler(async (req, res, next) => {
     },
   });
 });
-const getOneSubCategory = FindOne(SubCategoryModel, Errormassage);
-const updateSubCategorty = updateOne(SubCategoryModel, Errormassage);
-const deleteSubCategory = deleteOne(SubCategoryModel, Errormassage);
+const getOnesubCategory = FindOne(subCategoryModel, Errormassage);
+const updateSubCategorty = updateOne(subCategoryModel, Errormassage);
+const deletesubCategory = deleteOne(subCategoryModel, Errormassage);
 export {
-  addSubCategory,
-  getAllSubCategoryies,
-  getOneSubCategory,
+  addsubCategory,
+  getAllsubCategoryies,
+  getOnesubCategory,
   updateSubCategorty,
-  deleteSubCategory,
+  deletesubCategory,
 };

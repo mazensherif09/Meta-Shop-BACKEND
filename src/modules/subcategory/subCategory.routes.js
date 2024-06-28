@@ -1,11 +1,11 @@
 import express from "express";
 
 import {
-  addSubCategory,
-  getAllSubCategoryies,
-  getOneSubCategory,
+  addsubCategory,
+  getAllsubCategoryies,
+  getOnesubCategory,
   updateSubCategorty,
-  deleteSubCategory,
+  deletesubCategory,
 } from "./subCategory.controller.js";
 
 import {
@@ -18,20 +18,20 @@ import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
 import { authorized } from "../../middleware/globels/authorized.js";
 import { enumRoles } from "../../assets/enums/Roles_permissions.js";
 import { AttributedTo } from "../../middleware/globels/AttributedTo.js";
-import { addSubCategory, deleteSubCategory, getAllSubCategoryies, getOneSubCategory, updateSubCategorty } from "./subCategory.controller.js";
+import { addsubCategory, deletesubCategory, getAllsubCategoryies, getOnesubCategory, updateSubCategorty } from "./subCategory.controller.js";
 
-const SubCategoryRouter = express.Router({ mergeParams: true });
-SubCategoryRouter.route("/")
+const subCategoryRouter = express.Router({ mergeParams: true });
+subCategoryRouter.route("/")
   .post(
     validation(subCategorySchemaVal),
     protectedRoutes,
     authorized(enumRoles.admin),
     AttributedTo,
-    addSubCategory
+    addsubCategory
   )
-  .get(getAllSubCategoryies);
-SubCategoryRouter.route("/:id")
-  .get(validation(paramsIdVal), getOneSubCategory)
+  .get(getAllsubCategoryies);
+subCategoryRouter.route("/:id")
+  .get(validation(paramsIdVal), getOnesubCategory)
   .put(
     validation(UpdatesubCategorySchemaVal),
     protectedRoutes,
@@ -44,6 +44,6 @@ SubCategoryRouter.route("/:id")
     protectedRoutes,
     authorized(enumRoles.admin),
     AttributedTo,
-    deleteSubCategory
+    deletesubCategory
   );
-export { SubCategoryRouter };
+export { subCategoryRouter };
