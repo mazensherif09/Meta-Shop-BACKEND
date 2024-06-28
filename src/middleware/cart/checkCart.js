@@ -25,10 +25,8 @@ export const checkCart = AsyncHandler(async (req, res, next) => {
         maxAge: 2 * 365 * 24 * 60 * 60 * 1000,
         httpOnly: true, // accessible only by web server
         secure: process.env === 'pro', // send only over HTTPS
-         domain: process.env.DOMAIN, // parent domain to include subdomains
-        
-         path: '/'
-         ,sameSite: 'lax',
+         //domain: process.env.DOMAIN, // parent domain to include subdomains
+         path: '/',sameSite: 'strict',
       });
     }
     await cart.save();
