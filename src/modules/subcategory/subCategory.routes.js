@@ -18,6 +18,7 @@ import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
 import { authorized } from "../../middleware/globels/authorized.js";
 import { enumRoles } from "../../assets/enums/Roles_permissions.js";
 import { AttributedTo } from "../../middleware/globels/AttributedTo.js";
+import { addSubCategory, deleteSubCategory, getAllSubCategoryies, getOneSubCategory, updateSubCategorty } from "./subcategory.controller.js";
 
 const SubCategoryRouter = express.Router({ mergeParams: true });
 SubCategoryRouter.route("/")
