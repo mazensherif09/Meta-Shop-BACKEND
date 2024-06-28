@@ -24,8 +24,9 @@ const signUp = AsyncHandler(async (req, res, next) => {
     httpOnly: true, // accessible only by web server
     secure: process.env === 'pro', // send only over HTTPS
      domain: process.env.DOMAIN, // parent domain to include subdomains
-    sameSite: 'None', // necessary for cross-site cookies
+   
      path: '/'
+     ,sameSite: 'lax',
   });
   const cart = await handleCartSignIn(user, req, res);
   return res.status(200).json({
@@ -54,8 +55,8 @@ const signIn = AsyncHandler(async (req, res, next) => {
         maxAge: 2 * 365 * 24 * 60 * 60 * 1000,
         httpOnly: true, // accessible only by web server
         secure: process.env === 'pro', // send only over HTTPS
-         domain: process.env.DOMAIN, // parent domain to include subdomains
-        sameSite: 'None', // necessary for cross-site cookies
+         domain: process.env.DOMAIN // parent domain to include subdomains
+         ,sameSite: 'lax',
          path: '/'
       }
     );
@@ -149,8 +150,8 @@ const changepassword = AsyncHandler(async (req, res, next) => {
       maxAge: 2 * 365 * 24 * 60 * 60 * 1000,
       httpOnly: true, // accessible only by web server
       secure: process.env === 'pro', // send only over HTTPS
-      domain: process.env.DOMAIN, // parent domain to include subdomains
-      sameSite: 'None', // necessary for cross-site cookies
+      domain: process.env.DOMAIN // parent domain to include subdomains
+      ,sameSite: 'lax',
        path: '/'
     }
   );

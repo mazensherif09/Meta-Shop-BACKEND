@@ -3,7 +3,6 @@ import { cartModel } from "../../../database/models/cart.model.js";
 import { productModel } from "../../../database/models/product.model.js";
 import { AppError } from "../../utils/AppError.js";
 
-
 const handleMerageCartItems = (items1 = [], items2 = []) => {
   let array = [...items1, ...items2];
   array.forEach((val, ind) => {
@@ -63,16 +62,16 @@ const handleConnectCart = async (user, req, res) => {
           res.cookie("cart", "", {
             maxAge: 0,
             httpOnly: true, // accessible only by web server
-            secure: process.env === 'pro', // send only over HTTPS
-             domain: process.env.DOMAIN, // parent domain to include subdomains
-            sameSite: 'None', // necessary for cross-site cookies
-             path: '/'
+            secure: process.env === "pro", // send only over HTTPS
+            domain: process.env.DOMAIN, // parent domain to include subdomains
+            sameSite: "lax",
+            path: "/",
           });
           return cart;
         }
       }
     } catch (err) {
-     return next(new AppError(`Error handling cart connection`, 401));
+      return next(new AppError(`Error handling cart connection`, 401));
     }
   }
   return cart;
@@ -90,10 +89,10 @@ const handleCartSignIn = async (user, req, res) => {
       res.cookie("cart", "", {
         maxAge: 0,
         httpOnly: true, // accessible only by web server
-        secure: process.env === 'pro', // send only over HTTPS
-         domain: process.env.DOMAIN, // parent domain to include subdomains
-        sameSite: 'None', // necessary for cross-site cookies
-         path: '/'
+        secure: process.env === "pro", // send only over HTTPS
+        domain: process.env.DOMAIN, // parent domain to include subdomains
+        sameSite: "lax", // necessary for cross-site cookies
+        path: "/",
       });
     } catch (error) {}
   }
