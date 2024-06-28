@@ -1,4 +1,4 @@
-import { SubCategoryModel } from "./../../../database/models/subCategory.model.js";
+import { SubCategoryModel } from "./../../../database/models/subcategory.model.js";
 import {
   FindAll,
   FindOne,
