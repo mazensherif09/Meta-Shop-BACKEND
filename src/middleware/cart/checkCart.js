@@ -24,10 +24,9 @@ export const checkCart = AsyncHandler(async (req, res, next) => {
       res.cookie("cart", jwt.sign({ cart: cart._id }, process.env.SECRETKEY), {
         maxAge: 2 * 365 * 24 * 60 * 60 * 1000,
         httpOnly: true, // accessible only by web server
-        secure: true, // send only over HTTPS
+        secure: process.env === 'pro', // send only over HTTPS
         domain: process.env.DOMAIN, // parent domain to include subdomains
         sameSite: 'None', // necessary for cross-site cookies
-        maxAge: 24 * 60 * 60 * 1000 // 1 day    
       });
     }
     await cart.save();

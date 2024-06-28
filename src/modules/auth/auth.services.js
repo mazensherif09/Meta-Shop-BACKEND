@@ -61,12 +61,11 @@ const handleConnectCart = async (user, req, res) => {
             }
           );
           res.cookie("cart", "", {
-            maxAge:0,
+            maxAge: 0,
             httpOnly: true, // accessible only by web server
-            secure: true, // send only over HTTPS
+            secure: process.env === 'pro', // send only over HTTPS
             domain: process.env.DOMAIN, // parent domain to include subdomains
             sameSite: 'None', // necessary for cross-site cookies
-            maxAge: 24 * 60 * 60 * 1000 // 1 day  
           });
           return cart;
         }
@@ -90,10 +89,9 @@ const handleCartSignIn = async (user, req, res) => {
       res.cookie("cart", "", {
         maxAge: 0,
         httpOnly: true, // accessible only by web server
-        secure: true, // send only over HTTPS
+        secure: process.env === 'pro', // send only over HTTPS
         domain: process.env.DOMAIN, // parent domain to include subdomains
         sameSite: 'None', // necessary for cross-site cookies
-        maxAge: 24 * 60 * 60 * 1000 // 1 day  
       });
     } catch (error) {}
   }
