@@ -64,7 +64,7 @@ const handleConnectCart = async (user, req, res) => {
             httpOnly: true, // accessible only by web server
             secure: process.env === "pro", // send only over HTTPS
             //domain: process.env.DOMAIN, // parent domain to include subdomains
-            sameSite: "lax",
+            sameSite: "strict",
             path: "/",
           });
           return cart;
@@ -91,7 +91,7 @@ const handleCartSignIn = async (user, req, res) => {
         httpOnly: true, // accessible only by web server
         secure: process.env === "pro", // send only over HTTPS
         //domain: process.env.DOMAIN, // parent domain to include subdomains
-        sameSite: "lax", // necessary for cross-site cookies
+        sameSite: "strict", // necessary for cross-site cookies
         path: "/",
       });
     } catch (error) {}
