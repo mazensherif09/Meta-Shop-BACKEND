@@ -23,7 +23,7 @@ const signUp = AsyncHandler(async (req, res, next) => {
     maxAge: 2 * 365 * 24 * 60 * 60 * 1000,
     httpOnly: true, // accessible only by web server
     secure: process.env === 'pro', // send only over HTTPS
-    domain: process.env.DOMAIN, // parent domain to include subdomains
+    // domain: process.env.DOMAIN, // parent domain to include subdomains
     sameSite: 'None', // necessary for cross-site cookies
   });
   const cart = await handleCartSignIn(user, req, res);
@@ -53,7 +53,7 @@ const signIn = AsyncHandler(async (req, res, next) => {
         maxAge: 2 * 365 * 24 * 60 * 60 * 1000,
         httpOnly: true, // accessible only by web server
         secure: process.env === 'pro', // send only over HTTPS
-        domain: process.env.DOMAIN, // parent domain to include subdomains
+        // domain: process.env.DOMAIN, // parent domain to include subdomains
         sameSite: 'None', // necessary for cross-site cookies
       }
     );
