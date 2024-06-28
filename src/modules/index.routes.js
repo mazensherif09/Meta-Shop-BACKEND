@@ -5,8 +5,6 @@ import { UserRouter } from "./user/user.routes.js";
 import { AppError } from "../utils/AppError.js";
 import { dbConnection } from "../../database/dbConnection.js";
 import { categoryRouter } from "./category/category.routes.js";
-
-import { subCategoryRouter } from "./subCategory/subCategory.routes.js";
 import { AuthRouter } from "./auth/auth.routes.js";
 import { globalError } from "../middleware/globels/globalError.js";
 import cookieParser from "cookie-parser";
@@ -20,8 +18,8 @@ import colorsRouter from "./colors/colors.routes.js";
 import sizesRouter from "./sizes/sizes.routes.js";
 import influncerRouter from "./influncer/influncer.routes.js";
 import singleTypeRouter from "./singleType/singleType.routes.js";
-
 import { fileRouter } from "./file/file.routes.js";
+import { subCategoryRouter } from "./subcategory/subCategory.routes.js";
 
 export const bootstrap = (app, express) => {
   const mainroute = "/api"; // main route

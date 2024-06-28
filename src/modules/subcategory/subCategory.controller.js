@@ -16,7 +16,7 @@ const addsubCategory = InsertOne(
   "name",
   true
 );
-const getAllsubCategoryies =  AsyncHandler(async (req, res, next) => {
+const getAllsubCategoryies = AsyncHandler(async (req, res, next) => {
   // Define the populate array, you can adjust this as per your requirements
   const populateArray = [];
 

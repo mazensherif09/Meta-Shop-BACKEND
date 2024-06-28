@@ -11,12 +11,12 @@ import {
   UpdateCategorySchemaVal,
   paramsIdVal,
 } from "./category.validation.js";
-import { subCategoryRouter } from "../subCategory/subCategory.routes.js";
 import { validation } from "../../middleware/globels/validation.js";
 import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
 import { authorized } from "../../middleware/globels/authorized.js";
 import { enumRoles } from "../../assets/enums/Roles_permissions.js";
 import { AttributedTo } from "../../middleware/globels/AttributedTo.js";
+import { subCategoryRouter } from "../subcategory/subCategory.routes.js";
 
 const categoryRouter = express.Router();
 categoryRouter.use("/:category/subcategories", subCategoryRouter);
