@@ -6,13 +6,13 @@ import {
   getOneSubCategory,
   updateSubCategorty,
   deleteSubCategory,
-} from "./subcategory.controller.js";
+} from "./subCategory.controller.js";
 
 import {
   subCategorySchemaVal,
   UpdatesubCategorySchemaVal,
   paramsIdVal,
-} from "./subcategory.validation.js";
+} from "./subCategory.validation.js";
 import { validation } from "../../middleware/globels/validation.js";
 import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
 import { authorized } from "../../middleware/globels/authorized.js";

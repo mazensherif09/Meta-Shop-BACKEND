@@ -8,7 +8,6 @@ import {
   CategorySchemaVal,
   UpdateCategorySchemaVal,
 } from "../category/category.validation.js";
-import { subCategorySchemaVal } from "../subcategory/subcategory.validation.js";
 import { updatesizeSchemaVal } from "../sizes/sizes.validation.js";
 let ObjectIdVal = Joi.string().hex().length(24);
 let imagesVal = Joi.array().items(

@@ -20,8 +20,12 @@ const signUp = AsyncHandler(async (req, res, next) => {
     process.env.SECRETKEY
   );
   res.cookie("token", token, {
-    maxAge: 365 * 24 * 60 * 60 * 1000,
-    httpOnly: true,
+    maxAge: 2 * 365 * 24 * 60 * 60 * 1000,
+    httpOnly: true, // accessible only by web server
+    secure: true, // send only over HTTPS
+    domain: process.env.DOMAIN, // parent domain to include subdomains
+    sameSite: 'None', // necessary for cross-site cookies
+    maxAge: 24 * 60 * 60 * 1000 // 1 day  
   });
   const cart = await handleCartSignIn(user, req, res);
   return res.status(200).json({
@@ -47,8 +51,12 @@ const signIn = AsyncHandler(async (req, res, next) => {
         expiresIn: 365 * 24 * 60 * 60 * 1000,
       }),
       {
-        maxAge: 365 * 24 * 60 * 60 * 1000,
-        httpOnly: true,
+        maxAge: 2 * 365 * 24 * 60 * 60 * 1000,
+        httpOnly: true, // accessible only by web server
+        secure: true, // send only over HTTPS
+        domain: process.env.DOMAIN, // parent domain to include subdomains
+        sameSite: 'None', // necessary for cross-site cookies
+        maxAge: 24 * 60 * 60 * 1000 // 1 day  
       }
     );
 
@@ -138,8 +146,12 @@ const changepassword = AsyncHandler(async (req, res, next) => {
       expiresIn: 365 * 24 * 60 * 60 * 1000,
     }),
     {
-      maxAge: 365 * 24 * 60 * 60 * 1000,
-      httpOnly: true,
+      maxAge: 2 * 365 * 24 * 60 * 60 * 1000,
+      httpOnly: true, // accessible only by web server
+      secure: true, // send only over HTTPS
+      domain: process.env.DOMAIN, // parent domain to include subdomains
+      sameSite: 'None', // necessary for cross-site cookies
+      maxAge: 24 * 60 * 60 * 1000 // 1 day  
     }
   );
   return res.status(200).json({ message: "sucess" });

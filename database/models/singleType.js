@@ -26,7 +26,12 @@ schema.pre(/^find/, function (next) {
     model: "file",
     select: "_id url", // Example fields to select from the 'color' model
     options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
-  });
+  }).populate({
+    path: "newInPoster",
+    model: "file",
+    select: "_id url", // Example fields to select from the 'color' model
+    options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
+  })
   next();
 });
 export const SingleTypeModel = mongoose.model("singletype", schema);
