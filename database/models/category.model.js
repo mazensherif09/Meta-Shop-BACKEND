@@ -39,18 +39,20 @@ schema.pre(/^find/, function (next) {
   next();
 });
 // Pre-findOneAndDelete hook to remove category references from products
-schema.pre("findByIdAndDelete", async function (next) {
-  try {
-    const categoryId = this.getQuery()._id;
-    // Remove the category reference from all products
-    await productModel.updateMany(
-      { category: categoryId },
-      { $unset: { category: "" } }
-    );
-    next();
-  } catch (err) {
-    next(err);
-  }
-});
+// schema.pre("findByIdAndDelete", async function (next) {
+//   try {
+//     console.log("hi");
+//     const categoryId = this.getQuery()._id;
+//     // Remove the category reference from all products
+//     await productModel.updateMany(
+//       { category: categoryId },
+//       { $unset: { category: "" } }
+//     );
+//     next();
+//   } catch (err) {
+//     console.log("🚀 ~ err:", err);
+//     next();
+//   }
+// });
 
 export const categoryModel = mongoose.model("category", schema);
