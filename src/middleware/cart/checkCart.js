@@ -26,7 +26,7 @@ export const checkCart = AsyncHandler(async (req, res, next) => {
         httpOnly: true, // accessible only by web server
         secure: process.env === "pro", // send only over HTTPS
         //domain: process.env.DOMAIN, // parent domain to include subdomains
-        sameSite: "none",
+        // sameSite: "none",
       });
     }
     await cart.save();
