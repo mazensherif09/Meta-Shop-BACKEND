@@ -95,6 +95,9 @@ schema.pre(/^find/, function (next) {
       model: "user",
       select: "_id fullName", // Example fields to select from the 'color' model
     });
+
+
+    
   next();
 });
 export const productModel = mongoose.model("product", schema);

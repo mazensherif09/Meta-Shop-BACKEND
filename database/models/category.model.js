@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { productModel } from "./product.model.js";
 
 const ObjectId = mongoose.Schema.Types.ObjectId;
 const schema = new mongoose.Schema(
@@ -31,11 +32,25 @@ const schema = new mongoose.Schema(
 // Pre-find hook to automatically populate images field
 schema.pre(/^find/, function (next) {
   this.populate({
-      path: 'poster',
-      model: 'file',
-      select: 'url',
-    });
+    path: "poster",
+    model: "file",
+    select: "url",
+  });
   next();
+});
+// Pre-findOneAndDelete hook to remove category references from products
+schema.pre("findByIdAndDelete", async function (next) {
+  try {
+    const categoryId = this.getQuery()._id;
+    // Remove the category reference from all products
+    await productModel.updateMany(
+      { category: categoryId },
+      { $unset: { category: "" } }
+    );
+    next();
+  } catch (err) {
+    next(err);
+  }
 });
 
 export const categoryModel = mongoose.model("category", schema);
