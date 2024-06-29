@@ -36,7 +36,7 @@ const schema = new mongoose.Schema(
     publish: { type: Boolean, default: false, default: false },
     createdBy: { type: ObjectId, ref: "user" },
     updatedBy: { type: mongoose.Types.ObjectId, ref: "user" },
-    subcategory: { type: ObjectId, ref: "subcategory" },
+    subCategory: { type: ObjectId, ref: "subcategory" },
     category: { type: ObjectId, ref: "category" },
     poster: {
       type: ObjectId,
@@ -76,13 +76,13 @@ schema.pre(/^find/, function (next) {
     .populate({
       path: "category",
       model: "category",
-      select: "_id name slug", // Example fields to select from the 'color' model
+      select: "_id name slug  -poster", // Example fields to select from the 'color' model
       options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
     })
     .populate({
       path: "subcategory",
       model: "subcategory",
-      select: "_id name slug", // Example fields to select from the 'color' model
+      select: "_id name slug  -poster", // Example fields to select from the 'color' model
       options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
     });
 

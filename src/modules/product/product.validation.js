@@ -14,7 +14,6 @@ let imagesVal = Joi.array().items(
   Joi.alternatives().try(ObjectIdVal, relationFileVal)
 ); // Validate ObjectId
 let colorVal = Joi.alternatives().try(ObjectIdVal, updateColorSchemaVal);
-const sizeVal = Joi.alternatives().try(ObjectIdVal, updatesizeSchemaVal);
 const clothesVal = Joi.array().items(
   Joi.object({
     color: colorVal,
@@ -42,7 +41,7 @@ const decorVal = Joi.array()
 const ProductSchemaVal = Joi.object({
   _id: ObjectIdVal,
   name: Joi.string().min(1).max(300).required().trim(),
-  description: Joi.string().min(15).max(1500).required(),
+  description: Joi.string().min(3).max(1500).required(),
   price: Joi.number().min(0).required(),
   discount: Joi.number().default(0),
   quantity: Joi.number().min(0).optional(),
