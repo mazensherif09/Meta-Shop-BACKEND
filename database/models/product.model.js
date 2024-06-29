@@ -36,7 +36,7 @@ const schema = new mongoose.Schema(
     publish: { type: Boolean, default: false, default: false },
     createdBy: { type: ObjectId, ref: "user" },
     updatedBy: { type: mongoose.Types.ObjectId, ref: "user" },
-    subCategory: { type: ObjectId, ref: "subcategory" },
+    subcategory: { type: ObjectId, ref: "subcategory" },
     category: { type: ObjectId, ref: "category" },
     poster: {
       type: ObjectId,
@@ -84,8 +84,17 @@ schema.pre(/^find/, function (next) {
       model: "subcategory",
       select: "_id name slug  -poster", // Example fields to select from the 'color' model
       options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
+    })
+    .populate({
+      path: "createdBy",
+      model: "user",
+      select: "_id fullName", // Example fields to select from the 'color' model
+    })
+    .populate({
+      path: "updatedBy",
+      model: "user",
+      select: "_id fullName", // Example fields to select from the 'color' model
     });
-
   next();
 });
 export const productModel = mongoose.model("product", schema);
