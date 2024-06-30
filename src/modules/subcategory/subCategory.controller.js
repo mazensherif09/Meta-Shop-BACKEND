@@ -18,14 +18,8 @@ const addsubCategory = InsertOne(
 );
 const getAllsubCategoryies = AsyncHandler(async (req, res, next) => {
   // Define the populate array, you can adjust this as per your requirements
-  const populateArray = [];
 
-  let filterObject = {};
-  if (req.query.filters) {
-    filterObject = req.query.filters;
-  }
-
-  let apiFetcher = new ApiFetcher(SubCategoryModel.find(filterObject), req.query);
+  let apiFetcher = new ApiFetcher(SubCategoryModel.find(), req.query);
   apiFetcher.filter().search().sort().select();
   // Execute the modified query and get total count
   const total = await SubCategoryModel.countDocuments(apiFetcher.queryOrPipeline);

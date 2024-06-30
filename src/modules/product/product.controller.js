@@ -49,13 +49,6 @@ const addproduct = AsyncHandler(async (req, res, next) => {
 
 const getallproduct = AsyncHandler(async (req, res, next) => {
   // Define the populate array, you can adjust this as per your requirements
-  const populateArray = [];
-
-  let filterObject = {};
-  if (req.query.filters) {
-    filterObject = req.query.filters;
-  }
-  // console.log("🚀 ~ getallproduct ~ filterObject:", filterObject);
 
   let pipeline = [];
   // Add category lookup if category is provided

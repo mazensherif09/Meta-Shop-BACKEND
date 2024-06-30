@@ -1,3 +1,5 @@
+import { handleBooleans, handleDollarSign } from "./QueryHandler.js";
+
 export class ApiFetcher {
   constructor(queryOrPipeline, searchQuery) {
     this.queryOrPipeline = queryOrPipeline;
@@ -30,31 +32,16 @@ export class ApiFetcher {
   // Filter method
   filter() {
     if (this.searchQuery.filters) {
-      // const convertBooleans = (obj) => {
-      //   if (typeof obj === "string") {
-      //     if (obj === "true") return true;
-      //     if (obj === "false") return false;
-      //   } else if (Array.isArray(obj)) {
-      //     return obj.map(convertBooleans);
-      //   } else if (typeof obj === "object" && obj !== null) {
-      //     return Object.keys(obj).reduce((acc, key) => {
-      //       acc[key] = convertBooleans(obj[key]);
-      //       return acc;
-      //     }, {});
-      //   }
-      //   return obj;
-      // };
-      // let filterObject = JSON.stringify({ ...this.searchQuery.filters })
-      //   .replace(/\$/g, "")
-      //   .replace(/(gt|gte|lt|lte|eq|ne)/g, (match) => "$" + match);
-      // filterObject = JSON.parse(filterObject);
-      // filterObject = convertBooleans(filterObject);
-      // console.log("here is log after proccess", filterObject);
+      let query = this.searchQuery.filters;
+      console.log("🚀 ~ ApiFetcher ~ filter ~ query:", query)
+      query = handleDollarSign(query);
+      query = handleBooleans(query);
+      console.log("🚀 ~ ApiFetcher ~ filter ~ query:", query)
 
       if (this.isPipeline) {
-        this.queryOrPipeline.push({ $match: this.searchQuery.filters });
+        this.queryOrPipeline.push({ $match: query });
       } else {
-        this.queryOrPipeline.find(this.searchQuery.filters);
+        this.queryOrPipeline.find(query);
       }
     }
     return this;

@@ -50,9 +50,6 @@ const getAllUsers = AsyncHandler(async (req, res, next) => {
       role: { $eq: enumRoles.user },
     };
   }
-  if (req.query.filters) {
-    filterObject = { ...req.query.filters, ...filterObject };
-  }
 
   // Exclude the current user from the query
   filterObject._id = { $ne: req.user._id };

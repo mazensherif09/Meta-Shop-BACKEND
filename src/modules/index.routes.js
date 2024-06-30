@@ -36,7 +36,7 @@ export const bootstrap = (app, express) => {
   app.use(helmet()); //  Use helmet to enhance your app's security and for handle XSS attacks
   app.use(express.json()); // middlewar  for buffer
   app.use(cookieParser()); // for handle cookies
-  app.use(QueryHandler)
+  // app.use(QueryHandler)
   app.use("/uploads", express.static("uploads")); // middlewar for File upload
 
   // start  Endpoints ----------------------------------------- |
