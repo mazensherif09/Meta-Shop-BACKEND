@@ -35,11 +35,10 @@ export class ApiFetcher {
       filterObject = JSON.stringify(filterObject);
 
       filterObject = filterObject.replace(
-        /(gt|gte|lt|lte)/g,
+        /(gt|gte|lt|lte|eq|ne)/g,
         (match) => "$" + match
       );
       filterObject = JSON.parse(filterObject);
-
       // Loop through each filter parameter
       for (const key in filterObject) {
         if (typeof filterObject[key] === "object") {
