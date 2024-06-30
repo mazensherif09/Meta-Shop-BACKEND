@@ -42,13 +42,13 @@ export class ApiFetcher {
       // Loop through each filter parameter
       for (const key in filterObject) {
         // Handle regex filters
-        if (filterObject[key].hasOwnProperty("regex")) {
-          const regexPattern = filterObject[key]["regex"].replace(/^'|'$/g, ""); // Remove extra quotes if present
+        if (filterObject[key].hasOwnProperty("$regex")) {
+          const regexPattern = filterObject[key]["$regex"].replace(/^'|'$/g, ""); // Remove extra quotes if present
           filterObject[key] = {
             $regex: new RegExp(regexPattern, "i"),
           };
-        } else if (filterObject[key].hasOwnProperty("neregex")) {
-          const regexPattern = filterObject[key]["neregex"].replace(/^'|'$/g, "" ); // Remove extra quotes if present
+        } else if (filterObject[key].hasOwnProperty("$neregex")) {
+          const regexPattern = filterObject[key]["$neregex"].replace(/^'|'$/g, "" ); // Remove extra quotes if present
           filterObject[key] = {
             $not: new RegExp(regexPattern, "i"),
           };
