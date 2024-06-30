@@ -30,60 +30,31 @@ export class ApiFetcher {
   // Filter method
   filter() {
     if (this.searchQuery.filters) {
-      let filterObject = { ...this.searchQuery.filters };
-
-      filterObject = JSON.stringify(filterObject);
-
-      filterObject = filterObject.replace(
-        /(gt|gte|lt|lte|eq|ne)/g,
-        (match) => "$" + match
-      );
-      filterObject = JSON.parse(filterObject);
-      // Loop through each filter parameter
-      for (const key in filterObject) {
-        if (typeof filterObject[key] === "object") {
-          for (const operator in filterObject[key]) {
-            if (["$gt", "$gte", "$lt", "$lte"].includes(operator)) {
-              filterObject[key][operator] = Number(filterObject[key][operator]);
-            }
-          }
-        }
-        // Handle regex filters
-        if (filterObject[key].hasOwnProperty("$regex")) {
-          const regexPattern = filterObject[key]["$regex"].replace(
-            /^'|'$/g,
-            ""
-          ); // Remove extra quotes if present
-          filterObject[key] = {
-            $regex: new RegExp(regexPattern, "i"),
-          };
-        } else if (filterObject[key].hasOwnProperty("$neregex")) {
-          const regexPattern = filterObject[key]["$neregex"].replace(
-            /^'|'$/g,
-            ""
-          ); // Remove extra quotes if present
-          filterObject[key] = {
-            $not: new RegExp(regexPattern, "i"),
-          };
-        }
-        // Handle special MongoDB operators if present
-        if (key === "isFeatured" && filterObject[key]["$eq"] === "true") {
-          filterObject[key] = true;
-        } else if (
-          key === "isFeatured" &&
-          filterObject[key]["$eq"] === "false"
-        ) {
-          // Default behavior: copy filter value as is
-          filterObject[key] = false;
-        }
-      }
-
-      console.log("here is log after proccess", filterObject);
+      // const convertBooleans = (obj) => {
+      //   if (typeof obj === "string") {
+      //     if (obj === "true") return true;
+      //     if (obj === "false") return false;
+      //   } else if (Array.isArray(obj)) {
+      //     return obj.map(convertBooleans);
+      //   } else if (typeof obj === "object" && obj !== null) {
+      //     return Object.keys(obj).reduce((acc, key) => {
+      //       acc[key] = convertBooleans(obj[key]);
+      //       return acc;
+      //     }, {});
+      //   }
+      //   return obj;
+      // };
+      // let filterObject = JSON.stringify({ ...this.searchQuery.filters })
+      //   .replace(/\$/g, "")
+      //   .replace(/(gt|gte|lt|lte|eq|ne)/g, (match) => "$" + match);
+      // filterObject = JSON.parse(filterObject);
+      // filterObject = convertBooleans(filterObject);
+      // console.log("here is log after proccess", filterObject);
 
       if (this.isPipeline) {
-        this.queryOrPipeline.push({ $match: filterObject });
+        this.queryOrPipeline.push({ $match: this.searchQuery.filters });
       } else {
-        this.queryOrPipeline.find(filterObject);
+        this.queryOrPipeline.find(this.searchQuery.filters);
       }
     }
     return this;
@@ -198,3 +169,42 @@ export class ApiFetcher {
     }
   }
 }
+// draft
+// Loop through each filter parameter
+// for (const key in filterObject) {
+//   if (typeof filterObject[key] === "object") {
+//     for (const operator in filterObject[key]) {
+//       if (["$gt", "$gte", "$lt", "$lte"].includes(operator)) {
+//         filterObject[key][operator] = Number(filterObject[key][operator]);
+//       }
+//     }
+//   }
+//   // Handle regex filters
+//   if (filterObject[key].hasOwnProperty("$regex")) {
+//     const regexPattern = filterObject[key]["$regex"].replace(
+//       /^'|'$/g,
+//       ""
+//     ); // Remove extra quotes if present
+//     filterObject[key] = {
+//       $regex: new RegExp(regexPattern, "i"),
+//     };
+//   } else if (filterObject[key].hasOwnProperty("$neregex")) {
+//     const regexPattern = filterObject[key]["$neregex"].replace(
+//       /^'|'$/g,
+//       ""
+//     ); // Remove extra quotes if present
+//     filterObject[key] = {
+//       $not: new RegExp(regexPattern, "i"),
+//     };
+//   }
+//   // Handle special MongoDB operators if present
+//   if (key === "isFeatured" && filterObject[key]["$eq"] === "true") {
+//     filterObject[key] = true;
+//   } else if (
+//     key === "isFeatured" &&
+//     filterObject[key]["$eq"] === "false"
+//   ) {
+//     // Default behavior: copy filter value as is
+//     filterObject[key] = false;
+//   }
+// }

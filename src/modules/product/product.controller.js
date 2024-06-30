@@ -147,7 +147,7 @@ const getallproduct = AsyncHandler(async (req, res, next) => {
     },
   });
 });
-
+  
 const getOneproduct = AsyncHandler(async (req, res, next) => {
   let query;
   if (mongoose.Types.ObjectId.isValid(req.params.slug)) {
