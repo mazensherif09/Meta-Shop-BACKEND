@@ -6,6 +6,7 @@ export class ApiFetcher {
     this.populateArray = []; // Initialize populate array
     this.metadata = {}; // Initialize metadata
   }
+
   // Pagination method
   pagination() {
     let pageNumber = this.searchQuery.page * 1 || 1;
@@ -77,6 +78,7 @@ export class ApiFetcher {
     }
     return this;
   }
+
   // Select method
   select() {
     if (this.searchQuery.fields) {
@@ -94,10 +96,12 @@ export class ApiFetcher {
     }
     return this;
   }
+
   // Search method
   search() {
     if (this.searchQuery.index) {
       let indexQueries = [];
+
       for (const key in this.searchQuery.index) {
         const value = this.searchQuery.index[key];
         const regexQuery = { [key]: { $regex: value, $options: "i" } };
@@ -116,6 +120,7 @@ export class ApiFetcher {
     }
     return this;
   }
+
   // Populate method for aggregation pipelines
   populateAggregation(populateArray) {
     if (
