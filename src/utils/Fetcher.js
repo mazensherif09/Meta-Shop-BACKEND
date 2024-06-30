@@ -41,14 +41,27 @@ export class ApiFetcher {
 
       // Loop through each filter parameter
       for (const key in filterObject) {
+        if (typeof filterObject[key] === "object") {
+          for (const operator in filterObject[key]) {
+            if (["$gt", "$gte", "$lt", "$lte"].includes(operator)) {
+              filterObject[key][operator] = Number(filterObject[key][operator]);
+            }
+          }
+        }
         // Handle regex filters
         if (filterObject[key].hasOwnProperty("$regex")) {
-          const regexPattern = filterObject[key]["$regex"].replace(/^'|'$/g, ""); // Remove extra quotes if present
+          const regexPattern = filterObject[key]["$regex"].replace(
+            /^'|'$/g,
+            ""
+          ); // Remove extra quotes if present
           filterObject[key] = {
             $regex: new RegExp(regexPattern, "i"),
           };
         } else if (filterObject[key].hasOwnProperty("$neregex")) {
-          const regexPattern = filterObject[key]["$neregex"].replace(/^'|'$/g, "" ); // Remove extra quotes if present
+          const regexPattern = filterObject[key]["$neregex"].replace(
+            /^'|'$/g,
+            ""
+          ); // Remove extra quotes if present
           filterObject[key] = {
             $not: new RegExp(regexPattern, "i"),
           };
@@ -56,11 +69,16 @@ export class ApiFetcher {
         // Handle special MongoDB operators if present
         if (key === "isFeatured" && filterObject[key]["$eq"] === "true") {
           filterObject[key] = true;
-        } else if (key === "isFeatured" && filterObject[key]["$eq"] === "false") {
+        } else if (
+          key === "isFeatured" &&
+          filterObject[key]["$eq"] === "false"
+        ) {
           // Default behavior: copy filter value as is
           filterObject[key] = false;
         }
       }
+
+      console.log("here is log after proccess", filterObject);
 
       if (this.isPipeline) {
         this.queryOrPipeline.push({ $match: filterObject });
