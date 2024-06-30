@@ -1,8 +1,8 @@
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
-import { UserModel } from "../../../database/models/user.model.js";
 import { ApiFetcher } from "../../utils/Fetcher.js";
 import { enumRoles } from "../../assets/enums/Roles_permissions.js";
 import { AppError } from "../../utils/AppError.js";
+import { UserModel } from "../../../database/models/user.model.js";
 
 const createuser = AsyncHandler(async (req, res, next) => {
   const user = new UserModel(req.body);
