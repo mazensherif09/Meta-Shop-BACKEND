@@ -33,7 +33,7 @@ export class ApiFetcher {
       let filterObject = { ...this.searchQuery.filters };
 
       filterObject = JSON.stringify(filterObject);
-     
+
       filterObject = filterObject.replace(
         /(gt|gte|lt|lte)/g,
         (match) => "$" + match
