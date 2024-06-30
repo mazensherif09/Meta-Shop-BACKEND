@@ -1,4 +1,4 @@
-import { handleBooleans, handleOperator } from "./QueryHandler.js";
+import { handleBooleans, handleOperators } from "./QueryHandler.js";
 
 export class ApiFetcher {
   constructor(queryOrPipeline, searchQuery) {
@@ -33,11 +33,10 @@ export class ApiFetcher {
   filter() {
     if (this.searchQuery.filters) {
       let query = this.searchQuery.filters;
-      console.log("🚀 ~ ApiFetcher ~ filter ~ query:", query)
-      query = handleOperator(query);
+      console.log("🚀 ~ ApiFetcher ~ filters ~ query:", query)
+      query = handleOperators(query);
       query = handleBooleans(query);
-      console.log("🚀 ~ ApiFetcher ~ filter ~ query:", query)
-
+      console.log("🚀 ~ ApiFetcher ~ filters ~ query:", query)
       if (this.isPipeline) {
         this.queryOrPipeline.push({ $match: query });
       } else {

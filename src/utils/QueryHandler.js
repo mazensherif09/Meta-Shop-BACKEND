@@ -1,4 +1,4 @@
-const handleOperator = (obj) => {
+const handleOperators = (obj) => {
   const operators = ["gt", "gte", "lt", "lte", "eq", "ne"];
 
   // Helper function to recursively modify keys
@@ -59,4 +59,4 @@ const handleBooleans = (obj) => {
   }
   return obj;
 };
-export { handleOperator, handleBooleans };
+export { handleOperators, handleBooleans };
