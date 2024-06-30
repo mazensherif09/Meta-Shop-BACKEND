@@ -6,7 +6,7 @@ import {
   getOneproduct,
   updateproduct,
   deleteproduct,
-  getFeatured
+  getFilters,
 } from "./product.controller.js";
 import {
   ProductSchemaVal,
@@ -31,10 +31,8 @@ productRouter
     addproduct
   )
   .get(getallproduct);
-  productRouter.get("/featured",  getFeatured);
-
-productRouter.get("/:slug", validation(paramsSlugVal), getOneproduct);
-
+  
+productRouter.get("/filters", getFilters);
 
 productRouter
   .route("/:id")
@@ -52,4 +50,7 @@ productRouter
     AttributedTo,
     deleteproduct
   );
+
+productRouter.get("/:slug", validation(paramsSlugVal), getOneproduct);
+
 export { productRouter };

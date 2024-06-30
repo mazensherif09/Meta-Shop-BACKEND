@@ -16,6 +16,9 @@ import {
 import { addLookup } from "../../utils/addLookup.js";
 import { ApiFetcher } from "../../utils/Fetcher.js";
 import mongoose from "mongoose";
+import { colorModel } from "../../../database/models/color.model.js";
+import { categoryModel } from "../../../database/models/category.model.js";
+import { sizeModel } from "../../../database/models/size.model.js";
 
 const Errormassage = "product not found";
 
@@ -166,6 +169,19 @@ const getOneproduct = AsyncHandler(async (req, res, next) => {
   return res.json(document);
 });
 
+const getFilters = AsyncHandler(async (req, res, next) => {
+  const colors = await colorModel.find().lean();
+  const categories = await categoryModel.find().lean();
+  const sizes = await sizeModel.find().lean();
+
+  return res.status(200).json({
+    message: "",
+    colors,
+    categories,
+    sizes
+  });
+});
+
 const updateproduct = AsyncHandler(async (req, res, next) => {
   // Find the product first to determine its type
   const product = await productModel.findById(req.params.id);
@@ -198,13 +214,10 @@ const updateproduct = AsyncHandler(async (req, res, next) => {
     data: updatedProduct,
   });
 });
+
 const deleteproduct = deleteOne(productModel, Errormassage);
 
-const getFeatured = AsyncHandler(async (req, res, next) => {
-  const document = await productModel.find({ isFeatured: true });
-  if (!document) return next(new AppError(Errormassage, 404));
-  return res.json(document);
-});
+
 
 export {
   addproduct,
@@ -212,16 +225,5 @@ export {
   getOneproduct,
   updateproduct,
   deleteproduct,
-  getFeatured,
+  getFilters
 };
-
-/*
- let imgCover = ""; // intial value
-  if (files?.imgCover) imgCover = files?.imgCover[0]?.path || ""; // set value if admin sent feild imgCover
-  const images = files?.images?.map((val) => val?.path); // set value if admin sent feild images
-  newProduct.images = await Promise.all(
-    images.map(async (val) => await Uploader(val)) // promise => looping on custom function to upload images to cloudinary
-  );
-  newProduct.imgcover = await Uploader(imgCover); // custom function to upload images to cloudinary
-
-*/

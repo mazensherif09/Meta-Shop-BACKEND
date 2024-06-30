@@ -4,7 +4,6 @@ import { AppError } from "../../utils/AppError.js";
 import { ApiFetcher } from "../../utils/Fetcher.js";
 import { UserModel } from "../../../database/models/user.model.js";
 
-
 const InsertOne = AsyncHandler(async (req, res, next) => {
   let check = await influencerModel.findOne({
     socialAccount: req.body.socialAccount,
@@ -89,20 +88,18 @@ const GetOne = AsyncHandler(async (req, res, next) => {
   const document = await influencerModel
     .findById(req.params.id)
     .populate("createdBy", "fullName")
-    .populate("updatedBy", "fullName")
+    .populate("updatedBy", "fullName");
   if (!document) return next(new AppError("influencer not found", 404));
 
   return res.json(document);
 });
 
 const Delete = AsyncHandler(async (req, res, next) => {
-  const document = await influencerModel.findByIdAndDelete({
-    _id: req.params?.id,
-  });
+  const document = await influencerModel.findByIdAndDelete(req.params?.id);
   if (!document) return next(new AppError(`Influncer is not found`, 401));
 
-  await UserModel.findByIdAndUpdate(req.user._id, {
-    influencer: null,
+  await UserModel.findOneAndUpdate({influencer: req.params?.id}, {
+    $unset: { influencer: 1 },
   });
 
   return res.status(200).json({

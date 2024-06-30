@@ -4,7 +4,7 @@ const ForgetPasswordVal = Joi.object({
   email: Joi.string().email().required(),
 });
 const userInsertVal = Joi.object({
-  id: Joi.string().hex().length(24).required(),
+  id: Joi.string().hex().length(24),
   fullName: Joi.string().min(1).max(30).required(),
   email: Joi.string().email().required(),
   role: Joi.string().messages(),
