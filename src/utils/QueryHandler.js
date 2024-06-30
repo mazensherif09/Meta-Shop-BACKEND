@@ -1,48 +1,39 @@
 const handleOperators = (obj) => {
   const operators = ["gt", "gte", "lt", "lte", "eq", "ne"];
 
-  // Helper function to recursively modify keys
   function modifyKeys(obj) {
     const modifiedObj = {};
-    for (let key in obj) {
-      let value = obj[key];
 
-      // Check if key has $ and is not one of the allowed operators
+    for (let key in obj) {
       if (key.includes("$") && !operators.includes(key.slice(1))) {
-        // Remove key if it has $ and not in allowed operators
-        continue;
+        continue; // Skip keys with $ that are not in operators
       }
 
-      // If value is an object or array, recursively modify keys
-      if (typeof value === "object" && value !== null) {
-        let modifiedValue = Array.isArray(value)
-          ? value.map(modifyKeys)
-          : modifyKeys(value);
+      let value = obj[key];
 
-        // Only add to modifiedObj if modifiedValue is not empty
-        if (Object.keys(modifiedValue).length > 0) {
-          modifiedObj[key] = modifiedValue;
+      if (typeof value === "object" && value !== null) {
+        value = Array.isArray(value) ? value.map(modifyKeys) : modifyKeys(value);
+        if (Object.keys(value).length > 0) {
+          modifiedObj[key] = value;
         }
       } else {
-        // Convert numeric strings to numbers
         if (!isNaN(value) && typeof value === "string") {
-          value = Number(value);
+          value = Number(value); // Convert numeric strings to numbers
         }
 
-        // Check if key is in operators array
         if (operators.includes(key)) {
-          // Add $ to the key
-          modifiedObj["$" + key] = value;
+          modifiedObj["$" + key] = value; // Add $ to operators
+        } else if (key.includes("$")) {
+          modifiedObj[key.replace("$", "")] = value; // Remove $ from keys
         } else {
-          // Copy key without $
-          modifiedObj[key.replace("$", "")] = value;
+          modifiedObj[key] = value; // Copy other keys as is
         }
       }
     }
+
     return modifiedObj;
   }
 
-  // Call the modifyKeys function and return the modified object
   return modifyKeys(obj);
 };
 const handleBooleans = (obj) => {
