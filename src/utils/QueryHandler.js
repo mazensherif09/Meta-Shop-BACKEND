@@ -1,50 +1,35 @@
-const handleDollarSign = (obj) => {
-  const replacer = (key, value) => {
-    if (value && typeof value === 'object') {
-      const newValue = {};
-      Object.keys(value).forEach(k => {
-        if (k.match(/^(gt|gte|lt|lte|eq|ne)$/)) {
-          newValue['$' + k] = value[k]; // Prefix valid keys with $
-        } else if (!k.includes('$')) {
-          const nestedValue = handleDollarSign(value[k]); // Recursively handle nested objects
-          if (isValidValue(nestedValue)) {
-            newValue[k] = nestedValue;
-          }
-        }
-      });
-      return newValue;
-    }
-    return value;
-  };
-  const isValidValue = (value) => {
-    if (value === null || value === undefined) {
-      return false;
-    } else if (typeof value === 'object' && Object.keys(value).length === 0) {
-      return false;
-    } else if (typeof value === 'string' && value.trim() === '') {
-      return false;
-    }
-    return true;
-  };
-  const modifiedObj = JSON.parse(JSON.stringify(obj, replacer));
-  // Remove empty values
-  const removeEmptyValues = (data) => {
-    if (Array.isArray(data)) {
-      return data.filter(isValidValue).map(removeEmptyValues);
-    } else if (typeof data === 'object' && data !== null) {
-      Object.keys(data).forEach(key => {
-        const value = data[key];
-        if (!isValidValue(value)) {
-          delete data[key];
+const handleOperator = (obj) => {
+  const operators = ["gt", "gte", "lt", "lte", "eq", "ne"];
+  // Helper function to recursively modify keys
+  function modifyKeys(obj) {
+    const modifiedObj = {};
+    for (let key in obj) {
+      let value = obj[key];
+      // Check if key has $ and is not one of the allowed operators
+      if (key.includes("$") && !operators.includes(key.slice(1))) {
+        // Remove key if it has $ and not in allowed operators
+        continue;
+      }
+      // If value is an object or array, recursively modify keys
+      if (typeof value === "object" && value !== null) {
+        modifiedObj[key] = Array.isArray(value)
+          ? value.map(modifyKeys)
+          : modifyKeys(value);
+      } else {
+        // Check if key is in operators array
+        if (operators.includes(key)) {
+          // Add $ to the key
+          modifiedObj["$" + key] = value;
         } else {
-          data[key] = removeEmptyValues(value);
+          // Copy key without $
+          modifiedObj[key.replace("$", "")] = value;
         }
-      });
+      }
     }
-    return data;
-  };
-  return removeEmptyValues(modifiedObj);
-}
+    return modifiedObj;
+  }
+  return modifyKeys(obj);
+};
 const handleBooleans = (obj) => {
   if (typeof obj === "string") {
     if (obj === "true") return true;
@@ -59,4 +44,4 @@ const handleBooleans = (obj) => {
   }
   return obj;
 };
-export { handleDollarSign, handleBooleans };
+export { handleOperator, handleBooleans };

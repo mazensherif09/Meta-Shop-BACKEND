@@ -20,8 +20,6 @@ import influncerRouter from "./influncer/influncer.routes.js";
 import singleTypeRouter from "./singleType/singleType.routes.js";
 import { fileRouter } from "./file/file.routes.js";
 import { subCategoryRouter } from "./subcategory/subCategory.routes.js";
-import { QueryHandler } from "../middleware/globels/QueryHandler.js";
-
 export const bootstrap = (app, express) => {
   const mainroute = "/api"; // main route
   const corsOptions = {
@@ -36,7 +34,6 @@ export const bootstrap = (app, express) => {
   app.use(helmet()); //  Use helmet to enhance your app's security and for handle XSS attacks
   app.use(express.json()); // middlewar  for buffer
   app.use(cookieParser()); // for handle cookies
-  // app.use(QueryHandler)
   app.use("/uploads", express.static("uploads")); // middlewar for File upload
 
   // start  Endpoints ----------------------------------------- |

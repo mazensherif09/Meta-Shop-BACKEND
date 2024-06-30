@@ -1,4 +1,4 @@
-import { handleBooleans, handleDollarSign } from "./QueryHandler.js";
+import { handleBooleans, handleOperator } from "./QueryHandler.js";
 
 export class ApiFetcher {
   constructor(queryOrPipeline, searchQuery) {
@@ -34,7 +34,7 @@ export class ApiFetcher {
     if (this.searchQuery.filters) {
       let query = this.searchQuery.filters;
       console.log("🚀 ~ ApiFetcher ~ filter ~ query:", query)
-      query = handleDollarSign(query);
+      query = handleOperator(query);
       query = handleBooleans(query);
       console.log("🚀 ~ ApiFetcher ~ filter ~ query:", query)
 
