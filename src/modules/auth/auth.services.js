@@ -2,6 +2,8 @@ import jwt from "jsonwebtoken";
 import { cartModel } from "../../../database/models/cart.model.js";
 import { productModel } from "../../../database/models/product.model.js";
 import { AppError } from "../../utils/AppError.js";
+import SetCookie from "../../utils/SetCookie.js";
+
 
 const handleMerageCartItems = (items1 = [], items2 = []) => {
   let array = [...items1, ...items2];
@@ -59,12 +61,7 @@ const handleConnectCart = async (user, req, res) => {
               new: true,
             }
           );
-          res.cookie("cart", "", {
-            maxAge: 0,
-            httpOnly: true, // accessible only by web server
-            secure: process.env === "pro", // send only over HTTPS
-            sameSite: "Lax",
-          });
+          res.cookie("cart", "", SetCookie())
           return cart;
         }
       }
@@ -84,12 +81,7 @@ const handleCartSignIn = async (user, req, res) => {
         { user: user._id },
         { new: true }
       );
-      res.cookie("cart", "", {
-        maxAge: 0,
-        httpOnly: true, // accessible only by web server
-        secure: process.env === "pro", // send only over HTTPS
-        sameSite: "Lax",
-      });
+      res.cookie("cart", "", SetCookie());
     } catch (error) {}
   }
   if (!cart) {

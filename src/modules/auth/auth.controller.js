@@ -6,11 +6,9 @@ import { forgetPasswordEmail } from "../../services/mails/forgetPassword/forgetP
 import { confirmEmail } from "../../services/mails/confirmation/confirmation.email.js";
 import { UserModel } from "../../../database/models/user.model.js";
 import { generateSecurePin } from "../../utils/genratePinCode.js";
-import {
-  handleMerageCartItems,
-  handleproductIsAvailable,
-} from "../../middleware/cart/handleCart.js";
+
 import { handleCartSignIn, handleConnectCart } from "./auth.services.js";
+import SetCookie from "../../utils/SetCookie.js";
 
 const signUp = AsyncHandler(async (req, res, next) => {
   const user = new UserModel(req.body);
@@ -19,12 +17,7 @@ const signUp = AsyncHandler(async (req, res, next) => {
     { _id: user?._id, role: user?.role },
     process.env.SECRETKEY
   );
-  res.cookie("token", token, {
-    maxAge: 2 * 365 * 24 * 60 * 60 * 1000,
-    httpOnly: true, // accessible only by web server
-    secure: process.env === 'pro', // send only over HTTPS
-    sameSite: "Lax",
-  });
+  res.cookie("token", token, SetCookie());
   const cart = await handleCartSignIn(user, req, res);
   return res.status(200).json({
     message: `welcome ${user?.fullName}`,
@@ -48,12 +41,7 @@ const signIn = AsyncHandler(async (req, res, next) => {
       jwt.sign({ _id: user?._id, role: user?.role }, process.env.SECRETKEY, {
         expiresIn: 365 * 24 * 60 * 60 * 1000,
       }),
-      {
-        maxAge: 2 * 365 * 24 * 60 * 60 * 1000,
-        httpOnly: true, // accessible only by web server
-        secure: process.env === 'pro', // send only over HTTPS
-        sameSite: "Lax",
-      }
+      SetCookie()
     );
 
     const cart = await handleConnectCart(user, req, res);
@@ -145,7 +133,7 @@ const changepassword = AsyncHandler(async (req, res, next) => {
       maxAge: 2 * 365 * 24 * 60 * 60 * 1000,
       httpOnly: true, // accessible only by web server
       secure: process.env === 'pro',
-      sameSite: "Lax",
+     
     }
   );
   return res.status(200).json({ message: "sucess" });
