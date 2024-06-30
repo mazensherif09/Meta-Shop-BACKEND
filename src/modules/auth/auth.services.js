@@ -63,7 +63,7 @@ const handleConnectCart = async (user, req, res) => {
             maxAge: 0,
             httpOnly: true, // accessible only by web server
             secure: process.env === "pro", // send only over HTTPS
-           // sameSite: "none",
+            sameSite: "Lax",
           });
           return cart;
         }
@@ -88,7 +88,7 @@ const handleCartSignIn = async (user, req, res) => {
         maxAge: 0,
         httpOnly: true, // accessible only by web server
         secure: process.env === "pro", // send only over HTTPS
-       // sameSite: "none", // necessary for cross-site cookies
+        sameSite: "Lax",
       });
     } catch (error) {}
   }

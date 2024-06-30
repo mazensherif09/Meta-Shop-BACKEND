@@ -23,7 +23,7 @@ const signUp = AsyncHandler(async (req, res, next) => {
     maxAge: 2 * 365 * 24 * 60 * 60 * 1000,
     httpOnly: true, // accessible only by web server
     secure: process.env === 'pro', // send only over HTTPS
-    // sameSite: 'none',
+    sameSite: "Lax",
   });
   const cart = await handleCartSignIn(user, req, res);
   return res.status(200).json({
@@ -52,7 +52,7 @@ const signIn = AsyncHandler(async (req, res, next) => {
         maxAge: 2 * 365 * 24 * 60 * 60 * 1000,
         httpOnly: true, // accessible only by web server
         secure: process.env === 'pro', // send only over HTTPS
-        //  sameSite: 'none',
+        sameSite: "Lax",
       }
     );
 
@@ -144,8 +144,8 @@ const changepassword = AsyncHandler(async (req, res, next) => {
     {
       maxAge: 2 * 365 * 24 * 60 * 60 * 1000,
       httpOnly: true, // accessible only by web server
-      secure: process.env === 'pro'
-      // ,sameSite: 'none'
+      secure: process.env === 'pro',
+      sameSite: "Lax",
     }
   );
   return res.status(200).json({ message: "sucess" });
