@@ -22,15 +22,14 @@ const handleOperators = (obj) => {
         }
 
         if (operators.includes(key)) {
-          modifiedObj["$" + key] = value; // Add $ to operators
+          modifiedObj["$" + key] = typeof value === "string" ? value.replace(/'/g, '') : value; // Add $ to operators
         } else if (key.includes("$")) {
-          modifiedObj[key.replace("$", "")] = value; // Remove $ from keys
+          modifiedObj[key.replace("$", "")] = typeof value === "string" ? value.replace(/'/g, '') : value; // Remove $ from keys
         } else {
           modifiedObj[key] = value; // Copy other keys as is
         }
       }
     }
-
     return modifiedObj;
   }
 
