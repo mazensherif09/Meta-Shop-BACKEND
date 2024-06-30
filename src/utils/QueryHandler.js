@@ -1,6 +1,5 @@
 const handleOperators = (obj) => {
   const operators = ["gt", "gte", "lt", "lte", "eq", "ne"];
-
   function modifyKeys(obj) {
     const modifiedObj = {};
 
@@ -32,7 +31,6 @@ const handleOperators = (obj) => {
     }
     return modifiedObj;
   }
-
   return modifyKeys(obj);
 };
 const handleBooleans = (obj) => {
