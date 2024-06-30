@@ -29,10 +29,11 @@ export class ApiFetcher {
 
   // Filter method
   filter() {
-    if (this.searchQuery.filter) {
-      let filterObject = { ...this.searchQuery.filter };
+    if (this.searchQuery.filters) {
+      let filterObject = { ...this.searchQuery.filters };
 
       filterObject = JSON.stringify(filterObject);
+     
       filterObject = filterObject.replace(
         /(gt|gte|lt|lte)/g,
         (match) => "$" + match
