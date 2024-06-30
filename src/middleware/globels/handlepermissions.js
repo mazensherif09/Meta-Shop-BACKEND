@@ -1,6 +1,6 @@
 import { handleArray } from "../../utils/handleArray.js";
 import { AsyncHandler } from "./AsyncHandler.js";
-// this code give full acces of the permissions and handel any unexpected errors that might have occurred
+// this code give full access of the permissions and handel any unexpected errors that might have occurred
 // and respect the business roles
 export const handlePermissions = AsyncHandler(async (req, res, next) => {
   if (
