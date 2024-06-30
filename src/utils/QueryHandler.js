@@ -17,7 +17,7 @@ const handleOperators = (obj) => {
           modifiedObj[key] = value;
         }
       } else {
-        if (!isNaN(value) && typeof value === "string") {
+        if (!isNaN(value) && typeof value === "string"  && ["gt", "gte", "lt", "lte"].includes(key)) {
           value = Number(value); // Convert numeric strings to numbers
         }
 
