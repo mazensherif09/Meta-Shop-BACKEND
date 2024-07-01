@@ -18,6 +18,8 @@ const createuser = AsyncHandler(async (req, res, next) => {
       isblocked: user.isblocked,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
+      createdBy: user.createdBy,
+      updatedBy: user.updatedBy
     },
   });
 });
