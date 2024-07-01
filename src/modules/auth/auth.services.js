@@ -60,7 +60,7 @@ const handleConnectCart = async (user, req, res) => {
               new: true,
             }
           );
-          res.clearCookie("cart");
+          res.cookie("cart", '', SetCookie({ maxAge:0 }));
           return cart;
         }
       }
@@ -80,7 +80,7 @@ const handleCartSignIn = async (user, req, res) => {
         { user: user._id },
         { new: true }
       );
-      res.clearCookie("cart");
+      res.cookie("cart", '', SetCookie({ maxAge:0 }));
     } catch (error) {}
   }
   if (!cart) {

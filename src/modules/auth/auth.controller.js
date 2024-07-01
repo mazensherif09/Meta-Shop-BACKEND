@@ -168,7 +168,9 @@ const verfiySession = AsyncHandler(async (req, res, next) => {
   });
 });
 const logOut = AsyncHandler(async (req, res, next) => {
-  res.clearCookie("token");
+  res.cookie("token", '', SetCookie({
+    maxAge:0
+  }));
   return res.status(200).json({ message: "success" });
 });
 export {
