@@ -1,10 +1,13 @@
 const handleOperators = (obj) => {
   const operators = ["gt", "gte", "lt", "lte", "eq", "ne"];
-
   function modifyKeys(obj) {
     const modifiedObj = {};
 
     for (let key in obj) {
+      if (key.includes("$") && !operators.includes(key.slice(1))) {
+        continue; // Skip keys with $ that are not in operators
+      }
+
       let value = obj[key];
 
       if (typeof value === "object" && value !== null) {
@@ -23,10 +26,10 @@ const handleOperators = (obj) => {
           value = Number(value); // Convert numeric strings to numbers
         }
 
-        if (key.startsWith("$") && operators.includes(key.slice(1))) {
-          modifiedObj[key] =
-            typeof value === "string" ? value.replace(/'/g, "") : value; // Keep $ and valid operators
-        } else if (key.includes("$")) {
+        if (operators.includes(key)) {
+          modifiedObj["$" + key] =
+            typeof value === "string" ? value.replace(/'/g, "") : value; // Add $ to operators
+        } else if (key.includes("$") && !operators.includes(key.slice(1))) {
           modifiedObj[key.replace("$", "")] =
             typeof value === "string" ? value.replace(/'/g, "") : value; // Remove $ from keys
         } else {
@@ -34,10 +37,8 @@ const handleOperators = (obj) => {
         }
       }
     }
-
     return modifiedObj;
   }
-
   return modifyKeys(obj);
 };
 const handleBooleans = (obj) => {
