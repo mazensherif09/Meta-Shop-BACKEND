@@ -6,7 +6,7 @@ const SetCookie = (options) => {
     path: "/",
     ...(process.env.MODE === "pro"
       ? { domain: ".lunadeluxo.com", sameSite: "Strict" }
-      : {}), // Use .lunadeluxo.com to include subdomains
+      : {}),
     ...options,
   };
 };
