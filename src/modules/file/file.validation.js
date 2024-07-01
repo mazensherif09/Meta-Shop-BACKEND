@@ -34,7 +34,9 @@ const relationFileVal = Joi.object({
   originalname: Joi.string(),
   filename: Joi.string(),
   url: Joi.string(),
-  mimetype: Joi.string().valid("image/jpeg", "image/png", "image/gif"),
+  mimetype: Joi.string()
+  .valid("image/jpeg", "image/png", "image/gif", "image/webp")
+  .required(),
   size: Joi.number(),
 });
 export { uploadSchema, paramsIdVal, deleteSchema, fileVal,relationFileVal };
