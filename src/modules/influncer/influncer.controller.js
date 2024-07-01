@@ -9,18 +9,15 @@ const InsertOne = AsyncHandler(async (req, res, next) => {
     socialAccount: req.body.socialAccount,
   });
   if (check)
-    return next(new AppError(`Influncer socialName is already in use`, 404));
-
+    return next(new AppError(`Influncer social name is already in use`, 404));
   req.body.influencer = req.user._id;
   const influencer = new influencerModel(req.body);
   await influencer.save();
-
   await UserModel.findByIdAndUpdate(req.user._id, {
     influencer: influencer._id,
   });
-
   return res.status(200).json({
-    message: "Send Sucessfully",
+    message: "created Sucessfully",
     influencer,
   });
 });
@@ -45,12 +42,7 @@ const requestForBenfluencer = AsyncHandler(async (req, res, next) => {
   });
 });
 const GetAll = AsyncHandler(async (req, res, next) => {
-
-
-  let apiFetcher = new ApiFetcher(
-    influencerModel.find(),
-    req.query
-  );
+  let apiFetcher = new ApiFetcher(influencerModel.find(), req.query);
   apiFetcher.filter().search().sort().select();
 
   // Execute the modified query and get total count
@@ -77,7 +69,6 @@ const GetAll = AsyncHandler(async (req, res, next) => {
     },
   });
 });
-
 const GetOne = AsyncHandler(async (req, res, next) => {
   const document = await influencerModel
     .findById(req.params.id)
@@ -87,14 +78,16 @@ const GetOne = AsyncHandler(async (req, res, next) => {
 
   return res.json(document);
 });
-
 const Delete = AsyncHandler(async (req, res, next) => {
   const document = await influencerModel.findByIdAndDelete(req.params?.id);
   if (!document) return next(new AppError(`Influncer is not found`, 401));
 
-  await UserModel.findOneAndUpdate({influencer: req.params?.id}, {
-    $unset: { influencer: 1 },
-  });
+  await UserModel.findOneAndUpdate(
+    { influencer: req.params?.id },
+    {
+      $unset: { influencer: 1 },
+    }
+  );
 
   return res.status(200).json({
     message: "Deleted Sucessfully",

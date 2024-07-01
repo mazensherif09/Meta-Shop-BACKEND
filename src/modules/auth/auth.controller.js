@@ -113,11 +113,6 @@ const ResetPassword = AsyncHandler(async (req, res, next) => {
   });
   return res.status(200).json(token);
 });
-const logout = AsyncHandler(async (req, res, next) => {
-  const { _id } = req.user;
-  await UserModel.findByIdAndUpdate(_id, { isActive: false });
-  return res.json({ message: "success" });
-});
 const changepassword = AsyncHandler(async (req, res, next) => {
   const user = req.user;
   await UserModel.findByIdAndUpdate(_id, {
@@ -132,8 +127,7 @@ const changepassword = AsyncHandler(async (req, res, next) => {
     {
       maxAge: 2 * 365 * 24 * 60 * 60 * 1000,
       httpOnly: true, // accessible only by web server
-      secure: process.env === 'pro',
-     
+      secure: process.env === "pro",
     }
   );
   return res.status(200).json({ message: "sucess" });
@@ -168,15 +162,19 @@ const verfiySession = AsyncHandler(async (req, res, next) => {
       role: user?.role,
       phone: user?.phone,
       confirmEmail: user?.confirmEmail,
-      influencer: user?.influencer
+      influencer: user?.influencer,
     },
     cart: user?.cart,
   });
 });
+const logOut = AsyncHandler(async (req, res, next) => {
+  res.clearCookie("token");
+  return res.status(200).json({ message: "success" });
+});
 export {
   signUp,
   signIn,
-  logout,
+  logOut,
   updateuser,
   deleteUser,
   softdelete,

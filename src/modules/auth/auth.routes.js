@@ -17,12 +17,12 @@ import {
   FPsendEmail,
   tokenForgetPassword,
   ResetPassword,
-  logout,
   softdelete,
   updateuser,
   deleteUser,
   changepassword,
   verfiySession,
+  logOut,
 } from "./auth.controller.js";
 import { validation } from "../../middleware/globels/validation.js";
 import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
@@ -46,7 +46,7 @@ AuthRouter.post(
   ResetPassword
 ); // reset password if token vaild
 
-AuthRouter.post(`/logout`, protectedRoutes, logout); // log out
+AuthRouter.get(`/logout`, protectedRoutes, logOut); // log out
 AuthRouter.delete("/softdelete", protectedRoutes, softdelete); // soft delete => account will be blocked (cant log in if  account blocked)
 AuthRouter.put(
   "/update-me",
@@ -54,10 +54,7 @@ AuthRouter.put(
   protectedRoutes,
   updateuser
 ); // update user
-AuthRouter.route(`/:id`).delete(
-  protectedRoutes,
-  deleteUser
-); // delete user
+AuthRouter.route(`/:id`).delete(protectedRoutes, deleteUser); // delete user
 AuthRouter.put(
   `/update-password`,
   validation(updatePasswordVal),
