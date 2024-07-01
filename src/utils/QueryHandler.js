@@ -1,36 +1,43 @@
 const handleOperators = (obj) => {
   const operators = ["gt", "gte", "lt", "lte", "eq", "ne"];
+
   function modifyKeys(obj) {
     const modifiedObj = {};
 
     for (let key in obj) {
-      if (key.includes("$") && !operators.includes(key.slice(1))) {
-        continue; // Skip keys with $ that are not in operators
-      }
-
       let value = obj[key];
 
       if (typeof value === "object" && value !== null) {
-        value = Array.isArray(value) ? value.map(modifyKeys) : modifyKeys(value);
+        value = Array.isArray(value)
+          ? value.map(modifyKeys)
+          : modifyKeys(value);
         if (Object.keys(value).length > 0) {
           modifiedObj[key] = value;
         }
       } else {
-        if (!isNaN(value) && typeof value === "string"  && ["gt", "gte", "lt", "lte"].includes(key)) {
+        if (
+          !isNaN(value) &&
+          typeof value === "string" &&
+          ["gt", "gte", "lt", "lte"].includes(key)
+        ) {
           value = Number(value); // Convert numeric strings to numbers
         }
 
-        if (operators.includes(key)) {
-          modifiedObj["$" + key] = typeof value === "string" ? value.replace(/'/g, '') : value; // Add $ to operators
+        if (key.startsWith("$") && operators.includes(key.slice(1))) {
+          modifiedObj[key] =
+            typeof value === "string" ? value.replace(/'/g, "") : value; // Keep $ and valid operators
         } else if (key.includes("$")) {
-          modifiedObj[key.replace("$", "")] = typeof value === "string" ? value.replace(/'/g, '') : value; // Remove $ from keys
+          modifiedObj[key.replace("$", "")] =
+            typeof value === "string" ? value.replace(/'/g, "") : value; // Remove $ from keys
         } else {
           modifiedObj[key] = value; // Copy other keys as is
         }
       }
     }
+
     return modifiedObj;
   }
+
   return modifyKeys(obj);
 };
 const handleBooleans = (obj) => {
