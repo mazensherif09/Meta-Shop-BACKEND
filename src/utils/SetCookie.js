@@ -4,8 +4,9 @@ const SetCookie = (options) => {
     httpOnly: true, // accessible only by web server
     secure: process.env.MODE === "pro", // send only over HTTPS
     path: "/",
-    // domain: ".lunadeluxo.com", // Use .lunadeluxo.com to include subdomains
-    // sameSite: "Strict", // Required for cross-site cookies
+    ...(process.env.MODE === "pro"
+      ? { domain: ".lunadeluxo.com", sameSite: "Strict" }
+      : {}), // Use .lunadeluxo.com to include subdomains
     ...options,
   };
 };
