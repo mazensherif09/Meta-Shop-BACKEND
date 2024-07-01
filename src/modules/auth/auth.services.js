@@ -4,7 +4,6 @@ import { productModel } from "../../../database/models/product.model.js";
 import { AppError } from "../../utils/AppError.js";
 import SetCookie from "../../utils/SetCookie.js";
 
-
 const handleMerageCartItems = (items1 = [], items2 = []) => {
   let array = [...items1, ...items2];
   array.forEach((val, ind) => {
@@ -61,7 +60,7 @@ const handleConnectCart = async (user, req, res) => {
               new: true,
             }
           );
-          res.cookie("cart", "", SetCookie())
+          res.clearCookie("cart");
           return cart;
         }
       }
@@ -81,7 +80,7 @@ const handleCartSignIn = async (user, req, res) => {
         { user: user._id },
         { new: true }
       );
-      res.cookie("cart", "", SetCookie());
+      res.clearCookie("cart");
     } catch (error) {}
   }
   if (!cart) {
