@@ -4,11 +4,7 @@ import {
   colorSchemaVal,
   updateColorSchemaVal,
 } from "../colors/colors.validation.js";
-import {
-  CategorySchemaVal,
-  UpdateCategorySchemaVal,
-} from "../category/category.validation.js";
-import { updatesizeSchemaVal } from "../sizes/sizes.validation.js";
+import { UpdateCategorySchemaVal } from "../category/category.validation.js";
 let ObjectIdVal = Joi.string().hex().length(24);
 let imagesVal = Joi.array().items(
   Joi.alternatives().try(ObjectIdVal, relationFileVal)

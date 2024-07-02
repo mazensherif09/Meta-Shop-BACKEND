@@ -9,8 +9,8 @@ const Insert = AsyncHandler(async (req, res, next) => {
   if (!files || files === 0) {
     return next(new AppError("No files uploaded", 400));
   }
-
-  const uploadResults = await Promise.all(
+  let failedfiles = [];
+  let  uploadResults = await Promise.all(
     files.map(async (file) => {
       try {
         return {
@@ -20,19 +20,24 @@ const Insert = AsyncHandler(async (req, res, next) => {
           mimetype: file?.mimetype,
           originalname: file?.originalname,
         };
-      } catch (error) {}
+      } catch (error) {
+        failedfiles.push(file.originalname);
+        return null; // Return null or handle the error as needed
+      }
     })
   );
+  uploadResults =  uploadResults?.filter(Boolean)
+  if (!uploadResults?.length) return next(new AppError("upload failed", 400));
   const savedFiles = await FileModel.insertMany(uploadResults?.filter(Boolean));
   res.status(201).json({
     data: savedFiles,
+    failedfiles,
+    message: "files successfully uploaded",
   });
 });
 const GetAll = AsyncHandler(async (req, res, next) => {
   // Define the populate array, you can adjust this as per your requirements
   const populateArray = [];
-
-
 
   let apiFetcher = new ApiFetcher(FileModel.find(), req.query);
   apiFetcher.filter().search().sort().select();
@@ -61,16 +66,13 @@ const GetAll = AsyncHandler(async (req, res, next) => {
 });
 const GetOne = AsyncHandler(async (req, res, next) => {
   const file = await FileModel.findOne({ _id: req?.params?.id })
-  .populate("createdBy", "fullName")
-  .populate("updatedBy", "fullName")
+    .populate("createdBy", "fullName")
+    .populate("updatedBy", "fullName");
   if (!file) next(new AppError(`File is not found`, 404));
   return res.status(200).json(file);
 });
 const Delete = AsyncHandler(async (req, res, next) => {
-  let id = req.params.id;
-  const deletedFile = await FileModel.findByIdAndDelete(id, {
-    new: true,
-  });
+  const deletedFile = await FileModel.findByIdAndDelete(req.params.id);
 
   if (!deletedFile) {
     return next(new AppError("file not found", 404));

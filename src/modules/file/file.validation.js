@@ -28,15 +28,14 @@ const paramsIdVal = Joi.object({
   id: Joi.string().hex().length(24),
 });
 const relationFileVal = Joi.object({
-  _id: Joi.string().hex().length(24).required(),
+  _id: Joi.string().hex().length(24),
   filename: Joi.string(),
   public_id: Joi.string(),
   originalname: Joi.string(),
   filename: Joi.string(),
   url: Joi.string(),
   mimetype: Joi.string()
-  .valid("image/jpeg", "image/png", "image/gif", "image/webp")
-  .required(),
+  .valid("image/jpeg", "image/png", "image/gif", "image/webp"),
   size: Joi.number(),
 });
 export { uploadSchema, paramsIdVal, deleteSchema, fileVal,relationFileVal };

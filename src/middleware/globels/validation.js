@@ -13,6 +13,7 @@ export const validation = (schema) => {
       { ...files, ...req.body, ...req.params, ...req.query },
       { abortWarly: false }
     );
+    console.log(req.body);
     if (!error) {
       next();
     } else {
@@ -20,6 +21,7 @@ export const validation = (schema) => {
       error.details.forEach((val) => {
         errmsg.push(val.message);
       });
+      console.log(errmsg);
       return next(new AppError(errmsg, 401));
     }
   };
