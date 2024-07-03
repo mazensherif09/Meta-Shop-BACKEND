@@ -10,23 +10,28 @@ const Insert = AsyncHandler(async (req, res, next) => {
     return next(new AppError("No files uploaded", 400));
   }
   let failedfiles = [];
-  let  uploadResults = await Promise.all(
+  let uploadResults = await Promise.all(
     files.map(async (file) => {
       try {
+        const result = await Uploader(file.path);
         return {
-          ...(await Uploader(file.path)),
+          ...result,
           filename: file?.filename,
           size: file?.size,
           mimetype: file?.mimetype,
           originalname: file?.originalname,
         };
       } catch (error) {
+        console.log("🚀 filename", file?.originalname, error);
         failedfiles.push(file.originalname);
         return null; // Return null or handle the error as needed
       }
     })
   );
-  uploadResults =  uploadResults?.filter(Boolean)
+
+  uploadResults = uploadResults?.filter(Boolean);
+  console.log("🚀 ~ Insert ~ uploadResults:", uploadResults);
+
   if (!uploadResults?.length) return next(new AppError("upload failed", 400));
   const savedFiles = await FileModel.insertMany(uploadResults?.filter(Boolean));
   res.status(201).json({
