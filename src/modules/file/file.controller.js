@@ -5,7 +5,6 @@ import { ApiFetcher } from "../../utils/Fetcher.js";
 import { Uploader, deleteFileCloudinary } from "../../utils/cloudnairy.js";
 
 const Insert = AsyncHandler(async (req, res, next) => {
-
   const { files } = req.files;
   if (!files || files === 0) {
     return next(new AppError("No files uploaded", 400));
@@ -23,7 +22,6 @@ const Insert = AsyncHandler(async (req, res, next) => {
           originalname: file?.originalname,
         };
       } catch (error) {
-        console.log("🚀 filename", file?.originalname, error);
         failedfiles.push(file.originalname);
         return null; // Return null or handle the error as needed
       }
@@ -31,12 +29,6 @@ const Insert = AsyncHandler(async (req, res, next) => {
   );
 
   uploadResults = uploadResults?.filter(Boolean);
-  console.log(
-    "🚀 ~ Insert ~ uploadResults:",
-    uploadResults?.length,
-    "from ",
-    files?.length
-  );
 
   if (!uploadResults?.length) return next(new AppError("upload failed", 400));
   const savedFiles = await FileModel.insertMany(uploadResults?.filter(Boolean));
