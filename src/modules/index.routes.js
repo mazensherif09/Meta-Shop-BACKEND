@@ -35,7 +35,11 @@ export const bootstrap = (app, express) => {
   app.use(express.json()); // middlewar  for buffer
   app.use(cookieParser()); // for handle cookies
   app.use("/uploads", express.static("uploads")); // middlewar for File upload
-
+  app.use((req, res, next) => {
+    req.setTimeout(10 * 60 * 1000); // 10 minutes
+    res.setTimeout(10 * 60 * 1000); // 10 minutes
+    next();
+  });
   // start  Endpoints ----------------------------------------- |
   app.get(mainroute, (req, res) => {
     console.log(req.query);
