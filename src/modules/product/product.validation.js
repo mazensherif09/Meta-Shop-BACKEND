@@ -55,7 +55,7 @@ const ProductSchemaVal = Joi.object({
     is: "clothes",
     then: clothesVal,
     otherwise: decorVal,
-  }).required(),
+  }),
 });
 const UpdateproductSchemaVal = Joi.object({
   id: ObjectIdVal,
