@@ -8,12 +8,12 @@ const Insert = AsyncHandler(async (req, res, next) => {
   if (checkDocument) next(new AppError(`Name is already in use`, 401));
 
   req.body.createdBy = req.user._id;
-  const document = new colorModel(req.body);
-  await document.save();
+  const data = new colorModel(req.body);
+  await data.save();
 
   return res.status(200).json({
     message: "Added Sucessfully",
-    document,
+    data,
   });
 });
 
@@ -68,15 +68,15 @@ const Delete = AsyncHandler(async (req, res, next) => {
 });
 
 const Update = AsyncHandler(async (req, res, next) => {
-  const document = await colorModel.findByIdAndUpdate(
+  const data = await colorModel.findByIdAndUpdate(
     { _id: req.params?.id },
     req.body
   );
-  if (!document) next(new AppError(`Color is not found`, 401));
+  if (!data) next(new AppError(`Color is not found`, 401));
 
   return res.status(200).json({
     message: "Updated Sucessfully",
-    document,
+    data,
   });
 });
 
