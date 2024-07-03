@@ -1,5 +1,6 @@
 import Joi from "joi";
 import { influencers } from "../../assets/enums/influeners.js";
+import { updateCouponSchemaVal } from "../coupon/coupon.validation.js";
 
 const requestForBenfluencerVal = Joi.object({
   socialAccount: Joi.string().min(1).max(30),
@@ -11,10 +12,7 @@ const InfluncerVal = Joi.object({
   state: Joi.string()
     .valid(...Object.values(influencers))
     .optional(),
-  coupon: Joi.object({
-    _id: Joi.string().hex().length(24).optional(),
-    code: Joi.string(),
-  }),
+  coupon: updateCouponSchemaVal,
   relatedTo: Joi.object({
     _id: Joi.string().hex().length(24).optional(),
     fullName: Joi.string(),
