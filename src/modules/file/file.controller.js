@@ -5,6 +5,8 @@ import { ApiFetcher } from "../../utils/Fetcher.js";
 import { Uploader, deleteFileCloudinary } from "../../utils/cloudnairy.js";
 
 const Insert = AsyncHandler(async (req, res, next) => {
+  req.setTimeout(10 * 60 * 1000); // 10 minutes
+  res.setTimeout(10 * 60 * 1000); // 10 minutes
   const { files } = req.files;
   if (!files || files === 0) {
     return next(new AppError("No files uploaded", 400));
