@@ -28,18 +28,34 @@ export const bootstrap = (app, express) => {
     allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
     credentials: true, // Allow credentials (cookies, authorization headers, etc.)
   };
-  //process.env.mode !== "dev" ? corsOptions :
-  app.use(logger()); // logging requests in terminal
-  app.use(cors({ origin: process.env.DOMAINS.split(","), credentials: true })); // Use the CORS middleware with the specified options
-  app.use(helmet()); //  Use helmet to enhance your app's security and for handle XSS attacks
-  app.use(express.json()); // middlewar  for buffer
-  app.use(cookieParser()); // for handle cookies
-  app.use("/uploads", express.static("uploads")); // middlewar for File upload
+
+
+
+  app.use(bodyParser.json({ limit: '50mb' }));
+  app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+  
+  // Middleware for logging requests
+  app.use(logger('dev')); // Using 'dev' format for morgan
+  
+  // Enable CORS with specific domains
+  app.use(cors({ origin: process.env.DOMAINS.split(","), credentials: true }));
+  
+  // Use helmet to enhance security
+  app.use(helmet());
+  
+  // Use cookie parser to handle cookies
+  app.use(cookieParser());
+  
+  // Serve static files from the 'uploads' directory
+  app.use("/uploads", express.static("uploads"));
+  
+  // Increase the request and response timeout to 10 minutes
   app.use((req, res, next) => {
     req.setTimeout(10 * 60 * 1000); // 10 minutes
     res.setTimeout(10 * 60 * 1000); // 10 minutes
     next();
   });
+  
   // start  Endpoints ----------------------------------------- |
   app.get(mainroute, (req, res) => {
     console.log(req.query);
