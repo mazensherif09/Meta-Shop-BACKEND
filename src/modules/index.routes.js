@@ -24,39 +24,38 @@ import bodyParser from "body-parser";
 export const bootstrap = (app, express) => {
   const mainroute = "/api"; // main route
   const corsOptions = {
-    origin: process.env.FrontUrl || "*", // Replace with your frontend domain
+    origin: process.env.DOMAINS.split(","),
+    credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "patch"], // Allowed HTTP methods
     allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
     credentials: true, // Allow credentials (cookies, authorization headers, etc.)
   };
 
+  app.use(bodyParser.json({ limit: "50mb" }));
+  app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
-
-  app.use(bodyParser.json({ limit: '50mb' }));
-  app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-  
   // Middleware for logging requests
-  app.use(logger('dev')); // Using 'dev' format for morgan
-  
+  app.use(logger("dev")); // Using 'dev' format for morgan
+
   // Enable CORS with specific domains
-  app.use(cors({ origin: process.env.DOMAINS.split(","), credentials: true }));
-  
+  app.use(cors(corsOptions));
+
   // Use helmet to enhance security
   app.use(helmet());
-  
+
   // Use cookie parser to handle cookies
   app.use(cookieParser());
-  
+
   // Serve static files from the 'uploads' directory
   app.use("/uploads", express.static("uploads"));
-  
+
   // Increase the request and response timeout to 10 minutes
   app.use((req, res, next) => {
     req.setTimeout(10 * 60 * 1000); // 10 minutes
     res.setTimeout(10 * 60 * 1000); // 10 minutes
     next();
   });
-  
+
   // start  Endpoints ----------------------------------------- |
   app.get(mainroute, (req, res) => {
     console.log(req.query);
