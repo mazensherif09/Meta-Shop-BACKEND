@@ -12,6 +12,7 @@ const userInsertVal = Joi.object({
   password: Joi.string().min(8).max(50).required(),
   _id: Joi.string().hex().length(24),
   isblocked: Joi.boolean(),
+  confirmEmail: Joi.boolean(),
 });
 const userUpdateVal = Joi.object({
   id: Joi.string().hex().length(24),

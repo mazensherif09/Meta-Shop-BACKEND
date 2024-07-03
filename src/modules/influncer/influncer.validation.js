@@ -16,6 +16,7 @@ const InfluncerVal = Joi.object({
   relatedTo: Joi.object({
     _id: Joi.string().hex().length(24).optional(),
     fullName: Joi.string(),
+    id: Joi.string().hex().length(24),
   }),
   count: Joi.number().integer().options({ convert: false }).optional(),
   balance: Joi.number().options({ convert: false }).optional(),
@@ -26,9 +27,15 @@ const updateInfluncerSchemaVal = Joi.object({
   state: Joi.string()
     .valid(...Object.values(influencers))
     .optional(),
-  coupon: Joi.string().hex().length(24).optional(),
+  coupon: updateCouponSchemaVal.allow(null),
   count: Joi.number().integer().options({ convert: false }).optional(),
   balance: Joi.number().options({ convert: false }).optional(),
+  _id: Joi.string().hex().length(24).optional(),
+  relatedTo: Joi.object({
+    _id: Joi.string().hex().length(24).optional(),
+    fullName: Joi.string(),
+    id: Joi.string().hex().length(24),
+  }).allow(null),
 });
 const paramsIdVal = Joi.object({
   id: Joi.string().hex().length(24),
