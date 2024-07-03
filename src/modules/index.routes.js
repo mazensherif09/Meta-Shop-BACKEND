@@ -20,6 +20,7 @@ import influncerRouter from "./influncer/influncer.routes.js";
 import singleTypeRouter from "./singleType/singleType.routes.js";
 import { fileRouter } from "./file/file.routes.js";
 import { subCategoryRouter } from "./subcategory/subCategory.routes.js";
+import bodyParser from "body-parser";
 export const bootstrap = (app, express) => {
   const mainroute = "/api"; // main route
   const corsOptions = {
