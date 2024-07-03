@@ -30,7 +30,12 @@ const Insert = AsyncHandler(async (req, res, next) => {
   );
 
   uploadResults = uploadResults?.filter(Boolean);
-  console.log("🚀 ~ Insert ~ uploadResults:", uploadResults);
+  console.log(
+    "🚀 ~ Insert ~ uploadResults:",
+    uploadResults?.length,
+    "from ",
+    files?.length
+  );
 
   if (!uploadResults?.length) return next(new AppError("upload failed", 400));
   const savedFiles = await FileModel.insertMany(uploadResults?.filter(Boolean));
