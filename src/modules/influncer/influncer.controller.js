@@ -18,7 +18,7 @@ const InsertOne = AsyncHandler(async (req, res, next) => {
   });
   return res.status(200).json({
     message: "created Sucessfully",
-    influencer,
+    data: influencer,
   });
 });
 const requestForBenfluencer = AsyncHandler(async (req, res, next) => {
@@ -38,7 +38,7 @@ const requestForBenfluencer = AsyncHandler(async (req, res, next) => {
 
   return res.status(200).json({
     message: "Send Sucessfully",
-    influencer,
+    data: influencer,
   });
 });
 const GetAll = AsyncHandler(async (req, res, next) => {
