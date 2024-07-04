@@ -61,9 +61,12 @@ export const FindOne = (model, Errormassage) => {
 };
 export const updateOne = (model, Errormassage) => {
   return AsyncHandler(async (req, res, next) => {
-    const document = await model.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
+    const document = await model
+      .findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+      })
+      .populate("createdBy", "fullName")
+      .populate("updatedBy", "fullName");
     if (!document) return next(new AppError(Errormassage, 404));
     return res.status(200).json({
       message: "Updated Sucessfully",

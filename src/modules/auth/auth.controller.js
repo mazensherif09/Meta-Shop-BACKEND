@@ -31,6 +31,7 @@ const signUp = AsyncHandler(async (req, res, next) => {
     cart,
   });
 });
+
 const signIn = AsyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
   let user = await UserModel.findOne({ email }).populate("cart");

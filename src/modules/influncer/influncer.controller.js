@@ -99,7 +99,8 @@ const Update = AsyncHandler(async (req, res, next) => {
   const document = await influencerModel.findByIdAndUpdate(
     { _id: req.params?.id },
     req.body
-  );
+  ).populate("createdBy", "fullName")
+  .populate("updatedBy", "fullName");;
   if (!document) return next(new AppError(`Influncer not found`, 401));
 
   return res.status(200).json({

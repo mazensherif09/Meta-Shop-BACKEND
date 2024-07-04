@@ -19,12 +19,15 @@ const createuser = AsyncHandler(async (req, res, next) => {
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
       createdBy: user.createdBy,
-      updatedBy: user.updatedBy
+      updatedBy: user.updatedBy,
     },
   });
 });
 const updateuser = AsyncHandler(async (req, res, next) => {
-  await UserModel.findByIdAndUpdate(req?.params?.id, req?.body);
+  await UserModel.findByIdAndUpdate(req?.params?.id, req?.body)
+    .populate("createdBy", "fullName")
+    .populate("updatedBy", "fullName")
+    .select("-password");
   return res.json({ message: "sucess" });
 });
 const deleteUser = AsyncHandler(async (req, res, next) => {

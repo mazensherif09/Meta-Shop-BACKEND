@@ -199,7 +199,8 @@ const updateproduct = AsyncHandler(async (req, res, next) => {
     {
       new: true,
     }
-  );
+  ).populate("createdBy", "fullName")
+  .populate("updatedBy", "fullName");
   if (!updatedProduct) return next(new AppError(Errormassage, 404));
 
   return res.status(200).json({

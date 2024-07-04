@@ -82,7 +82,8 @@ const updatePage = AsyncHandler(async (req, res, next) => {
     {
       new: true,
     }
-  );
+  ).populate("createdBy", "fullName")
+  .populate("updatedBy", "fullName");
   if (!data) return next(new AppError("Page not found", 404));
 
   return res.status(200).json({
