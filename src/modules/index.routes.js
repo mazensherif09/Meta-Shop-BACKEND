@@ -38,7 +38,6 @@ export const bootstrap = (app, express) => {
       "Content-Disposition", // Required for file uploads
     ],
   };
-  //process.env.mode !== "dev" ? corsOptions :
   app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
   app.use(bodyParser.json({ limit: "50mb" }));
   app.use(logger()); // logging requests in terminal
