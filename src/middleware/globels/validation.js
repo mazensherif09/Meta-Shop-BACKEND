@@ -13,7 +13,7 @@ export const validation = (schema) => {
       { ...files, ...req.body, ...req.params, ...req.query },
       { abortWarly: false }
     );
-    if (process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV === 'dev') {
       console.log(error);
     }
     if (!error) {
