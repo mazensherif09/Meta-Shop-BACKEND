@@ -6,9 +6,10 @@ const sizeSchemaVal = Joi.object({
   description: Joi.string().min(1).max(30).trim().required(),
 });
 const updatesizeSchemaVal = Joi.object({
-  name: Joi.string().min(1).max(10).required().trim(),
+  name: Joi.string().min(1).max(10).trim(),
   description: Joi.string().min(1).max(30).trim(),
   id: Joi.string().hex().length(24),
+  _id: Joi.string().hex().length(24),
 });
 const paramsIdVal = Joi.object({
   id: Joi.string().hex().length(24),

@@ -5,39 +5,19 @@ import { ApiFetcher } from "../../utils/Fetcher.js";
 import { Uploader, deleteFileCloudinary } from "../../utils/cloudnairy.js";
 
 const Insert = AsyncHandler(async (req, res, next) => {
-  const { files } = req.files;
-  if (!files || files === 0) {
-    return next(new AppError("No files uploaded", 400));
-  }
-  let failedfiles = [];
-  let uploadResults = await Promise.all(
-    files.map(async (file) => {
-      try {
-        const result = await Uploader(file.path);
-        return {
-          ...result,
-          filename: file?.filename,
-          size: file?.size,
-          mimetype: file?.mimetype,
-          originalname: file?.originalname,
-        };
-      } catch (error) {
-        console.log("🚀 filename", file?.originalname, error);
-        failedfiles.push(file.originalname);
-        return null; // Return null or handle the error as needed
-      }
-    })
-  );
-
-  uploadResults = uploadResults?.filter(Boolean);
-  console.log("🚀 ~ Insert ~ uploadResults:", uploadResults);
-
-  if (!uploadResults?.length) return next(new AppError("upload failed", 400));
-  const savedFiles = await FileModel.insertMany(uploadResults?.filter(Boolean));
+  const { file } = req.files;
+  const result = await Uploader(file.path);
+  let newFile = {
+    ...result,
+    filename: file?.filename,
+    size: file?.size,
+    mimetype: file?.mimetype,
+    originalname: file?.originalname,
+  };
+  const data = await FileModel.create(newFile);
   res.status(201).json({
-    data: savedFiles,
-    failedfiles,
-    message: "files successfully uploaded",
+    data,
+    message: "file uploaded successfully",
   });
 });
 const GetAll = AsyncHandler(async (req, res, next) => {
@@ -89,3 +69,29 @@ const Delete = AsyncHandler(async (req, res, next) => {
 });
 
 export { Insert, GetAll, GetOne, Delete };
+
+// if (!files || files === 0) {
+//   return next(new AppError("No files uploaded", 400));
+// }
+// let failedfiles = [];
+// let uploadResults = await Promise.all(
+//   files.map(async (file) => {
+//     try {
+//       const result = await Uploader(file.path);
+//       return {
+//         ...result,
+//         filename: file?.filename,
+//         size: file?.size,
+//         mimetype: file?.mimetype,
+//         originalname: file?.originalname,
+//       };
+//     } catch (error) {
+//       failedfiles.push(file.originalname);
+//       return null; // Return null or handle the error as needed
+//     }
+//   })
+// );
+
+// uploadResults = uploadResults?.filter(Boolean);
+
+// if (!uploadResults?.length) return next(new AppError("upload failed", 400));

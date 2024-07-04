@@ -1,8 +1,7 @@
 import express from "express";
 import { Insert, GetAll, GetOne, Delete } from "./file.controller.js";
 import {
-  fileUploadArray,
-  fileUploadfields,
+  fileUploadSingle
 } from "../../services/FileUpload/FileUpload.js";
 import { validation } from "../../middleware/globels/validation.js";
 import { deleteSchema, uploadSchema } from "./file.validation.js";
@@ -16,7 +15,7 @@ fileRouter
   .route("/")
   .get(GetAll)
   .post(
-    fileUploadfields([{ name: "files", maxCount: 100 }]),
+    fileUploadSingle("file"),
     validation(uploadSchema),
     protectedRoutes,
     authorized(enumRoles.admin),
