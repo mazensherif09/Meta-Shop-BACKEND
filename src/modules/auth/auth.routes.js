@@ -46,7 +46,7 @@ AuthRouter.post(
   ResetPassword
 ); // reset password if token vaild
 
-AuthRouter.get(`/logout`, protectedRoutes, logOut); // log out
+AuthRouter.get(`/logout`, logOut); // log out
 AuthRouter.delete("/softdelete", protectedRoutes, softdelete); // soft delete => account will be blocked (cant log in if  account blocked)
 AuthRouter.put(
   "/update-me",

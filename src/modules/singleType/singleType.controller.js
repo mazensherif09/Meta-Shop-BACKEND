@@ -16,7 +16,6 @@ const insert = AsyncHandler(async (req, res, next) => {
     return next(new AppError(`page already exist with same title`, 401));
 
   let Model;
-  console.log(req.body);
 
   switch (key) {
     case "warning":

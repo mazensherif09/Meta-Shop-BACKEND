@@ -48,7 +48,6 @@ export const bootstrap = (app, express) => {
   app.use(cookieParser()); // for handle cookies
   // start  Endpoints ----------------------------------------- |
   app.get(mainroute, (req, res) => {
-    console.log(req.query);
     return res.status(200).json({
       status: "success",
       message: "Welcome to LUNADELUXO API",

@@ -33,10 +33,8 @@ export class ApiFetcher {
   filter() {
     if (this.searchQuery.filters) {
       let query = this.searchQuery.filters;
-      console.log("🚀 ~ ApiFetcher ~ filters ~ query:", query)
       query = handleOperators(query);
       query = handleBooleans(query);
-      console.log("🚀 ~ ApiFetcher ~ filters ~ query:", query)
       if (this.isPipeline) {
         this.queryOrPipeline.push({ $match: query });
       } else {
