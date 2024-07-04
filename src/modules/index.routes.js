@@ -28,8 +28,8 @@ export const bootstrap = (app, express) => {
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], // Allowed HTTP methods
     allowedHeaders: [
       "Content-Type", // Required for POST requests with a JSON or XML body
-      "Authorization",
-      "Access-Control-Allow-Origin", // Required if you're using authorization headers
+      "Authorization",// Required if you're using authorization headers
+      // "Access-Control-Allow-Origin", // Required if you're using authorization headers
       "X-Requested-With", // Required for XMLHttpRequests
       "X-File-Name", // Required for file uploads
       "X-File-Size", // Required for chunked uploads
