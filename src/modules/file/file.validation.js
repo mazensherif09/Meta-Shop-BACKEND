@@ -17,7 +17,7 @@ const fileVal = Joi.object({
     .required(), // 10 MB size limit
 });
 const uploadSchema = Joi.object({
-  files: Joi.array().items(fileVal.required()).required(),
+  file: fileVal.required(),
 });
 
 const deleteSchema = Joi.object({
