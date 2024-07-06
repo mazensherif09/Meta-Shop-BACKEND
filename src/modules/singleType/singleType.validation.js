@@ -10,6 +10,7 @@ const updatePageSchemaVal = Joi.object({
   coupon: Joi.string().hex().length(24).optional(),
   count: Joi.number().integer().options({ convert: false }).optional(),
   balance: Joi.number().options({ convert: false }).optional(),
+  _id: Joi.string().hex().length(24),
 });
 const paramsIdVal = Joi.object({
   id: Joi.string().hex().length(24),
