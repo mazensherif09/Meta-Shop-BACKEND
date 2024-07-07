@@ -1,5 +1,4 @@
 import { cartModel } from "../../../database/models/cart.model.js";
-import { AppError } from "../../utils/AppError.js";
 import SetCookie from "../../utils/SetCookie.js";
 import { AsyncHandler } from "../globels/AsyncHandler.js";
 import jwt from "jsonwebtoken";

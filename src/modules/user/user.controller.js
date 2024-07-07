@@ -3,7 +3,7 @@ import { ApiFetcher } from "../../utils/Fetcher.js";
 import { enumRoles } from "../../assets/enums/Roles_permissions.js";
 import { AppError } from "../../utils/AppError.js";
 import { UserModel } from "../../../database/models/user.model.js";
-
+import httpStatus from "../../assets/messages/httpStatus.js";
 const createuser = AsyncHandler(async (req, res, next) => {
   const user = new UserModel(req.body);
   await user.save();
@@ -84,17 +84,15 @@ const getAllUsers = AsyncHandler(async (req, res, next) => {
     },
   });
 });
-
 const findOneUser = AsyncHandler(async (req, res, next) => {
-  let user = req.user;
-  if (user?._id?.toString() === req?.params?.id)
-    return next(new AppError("not found", 404));
-
+  if (req?.user?._id?.toString() === req?.params?.id.toString()) {
+    if (!document) return next(new AppError(httpStatus.NotFound));
+  }
   const document = await UserModel.findById({ _id: req.params.id })
     .populate("createdBy", "fullName")
     .populate("updatedBy", "fullName")
     .select("-password");
-  if (!document) return next(new AppError("user not found", 404));
+  if (!document) return next(new AppError(httpStatus.NotFound));
   return res.status(200).json(document);
 });
 export {

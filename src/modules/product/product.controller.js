@@ -19,6 +19,8 @@ import mongoose from "mongoose";
 import { colorModel } from "../../../database/models/color.model.js";
 import { categoryModel } from "../../../database/models/category.model.js";
 import { sizeModel } from "../../../database/models/size.model.js";
+import httpStatus from "../../assets/messages/httpStatus.js";
+import responseHandler from "../../utils/responseHandler.js";
 
 const Errormassage = "product not found";
 
@@ -27,7 +29,15 @@ const addproduct = AsyncHandler(async (req, res, next) => {
 
   const check = await productModel.findOne({ name: req.body.name });
   if (check)
-    return next(new AppError(` product already exist with same name`, 401));
+    return next(
+      new AppError(
+        responseHandler(
+          "conflict",
+          undefined,
+          `product already exist with same name`
+        )
+      )
+    );
   req.body.slug = slugify(req.body.name);
 
   // req.body.createdBy = req.user._id;
@@ -125,10 +135,6 @@ const getallproduct = AsyncHandler(async (req, res, next) => {
   // Execute the final aggregate query
   const data = await productModel.aggregate(apiFetcher.queryOrPipeline);
 
-  if (data.length === 0) {
-    throw new AppError("No products found", 404);
-  }
-
   const pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
 
   return res.status(200).json({
@@ -140,7 +146,7 @@ const getallproduct = AsyncHandler(async (req, res, next) => {
     },
   });
 });
-  
+
 const getOneproduct = AsyncHandler(async (req, res, next) => {
   let query;
   if (mongoose.Types.ObjectId.isValid(req.params.slug)) {
@@ -158,7 +164,7 @@ const getOneproduct = AsyncHandler(async (req, res, next) => {
     document = await productModel.findOne(query);
   }
 
-  if (!document) return next(new AppError(Errormassage, 404));
+  if (!document) return next(new AppError(httpStatus.NotFound));
   return res.json(document);
 });
 
@@ -171,15 +177,32 @@ const getFilters = AsyncHandler(async (req, res, next) => {
     message: "",
     colors,
     categories,
-    sizes
+    sizes,
   });
 });
 
 const updateproduct = AsyncHandler(async (req, res, next) => {
   // Find the product first to determine its type
   const product = await productModel.findById(req.params.id);
-  if (!product) {
-    next(new AppError("Product not found", 404));
+  if (!product)
+    return next(new AppError(responseHandler("NotFound", "product")));
+
+  if (req.body.name) {
+    // check is name is already in database to avoid duplicates
+    const check = await productModel.findOne({
+      $and: [{ name: req.body.name }, { _id: { $ne: product?._id } }],
+    });
+    if (check)
+      return next(
+        new AppError(
+          responseHandler(
+            "conflict",
+            undefined,
+            `product already exist with same name`
+          )
+        )
+      );
+    req.body.slug = slugify(req.body.name);
   }
 
   let model;
@@ -193,25 +216,20 @@ const updateproduct = AsyncHandler(async (req, res, next) => {
     default:
       model = productModel;
   }
-  const updatedProduct = await model.findByIdAndUpdate(
-    req.params.id,
-    req?.body,
-    {
+  const data = await model
+    .findByIdAndUpdate(req.params.id, req?.body, {
       new: true,
-    }
-  ).populate("createdBy", "fullName")
-  .populate("updatedBy", "fullName");
-  if (!updatedProduct) return next(new AppError(Errormassage, 404));
+    })
+    .populate("createdBy", "fullName")
+    .populate("updatedBy", "fullName");
 
   return res.status(200).json({
     message: "Updated Sucessfully",
-    data: updatedProduct,
+    data,
   });
 });
 
 const deleteproduct = deleteOne(productModel, Errormassage);
-
-
 
 export {
   addproduct,
@@ -219,5 +237,5 @@ export {
   getOneproduct,
   updateproduct,
   deleteproduct,
-  getFilters
+  getFilters,
 };

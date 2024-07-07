@@ -3,13 +3,22 @@ import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
 import { ApiFetcher } from "../../utils/Fetcher.js";
 import { UserModel } from "../../../database/models/user.model.js";
+import responseHandler from "../../utils/responseHandler.js";
 
 const InsertOne = AsyncHandler(async (req, res, next) => {
   let check = await influencerModel.findOne({
     socialAccount: req.body.socialAccount,
   });
   if (check)
-    return next(new AppError(`Influncer social name is already in use`, 404));
+    return next(
+      new AppError(
+        responseHandler(
+          "NotFound",
+          undefined,
+          `Influncer social name is already in use`
+        )
+      )
+    );
   req.body.influencer = req.user._id;
   const influencer = new influencerModel(req.body);
   await influencer.save();
@@ -26,8 +35,11 @@ const requestForBenfluencer = AsyncHandler(async (req, res, next) => {
     socialAccount: req.body.socialAccount,
   });
   if (check)
-    return next(new AppError(`Influncer socialName is already in use`, 404));
-
+    return next(
+      new AppError(
+        responseHandler("conflict", undefined, ` social name is already in use`)
+      )
+    );
   req.body.relatedTo = req.user._id;
   const influencer = new influencerModel(req.body);
   await influencer.save();
@@ -74,13 +86,15 @@ const GetOne = AsyncHandler(async (req, res, next) => {
     .findById(req.params.id)
     .populate("createdBy", "fullName")
     .populate("updatedBy", "fullName");
-  if (!document) return next(new AppError("influencer not found", 404));
+  if (!document)
+    return next(new AppError(responseHandler("NotFound", `Influncer`)));
 
   return res.json(document);
 });
 const Delete = AsyncHandler(async (req, res, next) => {
   const document = await influencerModel.findByIdAndDelete(req.params?.id);
-  if (!document) return next(new AppError(`Influncer is not found`, 401));
+  if (!document)
+    return next(new AppError(responseHandler("NotFound", "Influncer")));
 
   await UserModel.findOneAndUpdate(
     { influencer: req.params?.id },
@@ -95,17 +109,34 @@ const Delete = AsyncHandler(async (req, res, next) => {
 });
 
 const Update = AsyncHandler(async (req, res, next) => {
-  req.body.createdBy = req.user._id;
-  const document = await influencerModel.findByIdAndUpdate(
-    { _id: req.params?.id },
-    req.body
-  ).populate("createdBy", "fullName")
-  .populate("updatedBy", "fullName");;
-  if (!document) return next(new AppError(`Influncer not found`, 401));
+  if (req.body.socialAccount) {
+    let check = await influencerModel.findOne({
+      $and: [
+        { socialAccount: req.body.socialAccount },
+        { _id: { $ne: req.params?.id } },
+      ],
+    });
+    if (check)
+      return next(
+        new AppError(
+          responseHandler(
+            "conflict",
+            undefined,
+            `social name is already in use`
+          )
+        )
+      );
+  }
+  const data = await influencerModel
+    .findByIdAndUpdate({ _id: req.params?.id }, req.body)
+    .populate("createdBy", "fullName")
+    .populate("updatedBy", "fullName");
+  if (!data)
+    return next(new AppError(responseHandler("NotFound", `Influncer`)));
 
   return res.status(200).json({
     message: "Updated Sucessfully",
-    data: document,
+    data,
   });
 });
 

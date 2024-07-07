@@ -19,11 +19,11 @@ export const validation = (schema) => {
     if (!error) {
       next();
     } else {
-      let errmsg = [];
+      let message = [];
       error.details.forEach((val) => {
-        errmsg.push(val.message);
+        message.push(val.message);
       });
-      return next(new AppError(errmsg, 401));
+      return next(new AppError({ message, code: 400 }));
     }
   };
 };
