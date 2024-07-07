@@ -25,7 +25,7 @@ import { corsOptions } from "../../config/middlewars.js";
 export const bootstrap = (app, express) => {
   const mainroute = "/api"; // main route
   app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" })); // for handle limitations of urlencoded
-  app.use(bodyParser.json({ limit: "50mb" }));// for handle limitations of json parsing 
+  app.use(bodyParser.json({ limit: "50mb" })); // for handle limitations of json parsing
   app.use(logger()); // logging requests in terminal
   app.use(cors(corsOptions)); // Use the CORS middleware with the specified options
   app.use(helmet()); //  Use helmet to enhance your app's security and for handle XSS attacks
@@ -37,7 +37,7 @@ export const bootstrap = (app, express) => {
       message: "Welcome to LUNADELUXO API",
     });
   });
-  app.use(`${mainroute}/auth`, AuthRouter); 
+  app.use(`${mainroute}/auth`, AuthRouter);
   app.use(`${mainroute}/users`, UserRouter);
   app.use(`${mainroute}/files`, fileRouter);
   app.use(`${mainroute}/carts`, cartRouter);
@@ -52,10 +52,14 @@ export const bootstrap = (app, express) => {
   app.use(`${mainroute}/single-type`, singleTypeRouter);
   // End  Endpoints ------------------------------------------- |
   dbConnection(); // database connection
-
   app.use("*", (req, res, next) => {
     // handle UnException routes
-    return next(new AppError(`not found endPoint: ${req.originalUrl}`, 404));
+    return next(
+      new AppError({
+        message: `not found endPoint: ${req.originalUrl}`,
+        code: 404,
+      })
+    );
   });
   app.use(globalError); // error center
 };
