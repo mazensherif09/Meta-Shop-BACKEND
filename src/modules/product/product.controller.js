@@ -30,10 +30,13 @@ const addproduct = AsyncHandler(async (req, res, next) => {
   const check = await productModel.findOne({ name: req.body.name });
   if (check)
     return next(
-      new AppError({
-        massage: `product already exist with same name`,
-        code: 401,
-      })
+      new AppError(
+        responseHandler(
+          "conflict",
+          undefined,
+          `product already exist with same name`
+        )
+      )
     );
   req.body.slug = slugify(req.body.name);
 
@@ -183,6 +186,24 @@ const updateproduct = AsyncHandler(async (req, res, next) => {
   const product = await productModel.findById(req.params.id);
   if (!product)
     return next(new AppError(responseHandler("NotFound", "product")));
+
+  if (req.body.name) {
+    // check is name is already in database to avoid duplicates
+    const check = await productModel.findOne({
+      $and: [{ name: req.body.name }, { _id: { $ne: product?._id } }],
+    });
+    if (check)
+      return next(
+        new AppError(
+          responseHandler(
+            "conflict",
+            undefined,
+            `product already exist with same name`
+          )
+        )
+      );
+    req.body.slug = slugify(req.body.name);
+  }
 
   let model;
   switch (product?.type) {

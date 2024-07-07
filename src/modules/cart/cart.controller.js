@@ -76,7 +76,7 @@ const applyCoupon = AsyncHandler(async (req, res, next) => {
     expires: { $gte: Date.now() },
   });
   if (!coupon)
-    return next(new AppError({ massage: "invalid coupon", code: 401 }));
+    return next(new AppError({ message: "invalid coupon", code: 401 }));
   let cart = await cartModel.findOne({ user: req.user._id });
   if (!cart) return next(new AppError(responseHandler("NotFound", "coupon")));
   let totalPriceAfterDiscount =

@@ -7,7 +7,7 @@ import { ApiFetcher } from "../../utils/Fetcher.js";
 const Insert = AsyncHandler(async (req, res, next) => {
   const checkDocument = await couponModel.findOne({ code: req.body?.code });
   if (checkDocument)
-    next(new AppError({ massage: `Coupon is already in use`, code: 401 }));
+    next(new AppError({ message: `Coupon is already in use`, code: 401 }));
 
   req.body.createdBy = req.user._id;
   const data = new couponModel(req.body);
@@ -88,11 +88,11 @@ const checkCoupon = AsyncHandler(async (req, res, next) => {
   const coupon = await couponModel.findOne({ text });
   // Check if the coupon exists
   if (!coupon)
-    return next(new AppError({ massage: `Coupon not found `, code: 401 }));
+    return next(new AppError({ message: `Coupon not found `, code: 401 }));
 
   const user = await couponhistoryModel.findById({ user: req.user._id });
   if (user)
-    return next(new AppError({ massage: `Coupon used before`, code: 401 }));
+    return next(new AppError({ message: `Coupon used before`, code: 401 }));
 
   // Check if the coupon is expired
   const currentDate = new Date();

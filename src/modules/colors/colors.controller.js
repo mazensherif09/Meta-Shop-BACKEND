@@ -7,7 +7,7 @@ import { ApiFetcher } from "../../utils/Fetcher.js";
 const Insert = AsyncHandler(async (req, res, next) => {
   const checkdata = await colorModel.findOne({ name: req.body?.name });
   if (checkdata)
-    next(new AppError({ massage: `Name is already in use`, code: 401 }));
+    next(new AppError({ message: `Name is already in use`, code: 401 }));
 
   req.body.createdBy = req.user._id;
   const data = new colorModel(req.body);

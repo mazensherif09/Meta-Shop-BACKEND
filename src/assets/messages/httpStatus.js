@@ -24,7 +24,7 @@ const httpStatus = {
   },
   internalServerError: {
     code: 500,
-    message: "Something went wrong. Try again later."
+    message: "Something went wrong. Try again later.",
   },
   sessionExpired: { code: 403, message: "session expired" },
   Accepted: {

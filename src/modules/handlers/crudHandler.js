@@ -10,7 +10,7 @@ export const InsertOne = (model, massage, slug, check) => {
       const checkDocument = await model.findOne(checkObject);
       if (checkDocument)
         return next(
-          new AppError({ massage: `this ${slug} is already exist `, code: 401 })
+          new AppError({ message: `this ${slug} is already exist `, code: 401 })
         );
     }
     req.body.createdBy = req.user._id;
@@ -71,7 +71,7 @@ export const updateOne = (model, massage, slug, check) => {
       const checkDocument = await model.findOne(checkObject);
       if (checkDocument)
         return next(
-          new AppError({ massage: `this ${slug} is already exist `, code: 401 })
+          new AppError({ message: `this ${slug} is already exist `, code: 401 })
         );
       req.body.slug = slugify(req.body[slug]);
     }
