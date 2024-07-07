@@ -52,7 +52,7 @@ const getOne = AsyncHandler(async (req, res, next) => {
     .findById(req.params?.id)
     .populate("createdBy", "fullName")
     .populate("updatedBy", "fullName");
-  if (!document) next(new AppError(`Size is not found`, 401));
+  if (!document) next(new AppError(`Color is not found`, 401));
 
   res.status(200).json(document);
 });
@@ -68,7 +68,7 @@ const Delete = AsyncHandler(async (req, res, next) => {
 
 const Update = AsyncHandler(async (req, res, next) => {
   const data = await colorModel
-    .findByIdAndUpdate({ _id: req.params?.id }, req.body)
+    .findByIdAndUpdate(req.params?.id, req.body)
     .populate("createdBy", "fullName")
     .populate("updatedBy", "fullName");
   if (!data) next(new AppError(`Color is not found`, 401));
