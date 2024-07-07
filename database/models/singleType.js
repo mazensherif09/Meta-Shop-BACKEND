@@ -19,19 +19,21 @@ schema.pre(/^find/, function (next) {
   this.populate({
     path: "topCategories",
     model: "category",
-    select: "_id name poster", // Example fields to select from the 'color' model
-    options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
-  }).populate({
-    path: "sliderLanding.poster",
-    model: "file",
-    select: "_id url", // Example fields to select from the 'color' model
-    options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
-  }).populate({
-    path: "newInPoster",
-    model: "file",
-    select: "_id url", // Example fields to select from the 'color' model
+    select: "_id name poster slug", // Example fields to select from the 'color' model
     options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
   })
+    .populate({
+      path: "sliderLanding.poster",
+      model: "file",
+      select: "_id url", // Example fields to select from the 'color' model
+      options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
+    })
+    .populate({
+      path: "newInPoster",
+      model: "file",
+      select: "_id url", // Example fields to select from the 'color' model
+      options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
+    });
   next();
 });
 export const SingleTypeModel = mongoose.model("singletype", schema);
@@ -96,8 +98,6 @@ const landingSchema = new mongoose.Schema({
     required: true,
   },
 });
-
-
 
 export const landingPageModel = SingleTypeModel.discriminator(
   "landing",
