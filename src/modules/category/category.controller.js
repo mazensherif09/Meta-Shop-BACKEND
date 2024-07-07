@@ -11,7 +11,6 @@ import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 
 const Errormassage = "Category not found";
 const addCategory = InsertOne(categoryModel, Errormassage, "name");
-
 const getallCategoryies = AsyncHandler(async (req, res, next) => {
   // Define the populate array, you can adjust this as per your requirements
   const populateArray = [];

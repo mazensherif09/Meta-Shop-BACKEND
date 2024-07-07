@@ -3,12 +3,15 @@ import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
 import { ApiFetcher } from "../../utils/Fetcher.js";
 
-export const InsertOne = (model, Errormassage, slug, check) => {
+export const InsertOne = (model, massage, slug, check) => {
   return AsyncHandler(async (req, res, next) => {
     if (check) {
       let checkObject = { [slug]: req.body[slug] };
       const checkDocument = await model.findOne(checkObject);
-      if (checkDocument) return next(new AppError(Errormassage, 401));
+      if (checkDocument)
+        return next(
+          new AppError({ massage: `this ${slug} is already exist `, code: 401 })
+        );
     }
     req.body.createdBy = req.user._id;
     req.body.slug = slugify(req.body[slug]);
@@ -20,7 +23,7 @@ export const InsertOne = (model, Errormassage, slug, check) => {
     });
   });
 };
-export const FindAll = ({ model, Errormassage, param, populateArray }) => {
+export const FindAll = ({ model, massage, param, populateArray }) => {
   return AsyncHandler(async (req, res, next) => {
     let filterObject = {};
     if (param && req.params[param]) {
@@ -49,35 +52,47 @@ export const FindAll = ({ model, Errormassage, param, populateArray }) => {
     });
   });
 };
-export const FindOne = (model, Errormassage) => {
+export const FindOne = (model, massage) => {
   return AsyncHandler(async (req, res, next) => {
     const document = await model
       .findById(req.params.id)
       .populate("createdBy", "fullName")
       .populate("updatedBy", "fullName");
-    if (!document) return next(new AppError(Errormassage, 404));
+    if (!document) return next(new AppError({ massage, code: 404 }));
     return res.status(200).json(document);
   });
 };
-export const updateOne = (model, Errormassage) => {
+export const updateOne = (model, massage, slug, check) => {
   return AsyncHandler(async (req, res, next) => {
+    if (check && req.body[slug]) {
+      let checkObject = {
+        $and: [{ [slug]: req.body[slug] }, { _id: { $ne: req.params.id } }],
+      };
+      const checkDocument = await model.findOne(checkObject);
+      if (checkDocument)
+        return next(
+          new AppError({ massage: `this ${slug} is already exist `, code: 401 })
+        );
+      req.body.slug = slugify(req.body[slug]);
+    }
+
     const document = await model
       .findByIdAndUpdate(req.params.id, req.body, {
         new: true,
       })
       .populate("createdBy", "fullName")
       .populate("updatedBy", "fullName");
-    if (!document) return next(new AppError(Errormassage, 404));
+    if (!document) return next(new AppError({ massage, code: 404 }));
     return res.status(200).json({
       message: "Updated Sucessfully",
       data: document,
     });
   });
 };
-export const deleteOne = (model, Errormassage) => {
+export const deleteOne = (model, massage) => {
   return AsyncHandler(async (req, res, next) => {
     const document = await model.findByIdAndDelete({ _id: req.params.id });
-    if (!document) return next(new AppError(Errormassage, 404));
+    if (!document) return next(new AppError({ massage, code: 404 }));
     return res.status(200).json({
       message: "Deleted Sucessfully",
       data: document,

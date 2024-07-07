@@ -6,7 +6,7 @@ import { AppError } from "../../utils/AppError.js";
 import Stripe from "stripe";
 import { ApiFetcher } from "../../utils/Fetcher.js";
 
-const stripe = new Stripe('sk_test....');
+const stripe = new Stripe("sk_test....");
 
 const createCashOrder = AsyncHandler(async (req, res, next) => {
   //1- get cart --> cartId
@@ -59,7 +59,10 @@ const getAllOrders = AsyncHandler(async (req, res, next) => {
     filterObject = req.query.filters;
   }
 
-  let apiFetcher = new ApiFetcher(orderModel.find({ user: req.user._id }), req.query);
+  let apiFetcher = new ApiFetcher(
+    orderModel.find({ user: req.user._id }),
+    req.query
+  );
   apiFetcher.filter().search().sort().select();
   // Execute the modified query and get total count
   const total = await orderModel.countDocuments(apiFetcher.queryOrPipeline);
@@ -90,8 +93,8 @@ const createCheckoutSession = AsyncHandler(async (req, res, next) => {
   if (!cart) return next(new AppError("cart not found"));
   //2- total order price
   let totalOrderPrice = cart?.totalPriceAfterDiscount
-  ? cart?.totalPriceAfterDisc
-  : cart?.totalPrice;
+    ? cart?.totalPriceAfterDisc
+    : cart?.totalPrice;
   //3- create session for the payment transaction
   let session = await stripe.checkout.sessions.create({
     line_items: [

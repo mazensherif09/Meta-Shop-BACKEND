@@ -9,19 +9,24 @@ export const tokenDetector = AsyncHandler(async (req, res, next) => {
   // 2-verfiy token
   if (token) {
     jwt.verify(token, process.env.SECRETKEY, async (err, decoded) => {
-      if (err) return next(new AppError(err, 401));
-      //3- User -> exist or not
-      const user = await UserModel.findById(decoded?._id).populate("cart");
-      if (!user) return next(new AppError("User is not found", 401));
-      //4- user blocked or not
-      if (user?.isblocked) return next(new AppError("User is blocked", 401));
-      //5- user token valid or not
-      if (user?.passwordChangedAt) {
-        let time = parseInt(user?.passwordChangedAt.getTime() / 1000);
-        if (time > decoded.iat) return next(new AppError("Invalid token"));
+      if (err) return next(new AppError(httpStatus.Forbidden));
+      // 3- Check if user exists
+      const user = await UserModel.findById(decoded._id).populate("cart");
+      if (!user) return next(new AppError(httpStatus.Forbidden));
+      // 4- Check if user is blocked
+      if (user.isblocked) return next(new AppError(httpStatus.Forbidden));
+      // 5- Check if user token is valid (password changed after token was issued)
+      if (user.passwordChangedAt) {
+        const passwordChangedAtTime = parseInt(
+          user.passwordChangedAt.getTime() / 1000,
+          10
+        );
+        if (passwordChangedAtTime > decoded.iat) {
+          return next(new AppError(httpStatus.Forbidden));
+        }
       }
       req.user = user;
-      return next();
+      next();
     });
   } else {
     return next();

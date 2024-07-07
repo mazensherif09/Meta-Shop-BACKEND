@@ -1,11 +1,13 @@
 import { colorModel } from "../../../database/models/color.model.js";
+import httpStatus from "../../assets/messages/httpStatus.js";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
 import { ApiFetcher } from "../../utils/Fetcher.js";
 
 const Insert = AsyncHandler(async (req, res, next) => {
-  const checkDocument = await colorModel.findOne({ name: req.body?.name });
-  if (checkDocument) next(new AppError(`Name is already in use`, 401));
+  const checkdata = await colorModel.findOne({ name: req.body?.name });
+  if (checkdata)
+    next(new AppError({ massage: `Name is already in use`, code: 401 }));
 
   req.body.createdBy = req.user._id;
   const data = new colorModel(req.body);
@@ -25,7 +27,7 @@ const GetAll = AsyncHandler(async (req, res, next) => {
   apiFetcher.filter().search().sort().select();
 
   // Execute the modified query and get total count
-  const total = await colorModel.countDocuments(apiFetcher.queryOrPipeline);
+  const total = await colorModel.countdatas(apiFetcher.queryOrPipeline);
 
   // Apply pagination after getting total count
   apiFetcher.pagination();
@@ -48,18 +50,18 @@ const GetAll = AsyncHandler(async (req, res, next) => {
 });
 
 const getOne = AsyncHandler(async (req, res, next) => {
-  const document = await colorModel
+  const data = await colorModel
     .findById(req.params?.id)
     .populate("createdBy", "fullName")
     .populate("updatedBy", "fullName");
-  if (!document) next(new AppError(`Size is not found`, 401));
+  if (!data) next(new AppError(httpStatus.NotFound));
 
-  res.status(200).json(document);
+  res.status(200).json(data);
 });
 
 const Delete = AsyncHandler(async (req, res, next) => {
-  const document = await colorModel.findByIdAndDelete({ _id: req.params?.id });
-  if (!document) next(new AppError(`Color is not found`, 401));
+  const data = await colorModel.findByIdAndDelete({ _id: req.params?.id });
+  if (!data) next(new AppError(httpStatus.NotFound));
 
   return res.status(200).json({
     message: "Deleted Sucessfully",
@@ -71,7 +73,7 @@ const Update = AsyncHandler(async (req, res, next) => {
     .findByIdAndUpdate({ _id: req.params?.id }, req.body)
     .populate("createdBy", "fullName")
     .populate("updatedBy", "fullName");
-  if (!data) next(new AppError(`Color is not found`, 401));
+  if (!data) next(new AppError(httpStatus.NotFound));
 
   return res.status(200).json({
     message: "Updated Sucessfully",

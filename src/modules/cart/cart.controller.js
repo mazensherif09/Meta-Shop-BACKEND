@@ -4,10 +4,13 @@ import { AppError } from "../../utils/AppError.js";
 import { couponModel } from "../../../database/models/coupon.model.js";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import jwt from "jsonwebtoken";
+import httpStatus from "../../assets/messages/httpStatus.js";
+import responseHandler from "../../utils/responseHandler.js";
 
 const addToCart = AsyncHandler(async (req, res, next) => {
   let product = await productModel.findById(req?.body?.product);
-  if (!product) return next(new AppError("Product not found", 404));
+  if (!product)
+    return next(new AppError(responseHandler("NotFound", "product")));
   const { color = null, size = null, quantity = 1 } = req.body;
   let cart = req?.cart;
   const item = cart.items.find(
@@ -46,15 +49,14 @@ const removeItemCart = AsyncHandler(async (req, res, next) => {
       }
     );
   }
-  if (!query)
-    return next(new AppError("something went wrong try again later."));
+  if (!query) return next(new AppError(httpStatus.internalServerError));
   let cart = await cartModel.findOneAndUpdate(
     query,
     { $pull: { items: { _id: req?.params?.id } } },
     { new: true }
   );
 
-  if (!cart) return next(new AppError("something went wrong try again later."));
+  if (!cart) return next(new AppError(httpStatus.internalServerError));
   return res.status(200).json(cart);
 });
 const getLoggedCart = AsyncHandler(async (req, res, next) => {
@@ -65,7 +67,7 @@ const clearCart = AsyncHandler(async (req, res, next) => {
   let cart = req?.cart;
   cart.items = [];
   await cart.save();
-  if (!cart) return next(new AppError("something went wrong try again later."));
+  if (!cart) return next(new AppError(httpStatus.internalServerError));
   return res.json(cart);
 });
 const applyCoupon = AsyncHandler(async (req, res, next) => {
@@ -73,9 +75,10 @@ const applyCoupon = AsyncHandler(async (req, res, next) => {
     code: req.body.coupon,
     expires: { $gte: Date.now() },
   });
-  if (!coupon) return next(new AppError("invalid coupon", 401));
+  if (!coupon)
+    return next(new AppError({ massage: "invalid coupon", code: 401 }));
   let cart = await cartModel.findOne({ user: req.user._id });
-  if (!cart) return next(new AppError("cart not found", 404));
+  if (!cart) return next(new AppError(responseHandler("NotFound", "coupon")));
   let totalPriceAfterDiscount =
     cart.totalPrice - (cart.totalPrice * coupon.discount) / 100;
   cart.totalPriceAfterDiscount = totalPriceAfterDiscount;

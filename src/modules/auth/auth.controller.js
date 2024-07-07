@@ -3,12 +3,12 @@ import bcrypt from "bcrypt";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
 import { forgetPasswordEmail } from "../../services/mails/forgetPassword/forgetPassword.Email.js";
-import { confirmEmail } from "../../services/mails/confirmation/confirmation.email.js";
 import { UserModel } from "../../../database/models/user.model.js";
 import { generateSecurePin } from "../../utils/genratePinCode.js";
 
 import { handleCartSignIn, handleConnectCart } from "./auth.services.js";
 import SetCookie from "../../utils/SetCookie.js";
+import httpStatus from "../../assets/messages/httpStatus.js";
 
 const signUp = AsyncHandler(async (req, res, next) => {
   const user = new UserModel(req.body);
@@ -36,7 +36,13 @@ const signIn = AsyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
   let user = await UserModel.findOne({ email }).populate("cart");
   if (user && bcrypt.compareSync(password, user.password)) {
-    if (user?.isblocked) return res.json({ message: "User is blocked" });
+    if (user?.isblocked)
+      return next(
+        new AppError({
+          message: `user is blocked`,
+          code: httpStatus.badRequest.code,
+        })
+      );
     res.cookie(
       "token",
       jwt.sign({ _id: user?._id, role: user?.role }, process.env.SECRETKEY, {
@@ -58,9 +64,15 @@ const signIn = AsyncHandler(async (req, res, next) => {
       cart,
     });
   } else {
-    return next(new AppError(`Incorrect email or password`, 401));
+    return next(
+      new AppError({
+        message: `Incorrect email or password`,
+        code: httpStatus.badRequest.code,
+      })
+    );
   }
 });
+/* emails is disabled  */
 const verfiyEmail = AsyncHandler(async (req, res, next) => {
   jwt.verify(req.params.token, process.env.SECRETKEY, async (err, decoded) => {
     if (err) return next(new AppError(err, 401));
@@ -114,6 +126,7 @@ const ResetPassword = AsyncHandler(async (req, res, next) => {
   });
   return res.status(200).json(token);
 });
+/* #################### */
 const changepassword = AsyncHandler(async (req, res, next) => {
   const user = req.user;
   await UserModel.findByIdAndUpdate(_id, {
@@ -125,19 +138,15 @@ const changepassword = AsyncHandler(async (req, res, next) => {
     jwt.sign({ _id: user?._id, role: user?.role }, process.env.SECRETKEY, {
       expiresIn: 365 * 24 * 60 * 60 * 1000,
     }),
-    {
-      maxAge: 2 * 365 * 24 * 60 * 60 * 1000,
-      httpOnly: true, // accessible only by web server
-      secure: process.env === "pro",
-    }
+    SetCookie()
   );
   return res.status(200).json({ message: "sucess" });
 });
 const updateuser = AsyncHandler(async (req, res, next) => {
   const { _id } = req.user;
-  const data = await UserModel.findByIdAndUpdate(_id, req.body).select(
-    "-password"
-  );
+  const data = await UserModel.findByIdAndUpdate(_id, req.body, {
+    new: true,
+  }).select("-password");
   return res.status(200).json({ message: "sucess", data });
 });
 const deleteUser = AsyncHandler(async (req, res, next) => {
@@ -169,9 +178,14 @@ const verfiySession = AsyncHandler(async (req, res, next) => {
   });
 });
 const logOut = AsyncHandler(async (req, res, next) => {
-  res.cookie("token", '', SetCookie({
-    maxAge:0
-  }));
+  //  handle logic refreash token
+  res.cookie(
+    "token",
+    "",
+    SetCookie({
+      maxAge: 0,
+    })
+  );
   return res.status(200).json({ message: "success" });
 });
 export {

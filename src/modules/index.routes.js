@@ -21,29 +21,14 @@ import singleTypeRouter from "./singleType/singleType.routes.js";
 import { fileRouter } from "./file/file.routes.js";
 import { subCategoryRouter } from "./subcategory/subCategory.routes.js";
 import bodyParser from "body-parser";
+import { corsOptions } from "../../config/middlewars.js";
 export const bootstrap = (app, express) => {
   const mainroute = "/api"; // main route
-  const corsOptions = {
-    origin: process.env.DOMAINS.split(","), // List of allowed origins
-    credentials: true, // Allow credentials (cookies, authorization headers, etc.)
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"], // Allowed HTTP methods
-    allowedHeaders: [
-      "Content-Type", // Required for POST requests with a JSON or XML body
-      "Authorization", // Required if you're using authorization headers
-      "Access-Control-Allow-Origin",
-      "X-Requested-With", // Required for XMLHttpRequests
-      "X-File-Name", // Required for file uploads
-      "X-File-Size", // Required for chunked uploads
-      "X-File-Type", // Required for chunked uploads
-      "Content-Disposition", // Required for file uploads
-    ],
-  };
-  app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
-  app.use(bodyParser.json({ limit: "50mb" }));
+  app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" })); // for handle limitations of urlencoded
+  app.use(bodyParser.json({ limit: "50mb" }));// for handle limitations of json parsing 
   app.use(logger()); // logging requests in terminal
   app.use(cors(corsOptions)); // Use the CORS middleware with the specified options
   app.use(helmet()); //  Use helmet to enhance your app's security and for handle XSS attacks
-  app.use(express.json()); // middlewar  for buffer
   app.use(cookieParser()); // for handle cookies
   // start  Endpoints ----------------------------------------- |
   app.get(mainroute, (req, res) => {
@@ -52,7 +37,7 @@ export const bootstrap = (app, express) => {
       message: "Welcome to LUNADELUXO API",
     });
   });
-  app.use(`${mainroute}/auth`, AuthRouter); // middlewar for
+  app.use(`${mainroute}/auth`, AuthRouter); 
   app.use(`${mainroute}/users`, UserRouter);
   app.use(`${mainroute}/files`, fileRouter);
   app.use(`${mainroute}/carts`, cartRouter);

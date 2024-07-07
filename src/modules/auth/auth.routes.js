@@ -35,21 +35,20 @@ const AuthRouter = express.Router();
 AuthRouter.post(`/signup`, validation(signupschemaVal), checkEmailuser, signUp); //sign up :)
 AuthRouter.post(`/signin`, validation(signinSchemaVal), signIn); //log in :)
 AuthRouter.get(`/session`, handleVerfiySession, protectedRoutes, verfiySession);
-AuthRouter.get("/verify/:token", verfiyEmail); // verfiy Email :)
-AuthRouter.get(`/unsubscribe/:token`, unsubscribe); // unsubscribe  :)
-AuthRouter.post(`/forget-password`, validation(ForgetPasswordVal), FPsendEmail); // send email for reset password !
-AuthRouter.get(`/forget-Password/:token`, protectedRoutes, tokenForgetPassword); // this optional endpoint  for front-end to loaders(react js || next js) to check token for handle layout !
+AuthRouter.get(`/logout`, logOut); // log out
+// AuthRouter.get("/verify/:token", verfiyEmail); // verfiy Email :)
+// AuthRouter.get(`/unsubscribe/:token`, unsubscribe); // unsubscribe  :)
+// AuthRouter.post(`/forget-password`, validation(ForgetPasswordVal), FPsendEmail); // send email for reset password !
+// AuthRouter.get(`/forget-Password/:token`, protectedRoutes, tokenForgetPassword); // this optional endpoint  for front-end to loaders(react js || next js) to check token for handle layout !
 AuthRouter.post(
   `/resetPassword`,
   validation(authResetPasswordVal),
   protectedRoutes,
   ResetPassword
 ); // reset password if token vaild
-
-AuthRouter.get(`/logout`, logOut); // log out
-AuthRouter.delete("/softdelete", protectedRoutes, softdelete); // soft delete => account will be blocked (cant log in if  account blocked)
+//AuthRouter.delete("/softdelete", protectedRoutes, softdelete); // soft delete => account will be blocked (cant log in if  account blocked)
 AuthRouter.put(
-  "/update-me",
+  "/me",
   validation(updateVal),
   protectedRoutes,
   updateuser
