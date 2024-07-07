@@ -27,7 +27,7 @@ const GetAll = AsyncHandler(async (req, res, next) => {
   apiFetcher.filter().search().sort().select();
 
   // Execute the modified query and get total count
-  const total = await colorModel.countdatas(apiFetcher.queryOrPipeline);
+  const total = await colorModel.countDocuments(apiFetcher.queryOrPipeline);
 
   // Apply pagination after getting total count
   apiFetcher.pagination();
