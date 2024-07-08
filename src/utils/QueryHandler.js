@@ -1,5 +1,3 @@
-import responseHandler from "./responseHandler";
-
 const handleOperators = (obj) => {
   const operators = ["gt", "gte", "lt", "lte", "eq", "ne"];
   function modifyKeys(obj) {
@@ -58,5 +56,3 @@ const handleBooleans = (obj) => {
   return obj;
 };
 export { handleOperators, handleBooleans };
-
-responseHandler( )
