@@ -1,4 +1,4 @@
-// responseHandler.js
+// JSDoc 
 import httpStatus from "../assets/messages/httpStatus.js";
 
 /**
