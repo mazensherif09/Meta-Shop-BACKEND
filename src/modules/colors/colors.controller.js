@@ -70,7 +70,7 @@ const Delete = AsyncHandler(async (req, res, next) => {
 
 const Update = AsyncHandler(async (req, res, next) => {
   const data = await colorModel
-    .findByIdAndUpdate({ _id: req.params?.id }, req.body)
+    .findByIdAndUpdate(req.params?.id, req.body)
     .populate("createdBy", "fullName")
     .populate("updatedBy", "fullName");
   if (!data) next(new AppError(httpStatus.NotFound));
