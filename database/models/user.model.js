@@ -55,6 +55,7 @@ const autoPopulateFields = function (next) {
     path: "updatedBy",
     select: "fullName _id",
   });
+  
   next();
 };
 

@@ -8,7 +8,7 @@ import responseHandler from "../../utils/responseHandler.js";
 const addSize = AsyncHandler(async (req, res, next) => {
   const checkDocument = await sizeModel.findOne({ name: req.body?.name });
   if (checkDocument)
-    next(
+    return next(
       new AppError(
         responseHandler("conflict", undefined, `Name is already in use`)
       )

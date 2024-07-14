@@ -65,7 +65,7 @@ const handleConnectCart = async (user, req, res) => {
         }
       }
     } catch (err) {
-      return next(new AppError(`Error handling cart connection`, 401));
+      
     }
   }
   return cart;

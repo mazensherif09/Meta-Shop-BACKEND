@@ -34,10 +34,10 @@ const signUp = AsyncHandler(async (req, res, next) => {
 
 const signIn = AsyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
+  console.log("🚀 ~ signIn ~  email, password :",  email, password )
   let user = await UserModel.findOne({ email }).populate("cart");
   if (user && bcrypt.compareSync(password, user.password)) {
-    if (user?.isblocked)
-      return next(
+    if (user?.isblocked)return next(
         new AppError({
           message: `user is blocked`,
           code: httpStatus.badRequest.code,
@@ -50,6 +50,7 @@ const signIn = AsyncHandler(async (req, res, next) => {
       }),
       SetCookie()
     );
+
 
     const cart = await handleConnectCart(user, req, res);
     return res.status(200).json({
@@ -71,6 +72,7 @@ const signIn = AsyncHandler(async (req, res, next) => {
       })
     );
   }
+     
 });
 /* emails is disabled  */
 const verfiyEmail = AsyncHandler(async (req, res, next) => {
