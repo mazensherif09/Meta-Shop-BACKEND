@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import { AsyncHandler } from "../globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
 import { UserModel } from "../../../database/models/user.model.js";
+import httpStatus from "../../assets/messages/httpStatus.js";
 
 export const tokenDetector = AsyncHandler(async (req, res, next) => {
   // 1-token is exist or not

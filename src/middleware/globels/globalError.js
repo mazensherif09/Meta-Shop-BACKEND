@@ -1,5 +1,6 @@
 import chalk from "chalk";
 import httpStatus from "../../assets/messages/httpStatus.js";
+import SetCookie from "../../utils/SetCookie.js";
 
 export const globalError = (error, req, res, next) => {
   process.env.MODE === "dev" ? console.log(chalk.red(error?.message)) : "";

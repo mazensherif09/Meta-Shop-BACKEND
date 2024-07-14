@@ -31,6 +31,12 @@ const schema = new mongoose.Schema(
       min: 0,
       default: 0,
     },
+    priceAfterDiscount: {
+      type: Number,
+      min: 0,
+      default: 0,
+      required: true,
+    },
     sold: Number,
     isFeatured: { type: Boolean, default: false },
     publish: { type: Boolean, default: false, default: false },
@@ -96,8 +102,6 @@ schema.pre(/^find/, function (next) {
       select: "_id fullName", // Example fields to select from the 'color' model
     });
 
-
-    
   next();
 });
 export const productModel = mongoose.model("product", schema);

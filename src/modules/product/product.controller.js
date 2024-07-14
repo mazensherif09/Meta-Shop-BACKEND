@@ -25,7 +25,7 @@ import responseHandler from "../../utils/responseHandler.js";
 const Errormassage = "product not found";
 
 const addproduct = AsyncHandler(async (req, res, next) => {
-  const { type } = req.body;
+  const { type, price, discount } = req.body;
 
   const check = await productModel.findOne({ name: req.body.name });
   if (check)
@@ -39,6 +39,11 @@ const addproduct = AsyncHandler(async (req, res, next) => {
       )
     );
   req.body.slug = slugify(req.body.name);
+
+  // Calculate priceAfterDiscount if discount is provided
+  if (discount) {
+    req.body.priceAfterDiscount = (price * (100 - discount)) / 100;
+  }
 
   // req.body.createdBy = req.user._id;
   let product;
@@ -60,7 +65,16 @@ const addproduct = AsyncHandler(async (req, res, next) => {
 const getallproduct = AsyncHandler(async (req, res, next) => {
   // Define the populate array, you can adjust this as per your requirements
 
-  let pipeline = [];
+  let pipeline = [
+    {
+      $match: {
+        publish: true,
+      },
+    },
+  ];
+  if (req?.user?.role === "admin") {
+    pipeline = [];
+  }
   // Add category lookup if category is provided
   if (req.query.category) {
     addLookup(
