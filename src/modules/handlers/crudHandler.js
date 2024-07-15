@@ -2,6 +2,7 @@ import slugify from "slugify";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
 import { ApiFetcher } from "../../utils/Fetcher.js";
+import httpStatus from "../../assets/messages/httpStatus.js";
 
 export const InsertOne = (model, massage, slug, check) => {
   return AsyncHandler(async (req, res, next) => {
@@ -26,33 +27,34 @@ export const InsertOne = (model, massage, slug, check) => {
     });
   });
 };
-export const FindAll = ({ model, massage, param, populateArray }) => {
+export const FindAll = (model) => {
   return AsyncHandler(async (req, res, next) => {
-    let filterObject = {};
-    if (param && req.params[param]) {
-      filterObject[param] = req.params[param];
-    }
-    let apiFetcher = new ApiFetcher(model.find(filterObject), req.query);
-    let total = new ApiFetcher(model.find(filterObject), req.query);
-    total.filter().search();
-    total = await total.mongooseQuery.countDocuments();
-    apiFetcher
-      .pagination()
-      .filter()
-      .search()
-      .sort()
-      .select()
-      .populate(populateArray || []);
-    let pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
-    let data = await apiFetcher.mongooseQuery;
-    return res.status(200).json({
-      data,
-      metadata: {
-        ...apiFetcher.metadata,
-        pages,
-        total,
-      },
-    });
+   // Define the populate array, you can adjust this as per your requirements
+   const populateArray = [];
+
+   let apiFetcher = new ApiFetcher(model.find(), req.query);
+   apiFetcher.filter().search().sort().select();
+ 
+   // Execute the modified query and get total count
+   const total = await model.countDocuments(apiFetcher.queryOrPipeline);
+ 
+   // Apply pagination after getting total count
+   apiFetcher.pagination();
+ 
+   // Execute the modified query to fetch data
+   const data = await apiFetcher.queryOrPipeline.exec();
+ 
+   // Calculate pagination metadata
+   const pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
+ 
+   res.status(200).json({
+     data,
+     metadata: {
+       ...apiFetcher.metadata,
+       pages,
+       total,
+     },
+   });
   });
 };
 export const FindOne = (model, massage) => {
@@ -98,10 +100,9 @@ export const updateOne = (model, massage, slug, check) => {
 export const deleteOne = (model, massage) => {
   return AsyncHandler(async (req, res, next) => {
     const document = await model.findByIdAndDelete({ _id: req.params.id });
-    if (!document) return next(new AppError({ massage, code: 404 }));
+    if (!document) return next(new AppError(httpStatus.NotFound));
     return res.status(200).json({
       message: "Deleted Sucessfully",
-      data: document,
     });
   });
 };
