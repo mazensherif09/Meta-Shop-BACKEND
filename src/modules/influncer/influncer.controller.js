@@ -20,14 +20,18 @@ const InsertOne = AsyncHandler(async (req, res, next) => {
       )
     );
   req.body.influencer = req.user._id;
-  const influencer = new influencerModel(req.body);
-  await influencer.save();
+  const data = new influencerModel(req.body);
+  await data.save();
   await UserModel.findByIdAndUpdate(req.user._id, {
-    influencer: influencer._id,
+    influencer: data._id,
   });
+  data = {
+    ...data?._doc,
+    createdBy: { fullName: req.user.fullName, _id: req.user._id },
+  };
   return res.status(200).json({
-    message: "created Sucessfully",
-    data: influencer,
+    message: "Added Sucessfully",
+    data,
   });
 });
 const requestForBenfluencer = AsyncHandler(async (req, res, next) => {

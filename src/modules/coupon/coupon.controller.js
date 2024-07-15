@@ -12,13 +12,13 @@ const Insert = AsyncHandler(async (req, res, next) => {
   req.body.createdBy = req.user._id;
   const data = new couponModel(req.body);
   await data.save();
-
+  data = {
+    ...data?._doc,
+    createdBy: { fullName: req.user.fullName, _id: req.user._id },
+  };
   return res.status(200).json({
     message: "Added Sucessfully",
-    data: {
-      ...data,
-      createdBy: { fullName: req.user.fullName, _id: req.user._id },
-    },
+    data,
   });
 });
 

@@ -17,12 +17,13 @@ export const InsertOne = (model, massage, slug, check) => {
     req.body.slug = slugify(req.body[slug]);
     const document = new model(req.body);
     await document.save();
+    let data = {
+      ...document?._doc,
+      createdBy: { fullName: req.user.fullName, _id: req.user._id },
+    };
     return res.status(200).json({
       message: "Added Sucessfully",
-      data: {
-        ...document,
-        createdBy: { fullName: req.user.fullName, _id: req.user._id },
-      },
+      data,
     });
   });
 };

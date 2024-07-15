@@ -49,12 +49,13 @@ const addproduct = AsyncHandler(async (req, res, next) => {
     return res.status(400).send("Invalid product type");
   }
   await data.save();
-  return res.status(201).send({
-    message: "Product saved successfully",
-    data: {
-      ...data,
-      createdBy: { fullName: req.user.fullName, _id: req.user._id },
-    },
+  data = {
+    ...data?._doc,
+    createdBy: { fullName: req.user.fullName, _id: req.user._id },
+  };
+  return res.status(200).json({
+    message: "Added Sucessfully",
+    data,
   });
 });
 
