@@ -167,17 +167,12 @@ const getOneproduct = AsyncHandler(async (req, res, next) => {
   }
   let document = null;
   if (req?.user?.role == "admin") {
-    console.log(
-      "🚀 ~ getOneproduct ~ req?.user?.role == ",
-      req?.user?.role == "admin"
-    );
     document = await productModel
       .findOne(query)
       .populate("createdBy", "fullName")
       .populate("updatedBy", "fullName");
   } else {
     query.published = true;
-    console.log("🚀 ~ getOneproduct ~ query.published:", query.published);
     document = await productModel.findOne(query);
   }
 
