@@ -4,9 +4,9 @@ import { AppError } from "../../utils/AppError.js";
 import { ApiFetcher } from "../../utils/Fetcher.js";
 import httpStatus from "../../assets/messages/httpStatus.js";
 
-export const InsertOne = (model, massage, slug, check) => {
+export const InsertOne = (model, massage, slug = null) => {
   return AsyncHandler(async (req, res, next) => {
-    if (check) {
+    if (req.body[slug]) {
       let checkObject = { [slug]: req.body[slug] };
       const checkDocument = await model.findOne(checkObject);
       if (checkDocument)
@@ -67,7 +67,7 @@ export const FindOne = (model, massage) => {
     return res.status(200).json(document);
   });
 };
-export const updateOne = (model, massage, slug, check) => {
+export const updateOne = (model, massage, slug = null) => {
   return AsyncHandler(async (req, res, next) => {
     if (check && req.body[slug]) {
       let checkObject = {
