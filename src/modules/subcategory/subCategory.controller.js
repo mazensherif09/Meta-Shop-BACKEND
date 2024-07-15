@@ -46,7 +46,12 @@ const getAllsubCategoryies = AsyncHandler(async (req, res, next) => {
   });
 });
 const getOnesubCategory = FindOne(SubCategoryModel, Errormassage);
-const updateSubCategorty = updateOne(SubCategoryModel, Errormassage);
+const updateSubCategorty = updateOne(
+  SubCategoryModel,
+  "can't create Category with name already exsit ",
+  "name",
+  true
+);
 const deletesubCategory = deleteOne(SubCategoryModel, Errormassage);
 export {
   addsubCategory,

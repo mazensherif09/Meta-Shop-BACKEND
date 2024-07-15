@@ -31,7 +31,6 @@ const signUp = AsyncHandler(async (req, res, next) => {
     cart,
   });
 });
-
 const signIn = AsyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
   console.log("🚀 ~ signIn ~  email, password :", email, password);
@@ -148,8 +147,18 @@ const updateuser = AsyncHandler(async (req, res, next) => {
   const data = await UserModel.findByIdAndUpdate(_id, req.body, {
     new: true,
   }).select("-password");
-  // err!
-  return res.status(200).json({ message: "sucess", data });
+  return res.status(200).json({
+    message: "sucess",
+    data: {
+      _id,
+      fullName: data?.fullName,
+      email: data?.email,
+      role: data?.role,
+      phone: data?.phone,
+      confirmEmail: data?.confirmEmail,
+      influencer: data?.influencer,
+    },
+  });
 });
 const deleteUser = AsyncHandler(async (req, res, next) => {
   const { _id } = req.user;

@@ -13,7 +13,6 @@ export const InsertOne = (model, massage, slug, check) => {
           new AppError({ message: `this ${slug} is already exist `, code: 401 })
         );
     }
-    req.body.createdBy = req.user._id;
     req.body.slug = slugify(req.body[slug]);
     const document = new model(req.body);
     await document.save();
