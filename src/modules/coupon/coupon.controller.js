@@ -85,34 +85,6 @@ const Update = AsyncHandler(async (req, res, next) => {
   });
 });
 
-// const checkCoupon = AsyncHandler(async (req, res, next) => {
-//   const { text } = req.query; // Ensure text is provided
-//   // Find the coupon in the database
-//   const coupon = await couponModel.findOne({ text });
-//   // Check if the coupon exists
-//   if (!coupon)
-//  return next(new AppError({ message: `Coupon not found `, code: 401 }));
-
-//   const user = await couponhistoryModel.findById({ user: req.user._id });
-//   if (user)
-//     return next(new AppError({ message: `Coupon used before`, code: 401 }));
-
-//   // Check if the coupon is expired
-//   const currentDate = new Date();
-//   if (coupon.expires && coupon.expires < currentDate) {
-//     return res.status(400).json({ message: "Coupon has expired" });
-//   }
-
-//   // Create a new entry in the coupon history
-//   const newCouponHistory = new couponhistoryModel({
-//     user: req.user._id,
-//     coupon: coupon._id,
-//   });
-//   await newCouponHistory.save();
-
-//   // Coupon is valid
-//   return res.status(200).json(coupon);
-// });
 const checkCoupon = AsyncHandler(async (req, res, next) => {
   const { text } = req.query; // Ensure text is provided
   // Find the coupon in the database
