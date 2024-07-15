@@ -10,7 +10,7 @@ const Insert = AsyncHandler(async (req, res, next) => {
     next(new AppError({ message: `Coupon is already in use`, code: 401 }));
 
   req.body.createdBy = req.user._id;
-  const data = new couponModel(req.body);
+  let data = new couponModel(req.body);
   await data.save();
   data = {
     ...data?._doc,

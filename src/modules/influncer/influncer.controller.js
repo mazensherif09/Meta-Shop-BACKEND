@@ -20,7 +20,7 @@ const InsertOne = AsyncHandler(async (req, res, next) => {
       )
     );
   req.body.influencer = req.user._id;
-  const data = new influencerModel(req.body);
+  let data = new influencerModel(req.body);
   await data.save();
   await UserModel.findByIdAndUpdate(req.user._id, {
     influencer: data._id,

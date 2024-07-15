@@ -15,7 +15,7 @@ const addSize = AsyncHandler(async (req, res, next) => {
     );
 
   req.body.createdBy = req.user._id;
-  const data = new sizeModel(req.body);
+  let data = new sizeModel(req.body);
   await data.save();
   data = {
     ...data?._doc,
