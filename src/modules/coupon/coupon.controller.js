@@ -15,7 +15,10 @@ const Insert = AsyncHandler(async (req, res, next) => {
 
   return res.status(200).json({
     message: "Added Sucessfully",
-    data,
+    data: {
+      ...data,
+      createdBy: { fullName: req.user.fullName, _id: req.user._id },
+    },
   });
 });
 

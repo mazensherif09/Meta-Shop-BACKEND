@@ -22,7 +22,9 @@ const getAllsubCategoryies = AsyncHandler(async (req, res, next) => {
   let apiFetcher = new ApiFetcher(SubCategoryModel.find(), req.query);
   apiFetcher.filter().search().sort().select();
   // Execute the modified query and get total count
-  const total = await SubCategoryModel.countDocuments(apiFetcher.queryOrPipeline);
+  const total = await SubCategoryModel.countDocuments(
+    apiFetcher.queryOrPipeline
+  );
 
   // Apply pagination after getting total count
   apiFetcher.pagination();

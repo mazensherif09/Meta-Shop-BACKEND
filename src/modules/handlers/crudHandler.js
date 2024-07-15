@@ -19,7 +19,10 @@ export const InsertOne = (model, massage, slug, check) => {
     await document.save();
     return res.status(200).json({
       message: "Added Sucessfully",
-      data: document,
+      data: {
+        ...document,
+        createdBy: { fullName: req.user.fullName, _id: req.user._id },
+      },
     });
   });
 };

@@ -39,21 +39,22 @@ const addproduct = AsyncHandler(async (req, res, next) => {
       )
     );
   req.body.slug = slugify(req.body.name);
-
-  // req.body.createdBy = req.user._id;
-  let product;
+  req.body.createdBy = req.user._id;
+  let data;
   if (type === "clothes") {
-    product = new ClothesModel(req.body);
+    data = new ClothesModel(req.body);
   } else if (type === "decor") {
-    product = new DecorModel(req.body);
+    data = new DecorModel(req.body);
   } else {
-    return res.status(400).send("Invalid category");
+    return res.status(400).send("Invalid product type");
   }
-
-  await product.save();
+  await data.save();
   return res.status(201).send({
     message: "Product saved successfully",
-    data: product,
+    data: {
+      ...data,
+      createdBy: { fullName: req.user.fullName, _id: req.user._id },
+    },
   });
 });
 

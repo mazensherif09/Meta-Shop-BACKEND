@@ -17,10 +17,12 @@ const addSize = AsyncHandler(async (req, res, next) => {
   req.body.createdBy = req.user._id;
   const document = new sizeModel(req.body);
   await document.save();
-
   return res.status(200).json({
     message: "Added Sucessfully",
-    data: document,
+    data: {
+      ...data,
+      createdBy: { fullName: req.user.fullName, _id: req.user._id },
+    },
   });
 });
 

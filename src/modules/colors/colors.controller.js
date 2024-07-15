@@ -5,17 +5,28 @@ import { AppError } from "../../utils/AppError.js";
 import { ApiFetcher } from "../../utils/Fetcher.js";
 
 const Insert = AsyncHandler(async (req, res, next) => {
-  const checkdata = await colorModel.findOne({ name: req.body?.name });
+  const checkdata = await colorModel.findOne({
+    $or: [
+      {
+        name: req.body?.name,
+      },
+      {
+        code: req.body?.code,
+      },
+    ],
+  });
   if (checkdata)
-    next(new AppError({ message: `Name is already in use`, code: 401 }));
+    next(new AppError({ message: `color is already exsist`, code: 401 }));
 
   req.body.createdBy = req.user._id;
-  const data = new colorModel(req.body);
+  let data = new colorModel(req.body);
   await data.save();
-
   return res.status(200).json({
     message: "Added Sucessfully",
-    data,
+    data: {
+      ...data,
+      createdBy: { fullName: req.user.fullName, _id: req.user._id },
+    },
   });
 });
 
