@@ -1,9 +1,11 @@
 import { influencerModel } from "../../../database/models/influencer.model.js";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
-import { ApiFetcher } from "../../utils/Fetcher.js";
 import { UserModel } from "../../../database/models/user.model.js";
 import responseHandler from "../../utils/responseHandler.js";
+import { FindAll, FindOne } from "../handlers/crudHandler.js";
+
+const Errormassage = "influencer not found";
 
 const InsertOne = AsyncHandler(async (req, res, next) => {
   let check = await influencerModel.findOne({
@@ -57,44 +59,6 @@ const requestForBenfluencer = AsyncHandler(async (req, res, next) => {
     data: influencer,
   });
 });
-const GetAll = AsyncHandler(async (req, res, next) => {
-  let apiFetcher = new ApiFetcher(influencerModel.find(), req.query);
-  apiFetcher.filter().search().sort().select();
-
-  // Execute the modified query and get total count
-  const total = await influencerModel.countDocuments(
-    apiFetcher.queryOrPipeline
-  );
-
-  // Apply pagination after getting total count
-  apiFetcher.pagination();
-
-  // Execute the modified query to fetch data
-  const data = await apiFetcher.queryOrPipeline.exec();
-
-  // Calculate pagination metadata
-  const pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
-
-  res.status(200).json({
-    success: true,
-    data,
-    metadata: {
-      ...apiFetcher.metadata,
-      pages,
-      total,
-    },
-  });
-});
-const GetOne = AsyncHandler(async (req, res, next) => {
-  const document = await influencerModel
-    .findById(req.params.id)
-    .populate("createdBy", "fullName")
-    .populate("updatedBy", "fullName");
-  if (!document)
-    return next(new AppError(responseHandler("NotFound", `Influncer`)));
-
-  return res.json(document);
-});
 const Delete = AsyncHandler(async (req, res, next) => {
   const document = await influencerModel.findByIdAndDelete(req.params?.id);
   if (!document)
@@ -143,5 +107,9 @@ const Update = AsyncHandler(async (req, res, next) => {
     data,
   });
 });
+
+
+const GetAll = FindAll(influencerModel);
+const GetOne =  FindOne(influencerModel, Errormassage)
 
 export { InsertOne, GetAll, requestForBenfluencer, Delete, Update, GetOne };

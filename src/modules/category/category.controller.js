@@ -9,7 +9,7 @@ import {
 
 
 const Errormassage = "Category not found";
-const addCategory = InsertOne(categoryModel, Errormassage, "name", true);
+const addCategory = InsertOne(categoryModel, Errormassage, "name");
 const getallCategoryies = FindAll(categoryModel);
 const getOneCategory = FindOne(categoryModel, Errormassage);
 const updateCategorty = updateOne(categoryModel, Errormassage, "name");

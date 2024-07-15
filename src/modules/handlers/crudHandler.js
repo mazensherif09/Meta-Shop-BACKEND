@@ -59,17 +59,22 @@ export const FindAll = (model) => {
 };
 export const FindOne = (model, massage) => {
   return AsyncHandler(async (req, res, next) => {
-    const document = await model
-      .findById(req.params.id)
-      .populate("createdBy", "fullName")
-      .populate("updatedBy", "fullName");
+    let document = null;
+    if (req?.user?.role === "admin") {
+      document = await model
+        .findById(req.params.id)
+        .populate("createdBy", "fullName")
+        .populate("updatedBy", "fullName");
+    }else{
+      document = await model.findById(req.params.id)
+    } 
     if (!document) return next(new AppError({ massage, code: 404 }));
     return res.status(200).json(document);
   });
 };
 export const updateOne = (model, massage, slug = null) => {
   return AsyncHandler(async (req, res, next) => {
-    if (check && req.body[slug]) {
+    if (req.body[slug]) {
       let checkObject = {
         $and: [{ [slug]: req.body[slug] }, { _id: { $ne: req.params.id } }],
       };

@@ -2,8 +2,9 @@ import { couponModel } from "../../../database/models/coupon.model.js";
 import { couponhistoryModel } from "../../../database/models/coupon_history.js";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
-import { ApiFetcher } from "../../utils/Fetcher.js";
+import { deleteOne, FindAll, FindOne } from "../handlers/crudHandler.js";
 
+const Errormassage = "coupon not found";
 const Insert = AsyncHandler(async (req, res, next) => {
   const checkDocument = await couponModel.findOne({ code: req.body?.code });
   if (checkDocument)
@@ -21,57 +22,6 @@ const Insert = AsyncHandler(async (req, res, next) => {
     data,
   });
 });
-
-const GetAll = AsyncHandler(async (req, res, next) => {
-  // Define the populate array, you can adjust this as per your requirements
-  const populateArray = [];
-
-  let apiFetcher = new ApiFetcher(couponModel.find(), req.query);
-  apiFetcher.filter().search().sort().select();
-
-  // Execute the modified query and get total count
-  const total = await couponModel.countDocuments(apiFetcher.queryOrPipeline);
-
-  // Apply pagination after getting total count
-  apiFetcher.pagination();
-
-  // Execute the modified query to fetch data
-  const data = await apiFetcher.queryOrPipeline.exec();
-
-  // Calculate pagination metadata
-  const pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
-
-  res.status(200).json({
-    success: true,
-    data,
-    metadata: {
-      ...apiFetcher.metadata,
-      pages,
-      total,
-    },
-  });
-});
-
-const getOne = AsyncHandler(async (req, res, next) => {
-  const data = await couponModel
-    .findById(req.params?.id)
-    .populate("createdBy", "fullName")
-    .populate("updatedBy", "fullName");
-  if (!data) next(new AppError(httpStatus.NotFound));
-
-  res.status(200).json(data);
-});
-
-const Delete = AsyncHandler(async (req, res, next) => {
-  const data = await couponModel.findByIdAndDelete({ _id: req.params?.id });
-  if (!data) next(new AppError(httpStatus.NotFound));
-
-  return res.status(200).json({
-    message: "Deleted Sucessfully",
-    data,
-  });
-});
-
 const Update = AsyncHandler(async (req, res, next) => {
   const data = await couponModel
     .findByIdAndUpdate({ _id: req.params?.id }, req.body)
@@ -84,7 +34,6 @@ const Update = AsyncHandler(async (req, res, next) => {
     data,
   });
 });
-
 const checkCoupon = AsyncHandler(async (req, res, next) => {
   const { text } = req.query; // Ensure text is provided
   // Find the coupon in the database
@@ -114,4 +63,12 @@ const checkCoupon = AsyncHandler(async (req, res, next) => {
     },
   });
 });
+
+const getOne = FindOne(couponModel, Errormassage)
+const GetAll = FindAll(couponModel);
+const Delete = deleteOne(couponModel);
+
+
+
+
 export { Insert, GetAll, Delete, Update, checkCoupon, getOne };

@@ -2,8 +2,9 @@ import { colorModel } from "../../../database/models/color.model.js";
 import httpStatus from "../../assets/messages/httpStatus.js";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
-import { deleteOne, FindAll } from "../handlers/crudHandler.js";
+import { deleteOne, FindAll, FindOne } from "../handlers/crudHandler.js";
 
+const Errormassage = "color not found";
 const Insert = AsyncHandler(async (req, res, next) => {
   const checkdata = await colorModel.findOne({
     $or: [
@@ -67,18 +68,9 @@ const Update = AsyncHandler(async (req, res, next) => {
     data,
   });
 });
-const getOne = AsyncHandler(async (req, res, next) => {
-  const data = await colorModel
-    .findById(req.params?.id)
-    .populate("createdBy", "fullName")
-    .populate("updatedBy", "fullName");
-  if (!data) next(new AppError(httpStatus.NotFound));
 
-  res.status(200).json(data);
-});
-
+const getOne = FindOne(colorModel, Errormassage)
 const GetAll = FindAll(colorModel);
-
 const Delete = deleteOne(colorModel);
 
 
