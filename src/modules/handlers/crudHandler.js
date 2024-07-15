@@ -80,16 +80,19 @@ export const updateOne = (model, massage, slug, check) => {
       req.body.slug = slugify(req.body[slug]);
     }
 
-    const document = await model
+    let data = await model
       .findByIdAndUpdate(req.params.id, req.body, {
         new: true,
       })
-      .populate("createdBy", "fullName")
-      .populate("updatedBy", "fullName");
-    if (!document) return next(new AppError({ massage, code: 404 }));
+      .populate("createdBy", "fullName");
+    data = {
+      ...data?._doc,
+      updatedBy: { fullName: req.user.fullName, _id: req.user._id },
+    };
+    if (!data) return next(new AppError({ massage, code: 404 }));
     return res.status(200).json({
       message: "Updated Sucessfully",
-      data: document,
+      data,
     });
   });
 };

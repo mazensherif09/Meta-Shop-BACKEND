@@ -16,7 +16,9 @@ const Insert = AsyncHandler(async (req, res, next) => {
     ],
   });
   if (checkdata)
-    next(new AppError({ message: `color is already exsist`, code: 401 }));
+    return next(
+      new AppError({ message: `color is already exsist`, code: 401 })
+    );
 
   req.body.createdBy = req.user._id;
   let data = new colorModel(req.body);
@@ -81,12 +83,35 @@ const Delete = AsyncHandler(async (req, res, next) => {
 });
 
 const Update = AsyncHandler(async (req, res, next) => {
-  const data = await colorModel
-    .findByIdAndUpdate(req.params?.id, req.body)
-    .populate("createdBy", "fullName")
-    .populate("updatedBy", "fullName");
-  if (!data) next(new AppError(httpStatus.NotFound));
+  if (req.body?.name || req.body?.code) {
+    const queryForCheck = {
+      _id: { $ne: req.params?.id },
+      $or: [],
+    };
+    if (req.body?.name) {
+      queryForCheck.$or.push({ name: req.body.name });
+    }
+    if (req.body?.code) {
+      queryForCheck.$or.push({ code: req.body.code });
+    }
+    if (queryForCheck.$or.length > 0) {
+      const checkdata = await colorModel.findOne(queryForCheck);
 
+      if (checkdata) {
+        return next(
+          new AppError({ message: `Color is already exist`, code: 401 })
+        );
+      }
+    }
+  }
+  let data = await colorModel
+    .findByIdAndUpdate(req.params?.id, req.body, { new: true })
+    .populate("createdBy", "fullName");
+  if (!data) next(new AppError(httpStatus.NotFound));
+  data = {
+    ...data?._doc,
+    updatedBy: { fullName: req.user.fullName, _id: req.user._id },
+  };
   return res.status(200).json({
     message: "Updated Sucessfully",
     data,

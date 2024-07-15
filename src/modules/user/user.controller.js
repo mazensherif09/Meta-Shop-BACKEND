@@ -23,11 +23,15 @@ const createuser = AsyncHandler(async (req, res, next) => {
   });
 });
 const updateuser = AsyncHandler(async (req, res, next) => {
-  await UserModel.findByIdAndUpdate(req?.params?.id, req?.body)
+  let data = await UserModel.findByIdAndUpdate(req?.params?.id, req?.body)
     .populate("createdBy", "fullName")
-    .populate("updatedBy", "fullName")
     .select("-password");
-  return res.json({ message: "sucess" });
+  if (!data) next(new AppError(responseHandler("NotFound", "user")));
+  data = {
+    ...data?._doc,
+    updatedBy: { fullName: req.user.fullName, _id: req.user._id },
+  };
+  return res.status(200).json({ message: "Updated Sucessfully", data });
 });
 const deleteUser = AsyncHandler(async (req, res, next) => {
   let user = req.user;
@@ -36,13 +40,6 @@ const deleteUser = AsyncHandler(async (req, res, next) => {
 
   await UserModel.findByIdAndDelete(req?.params?.id);
   res.json({ message: "sucess" });
-});
-const softdelete = AsyncHandler(async (req, res, next) => {
-  await UserModel.findByIdAndUpdate(req?.params?.id, {
-    isblocked: true,
-    isActive: false,
-  });
-  return res.json({ message: "success" });
 });
 const getAllUsers = AsyncHandler(async (req, res, next) => {
   // Define the populate array, you can adjust this as per your requirements
@@ -94,11 +91,4 @@ const findOneUser = AsyncHandler(async (req, res, next) => {
   if (!document) return next(new AppError(httpStatus.NotFound));
   return res.status(200).json(document);
 });
-export {
-  updateuser,
-  deleteUser,
-  softdelete,
-  createuser,
-  getAllUsers,
-  findOneUser,
-};
+export { updateuser, deleteUser, createuser, getAllUsers, findOneUser };

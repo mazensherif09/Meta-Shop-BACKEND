@@ -115,10 +115,8 @@ const Delete = AsyncHandler(async (req, res, next) => {
 const Update = AsyncHandler(async (req, res, next) => {
   if (req.body.socialAccount) {
     let check = await influencerModel.findOne({
-      $and: [
-        { socialAccount: req.body.socialAccount },
-        { _id: { $ne: req.params?.id } },
-      ],
+      socialAccount: req.body.socialAccount,
+      _id: { $ne: req.params?.id }
     });
     if (check)
       return next(
@@ -131,13 +129,15 @@ const Update = AsyncHandler(async (req, res, next) => {
         )
       );
   }
-  const data = await influencerModel
+  let data = await influencerModel
     .findByIdAndUpdate({ _id: req.params?.id }, req.body)
     .populate("createdBy", "fullName")
-    .populate("updatedBy", "fullName");
   if (!data)
     return next(new AppError(responseHandler("NotFound", `Influncer`)));
-
+  data = {
+    ...data?._doc,
+    updatedBy: { fullName: req.user.fullName, _id: req.user._id },
+  };
   return res.status(200).json({
     message: "Updated Sucessfully",
     data,

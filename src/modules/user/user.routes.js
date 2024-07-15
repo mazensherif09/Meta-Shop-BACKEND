@@ -3,7 +3,6 @@ import express from "express";
 import {
   updateuser,
   deleteUser,
-  softdelete,
   createuser,
   getAllUsers,
   findOneUser,

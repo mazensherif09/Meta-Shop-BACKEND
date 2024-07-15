@@ -201,7 +201,8 @@ const updateproduct = AsyncHandler(async (req, res, next) => {
   if (req.body.name) {
     // check is name is already in database to avoid duplicates
     const check = await productModel.findOne({
-      $and: [{ name: req.body.name }, { _id: { $ne: product?._id } }],
+      name: req.body.name,
+      _id: { $ne: product?._id },
     });
     if (check)
       return next(
@@ -227,13 +228,16 @@ const updateproduct = AsyncHandler(async (req, res, next) => {
     default:
       model = productModel;
   }
-  const data = await model
+  let data = await model
     .findByIdAndUpdate(req.params.id, req?.body, {
       new: true,
     })
     .populate("createdBy", "fullName")
     .populate("updatedBy", "fullName");
-
+  data = {
+    ...data?._doc,
+    updatedBy: { fullName: req.user.fullName, _id: req.user._id },
+  };
   return res.status(200).json({
     message: "Updated Sucessfully",
     data,

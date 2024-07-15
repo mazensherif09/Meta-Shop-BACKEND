@@ -74,13 +74,15 @@ const deleteSize = AsyncHandler(async (req, res, next) => {
 });
 
 const updateSize = AsyncHandler(async (req, res, next) => {
-  const data = await sizeModel
+  let data = await sizeModel
     .findByIdAndUpdate({ _id: req.params?.id }, req.body)
     .populate("createdBy", "fullName")
-    .populate("updatedBy", "fullName");
 
   if (!data) next(new AppError(responseHandler("NotFound", "size")));
-
+  data = {
+    ...data?._doc,
+    updatedBy: { fullName: req.user.fullName, _id: req.user._id },
+  };
   return res.status(200).json({
     message: "Updated Sucessfully",
     data,
