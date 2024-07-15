@@ -31,8 +31,8 @@ export class ApiFetcher {
 
   // Filter method
   filter() {
-    if (this.searchQuery.filters || this.searchQuery.filter) {
-      let query = this.searchQuery.filters || this.searchQuery.filter;
+    if (this.searchQuery.filters) {
+      let query = this.searchQuery.filters;
       query = handleOperators(query);
       query = handleBooleans(query);
       if (this.isPipeline) {

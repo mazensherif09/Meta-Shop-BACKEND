@@ -40,11 +40,6 @@ const addproduct = AsyncHandler(async (req, res, next) => {
     );
   req.body.slug = slugify(req.body.name);
 
-  // Calculate priceAfterDiscount if discount is provided
-  if (discount) {
-    req.body.priceAfterDiscount = (price * (100 - discount)) / 100;
-  }
-
   // req.body.createdBy = req.user._id;
   let product;
   if (type === "clothes") {
