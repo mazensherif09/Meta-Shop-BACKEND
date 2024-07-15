@@ -4,6 +4,7 @@ import { enumRoles } from "../../assets/enums/Roles_permissions.js";
 import { AppError } from "../../utils/AppError.js";
 import { UserModel } from "../../../database/models/user.model.js";
 import httpStatus from "../../assets/messages/httpStatus.js";
+import responseHandler from "../../utils/responseHandler.js";
 const createuser = AsyncHandler(async (req, res, next) => {
   let cheackUser = await UserModel.findOne({
     email: req.body.email,
