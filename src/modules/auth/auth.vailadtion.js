@@ -15,15 +15,13 @@ const signinSchemaVal = Joi.object({
     .required(),
 });
 
-
 const ForgetPasswordVal = Joi.object({
   email: Joi.string().email().required(),
 });
 const updateVal = Joi.object({
   fullName: Joi.string().min(1).max(30),
-  email: Joi.string().email(),
+  // email: Joi.string().email(),
   age: Joi.number().integer().min(10).max(80),
- 
 });
 const updatePasswordVal = Joi.object({
   newpassword: Joi.string()
@@ -32,7 +30,6 @@ const updatePasswordVal = Joi.object({
   currentpassword: Joi.string()
     .pattern(/^[A-Z][a-z0-9#@]{8,30}$/)
     .required(),
-  
 });
 const authResetPasswordVal = Joi.object({
   token: Joi.string().min(100).max(400).required(),
@@ -40,7 +37,6 @@ const authResetPasswordVal = Joi.object({
     .pattern(/^[A-Z][a-z0-9#@]{8,30}$/)
     .required(),
   rePassword: Joi.valid(Joi.ref("newPassword")).required(),
- 
 });
 export {
   updateVal,

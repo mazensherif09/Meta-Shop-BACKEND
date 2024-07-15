@@ -5,6 +5,18 @@ import { AppError } from "../../utils/AppError.js";
 import { UserModel } from "../../../database/models/user.model.js";
 import httpStatus from "../../assets/messages/httpStatus.js";
 const createuser = AsyncHandler(async (req, res, next) => {
+  let cheackUser = await UserModel.findOne({
+    email: req.body.email,
+    _id: {
+      $ne: req?.params?.id,
+    },
+  });
+  if (cheackUser)
+    return next(
+      new AppError(
+        responseHandler("conflict", undefined, "user already exists")
+      )
+    );
   const user = new UserModel(req.body);
   await user.save();
   return res.json({
@@ -23,6 +35,16 @@ const createuser = AsyncHandler(async (req, res, next) => {
   });
 });
 const updateuser = AsyncHandler(async (req, res, next) => {
+  if (req.body.email) {
+    let user = await UserModel.findOne({
+      email: req.body.email,
+      _id: {
+        $ne: req?.params?.id,
+      },
+    });
+    if (user) return next(new AppError(responseHandler("conflict", "email")));
+  }
+
   let data = await UserModel.findByIdAndUpdate(req?.params?.id, req?.body)
     .populate("createdBy", "fullName")
     .select("-password");
