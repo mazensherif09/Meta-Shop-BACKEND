@@ -172,6 +172,7 @@ const getOneproduct = AsyncHandler(async (req, res, next) => {
       .populate("createdBy", "fullName")
       .populate("updatedBy", "fullName");
   } else {
+    query.published = true;
     document = await productModel.findOne(query);
   }
 
@@ -180,12 +181,16 @@ const getOneproduct = AsyncHandler(async (req, res, next) => {
 });
 
 const getFilters = AsyncHandler(async (req, res, next) => {
-  const colors = await colorModel.find().lean();
-  const categories = await categoryModel.find().lean();
-  const sizes = await sizeModel.find().lean();
+  let query = {
+    published: true,
+    limit: 20,
+  };
+  const colors = await colorModel.find(query).lean();
+  const categories = await categoryModel.find(query).lean();
+  const sizes = await sizeModel.find(query).lean();
 
   return res.status(200).json({
-    message: "",
+    message: "success",
     colors,
     categories,
     sizes,
