@@ -33,7 +33,7 @@ const signUp = AsyncHandler(async (req, res, next) => {
 });
 const signIn = AsyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
-  console.log("🚀 ~ signIn ~  email, password :", email, password);
+ 
   let user = await UserModel.findOne({ email }).populate("cart");
   if (user && bcrypt.compareSync(password, user.password)) {
     if (user?.isblocked)

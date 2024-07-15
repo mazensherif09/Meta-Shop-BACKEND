@@ -159,10 +159,10 @@ const getallproduct = AsyncHandler(async (req, res, next) => {
 
 const getOneproduct = AsyncHandler(async (req, res, next) => {
   let query;
-  if (mongoose.Types.ObjectId.isValid(req.params.slug)) {
-    query = { _id: req.params.slug };
+  if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+    query = { _id: req.params.id };
   } else {
-    query = { slug: req.params.slug };
+    query = { slug: req.params.id };
   }
   let document = null;
   if (req?.user?.role == "admin") {

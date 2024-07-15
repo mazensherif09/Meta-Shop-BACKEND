@@ -82,7 +82,7 @@ const paramsIdVal = Joi.object({
   id: ObjectIdVal,
 });
 const paramsSlugVal = Joi.object({
-  slug: Joi.alternatives()
+  id: Joi.alternatives()
     .try(
       Joi.string().min(1).max(300).required(),
       Joi.string().hex().length(24).required()
