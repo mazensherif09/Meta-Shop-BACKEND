@@ -62,15 +62,14 @@ const addproduct = AsyncHandler(async (req, res, next) => {
 const getallproduct = AsyncHandler(async (req, res, next) => {
   // Define the populate array, you can adjust this as per your requirements
 
-  let pipeline = [
-    {
+  let pipeline = [];
+  
+  if (req?.user?.role !== "admin") {
+    pipeline.push({
       $match: {
         publish: true,
       },
-    },
-  ];
-  if (req?.user?.role === "admin") {
-    pipeline = [];
+    });
   }
   // Add category lookup if category is provided
   if (req.query.category) {
