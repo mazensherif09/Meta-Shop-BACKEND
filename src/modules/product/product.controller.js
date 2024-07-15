@@ -25,7 +25,7 @@ import responseHandler from "../../utils/responseHandler.js";
 const Errormassage = "product not found";
 
 const addproduct = AsyncHandler(async (req, res, next) => {
-  const { type, price, discount } = req.body;
+  const { type } = req.body;
 
   const check = await productModel.findOne({ name: req.body.name });
   if (check)
