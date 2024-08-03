@@ -48,12 +48,13 @@ export class ApiFetcher {
   sort() {
     if (this.searchQuery.sort) {
       let sortBy = {};
-
-      this.searchQuery.sort.split(",").forEach((field) => {
-        const [key, order] = field.split(":");
-        sortBy[key] = order === "desc" ? -1 : 1;
-      });
-
+      this.searchQuery.sort
+        .split(",")
+        .filter(Boolean)
+        .forEach((field) => {
+          const [key, order] = field.split(":");
+          sortBy[key] = order === "desc" ? -1 : 1;
+        });
       if (this.isPipeline) {
         this.queryOrPipeline.push({ $sort: sortBy });
       } else {
@@ -88,7 +89,7 @@ export class ApiFetcher {
 
       for (const key in this.searchQuery.index) {
         const value = this.searchQuery.index[key];
-        const regexQuery = { [key]: { $regex: value, $options: "i" } };
+        const regexQuery = { [key]: { $regex: value } };
         indexQueries.push(regexQuery);
       }
 
@@ -153,42 +154,3 @@ export class ApiFetcher {
     }
   }
 }
-// draft
-// Loop through each filter parameter
-// for (const key in filterObject) {
-//   if (typeof filterObject[key] === "object") {
-//     for (const operator in filterObject[key]) {
-//       if (["$gt", "$gte", "$lt", "$lte"].includes(operator)) {
-//         filterObject[key][operator] = Number(filterObject[key][operator]);
-//       }
-//     }
-//   }
-//   // Handle regex filters
-//   if (filterObject[key].hasOwnProperty("$regex")) {
-//     const regexPattern = filterObject[key]["$regex"].replace(
-//       /^'|'$/g,
-//       ""
-//     ); // Remove extra quotes if present
-//     filterObject[key] = {
-//       $regex: new RegExp(regexPattern, "i"),
-//     };
-//   } else if (filterObject[key].hasOwnProperty("$neregex")) {
-//     const regexPattern = filterObject[key]["$neregex"].replace(
-//       /^'|'$/g,
-//       ""
-//     ); // Remove extra quotes if present
-//     filterObject[key] = {
-//       $not: new RegExp(regexPattern, "i"),
-//     };
-//   }
-//   // Handle special MongoDB operators if present
-//   if (key === "isFeatured" && filterObject[key]["$eq"] === "true") {
-//     filterObject[key] = true;
-//   } else if (
-//     key === "isFeatured" &&
-//     filterObject[key]["$eq"] === "false"
-//   ) {
-//     // Default behavior: copy filter value as is
-//     filterObject[key] = false;
-//   }
-// }

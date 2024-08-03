@@ -101,17 +101,13 @@ const checkCoupon = AsyncHandler(async (req, res, next) => {
     user: req.user._id,
     coupon: coupon?._id,
   });
-  if (isUsedBefore)  return next(new AppError({ message: `Coupon used before`, code: 401 }));
+  if (isUsedBefore)
+    return next(new AppError({ message: `Coupon used before`, code: 401 }));
 
   return res.status(200).json({
-    message: "Coupon is valid",
-    data: {
-      coupon: {
-        _id: coupon._id,
-        text: coupon.text,
-        discount: coupon.discount,
-      },
-    },
+    _id: coupon._id,
+    text: coupon.text,
+    discount: coupon.discount,
   });
 });
 export { Insert, GetAll, Delete, Update, checkCoupon, getOne };

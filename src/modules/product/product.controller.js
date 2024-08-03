@@ -63,7 +63,7 @@ const getallproduct = AsyncHandler(async (req, res, next) => {
   // Define the populate array, you can adjust this as per your requirements
 
   let pipeline = [];
-  
+
   if (req?.user?.role !== "admin") {
     pipeline.push({
       $match: {
@@ -129,7 +129,7 @@ const getallproduct = AsyncHandler(async (req, res, next) => {
       poster: { $arrayElemAt: ["$poster", 0] },
     },
   });
-
+  req.query.sort = `createdAt:desc,${req.query.sort ? req.query.sort : ""}`;
   // Instantiate ApiFetcher with the pipeline and search query
   const apiFetcher = new ApiFetcher(pipeline, req.query);
 
@@ -141,8 +141,6 @@ const getallproduct = AsyncHandler(async (req, res, next) => {
 
   // Apply pagination after getting total count
   apiFetcher.pagination();
-
-  // Execute the final aggregate query
   const data = await productModel.aggregate(apiFetcher.queryOrPipeline);
 
   const pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
