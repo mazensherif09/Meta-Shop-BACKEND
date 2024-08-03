@@ -176,12 +176,12 @@ export const updateOne = ({
     });
   });
 };
-export const deleteOne = (model, massage) => {
+export const deleteOne = ({ model, name = "" }) => {
   return AsyncHandler(async (req, res, next) => {
     const document = await model.findByIdAndDelete({ _id: req.params.id });
     if (!document) return next(new AppError(httpStatus.NotFound));
     return res.status(200).json({
-      message: "Deleted Sucessfully",
+      message: `${name} Deleted Sucessfully`,
     });
   });
 };
