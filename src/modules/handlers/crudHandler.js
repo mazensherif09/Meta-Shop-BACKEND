@@ -3,18 +3,51 @@ import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
 import { ApiFetcher } from "../../utils/Fetcher.js";
 import httpStatus from "../../assets/messages/httpStatus.js";
+import responseHandler from "./../../utils/responseHandler.js";
 
-export const InsertOne = (model, massage, slug = null) => {
+export const InsertOne = ({
+  model,
+  slug = null,
+  name = "",
+  uniqueFields = [],
+}) => {
   return AsyncHandler(async (req, res, next) => {
-    if (req.body[slug]) {
-      let checkObject = { [slug]: req.body[slug] };
-      const checkDocument = await model.findOne(checkObject);
+    if (uniqueFields?.length) {
+      const queryForCheck = {
+        $or: [],
+      };
+      for (let i = 0; i < uniqueFields.length; i++) {
+        if (req.body?.[uniqueFields[i]]) {
+          queryForCheck.$or.push({
+            [uniqueFields[i]]: req.body?.[uniqueFields[i]],
+          });
+        }
+      }
+      if (slug && req.body?.[slug]) {
+        queryForCheck.push({
+          [slug]: req.body?.[slug],
+        });
+      }
+      const checkdata = await model.findOne(queryForCheck);
+      if (checkdata) {
+        return next(
+          new AppError(
+            responseHandler("conflict", undefined, `${name} is already exists `)
+          )
+        );
+      }
+    } else if (req.body?.[slug]) {
+      const checkDocument = await model.findOne({
+        [slug]: req.body[slug],
+      });
       if (checkDocument)
         return next(
-          new AppError({ message: `this ${slug} is already exist `, code: 401 })
+          new AppError(
+            responseHandler("conflict", undefined, `${name} is already exists`)
+          )
         );
+      req.body.slug = slugify(req?.body?.[slug]);
     }
-    req.body.slug = slugify(req.body[slug]);
     const document = new model(req.body);
     await document.save();
     let data = {
@@ -22,68 +55,109 @@ export const InsertOne = (model, massage, slug = null) => {
       createdBy: { fullName: req.user.fullName, _id: req.user._id },
     };
     return res.status(200).json({
-      message: "Added Sucessfully",
+      message: `${name} Added Sucessfully`,
       data,
     });
   });
 };
-export const FindAll = (model) => {
+export const FindAll = ({
+  model,
+  defaultSort = "createdAt:desc",
+  customQuery = null, // Function to define custom query logic
+  pushToPipeLine = [],
+}) => {
   return AsyncHandler(async (req, res, next) => {
-   // Define the populate array, you can adjust this as per your requirements
-   const populateArray = [];
-
-   let apiFetcher = new ApiFetcher(model.find(), req.query);
-   apiFetcher.filter().search().sort().select();
- 
-   // Execute the modified query and get total count
-   const total = await model.countDocuments(apiFetcher.queryOrPipeline);
- 
-   // Apply pagination after getting total count
-   apiFetcher.pagination();
- 
-   // Execute the modified query to fetch data
-   const data = await apiFetcher.queryOrPipeline.exec();
- 
-   // Calculate pagination metadata
-   const pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
- 
-   res.status(200).json({
-     data,
-     metadata: {
-       ...apiFetcher.metadata,
-       pages,
-       total,
-     },
-   });
+    // Handle filter with lookup and apply custom query logic
+    let pipeline = handleFilterwithLookUp(customQuery, query?.filters);
+    // Add custom query to pipeline
+    pipeline = pipeline.concat(pushToPipeLine);
+    let sort = query?.sort || defaultSort;
+    // Add sort field to pipeline
+    query.sort = sort;
+    const apiFetcher = new ApiFetcher(pipeline, query)
+      .filter()
+      .sort()
+      .select()
+      .search()
+      .pagination();
+    // Fetch data
+    const data = await model.aggregate(apiFetcher.pipeline).exec();
+    // Calculate total pages
+    const total = await apiFetcher.count(model);
+    // Calculate total pages
+    const pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
+    let responsedata = {
+      data,
+      metadata: {
+        ...apiFetcher.metadata,
+        pages,
+        total,
+      },
+    };
+    return res.status(200).json(responsedata);
   });
 };
-export const FindOne = (model, massage) => {
+export const FindOne = ({ model, name = "" }) => {
   return AsyncHandler(async (req, res, next) => {
-    let document = null;
-    if (req?.user?.role === "admin") {
-      document = await model
-        .findById(req.params.id)
+    let user = req?.user;
+    const query = handleQuerySlugOrid(params?.id);
+    let data = null;
+    if (user?.role == "admin") {
+      data = await model
+        .findOne(query)
         .populate("createdBy", "fullName")
         .populate("updatedBy", "fullName");
-    }else{
-      document = await model.findById(req.params.id)
-    } 
-    if (!document) return next(new AppError({ massage, code: 404 }));
-    return res.status(200).json(document);
+    } else {
+      data = await model.findOne(query);
+    }
+    if (!data) return next(new AppError(responseHandler("NotFound", name)));
+    return res.status(200).json(data);
   });
 };
-export const updateOne = (model, massage, slug = null) => {
+export const updateOne = ({
+  model,
+  name = "",
+  slug = "",
+  uniqueFields = [],
+}) => {
   return AsyncHandler(async (req, res, next) => {
-    if (req.body[slug]) {
-      let checkObject = {
-        $and: [{ [slug]: req.body[slug] }, { _id: { $ne: req.params.id } }],
+    if (uniqueFields?.length) {
+      const queryForCheck = {
+        _id: { $ne: params?.id },
+        $or: [],
       };
-      const checkDocument = await model.findOne(checkObject);
+      for (let i = 0; i < uniqueFields.length; i++) {
+        if (req.body?.[uniqueFields[i]]) {
+          queryForCheck.$or.push({
+            [uniqueFields[i]]: req.body?.[uniqueFields[i]],
+          });
+        }
+      }
+      if (slug && req.body?.[slug]) {
+        queryForCheck.push({
+          [slug]: req.body?.[slug],
+        });
+      }
+      const checkdata = await model.findOne(queryForCheck);
+      if (checkdata) {
+        return next(
+          new AppError(
+            responseHandler("conflict", undefined, `${name} is already exists `)
+          )
+        );
+      }
+    } else if (req.body?.[slug]) {
+      const checkDocument = await model.findOne({
+        [slug]: req.body[slug],
+        _id: { $ne: params?.id },
+      });
       if (checkDocument)
         return next(
-          new AppError({ message: `this ${slug} is already exist `, code: 401 })
+          new AppError(
+            responseHandler("conflict", undefined, `${name} is already exists`)
+          )
         );
-      req.body.slug = slugify(req.body[slug]);
+      req.body.slug = slugify(req?.body?.[slug]);
     }
 
     let data = await model
@@ -97,7 +171,7 @@ export const updateOne = (model, massage, slug = null) => {
     };
     if (!data) return next(new AppError({ massage, code: 404 }));
     return res.status(200).json({
-      message: "Updated Sucessfully",
+      message: `${name} Updated Sucessfully`,
       data,
     });
   });

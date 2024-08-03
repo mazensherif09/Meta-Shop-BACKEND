@@ -1,6 +1,8 @@
-import httpStatus from "../../assets/messages/httpStatus";
-import { AppError } from "../../utils/AppError";
-import { couponModel } from "./../../../database/models/coupon.model";
+
+
+import httpStatus from "../../assets/messages/httpStatus.js";
+import { AppError } from "../../utils/AppError.js";
+import { couponModel } from "./../../../database/models/coupon.model.js";
 
 export const FindCouponWithVerfiy = async ({ filters, user }) => {
   const result = await couponModel.aggregate([
