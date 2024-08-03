@@ -17,6 +17,7 @@ import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
 import { authorized } from "../../middleware/globels/authorized.js";
 import { enumRoles } from "../../assets/enums/Roles_permissions.js";
 import { AttributedTo } from "../../middleware/globels/AttributedTo.js";
+import { tokenDetector } from "../../middleware/auth/tokenDetector.js";
 
 const sizesRouter = express.Router();
 
@@ -33,7 +34,7 @@ sizesRouter
 
 sizesRouter
   .route("/:id")
-  .get(getOne)
+  .get(tokenDetector, getOne)
   .put(
     validation(updatesizeSchemaVal),
     protectedRoutes,
