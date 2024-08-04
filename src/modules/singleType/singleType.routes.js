@@ -26,10 +26,10 @@ singleTypeRouter.post(
   insert
 );
 singleTypeRouter.post(
-  "/about-us",
+  "/about_us",
   protectedRoutes,
   authorized(enumRoles.admin),
-  keyHandler("about-us"),
+  keyHandler("about_us"),
   AttributedTo,
   insert
 );
