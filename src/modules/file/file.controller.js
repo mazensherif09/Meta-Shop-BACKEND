@@ -32,8 +32,11 @@ const Delete = AsyncHandler(async (req, res, next) => {
     message: "File deleted successfully",
   });
 });
-
-const GetAll = FindAll(FileModel);
+let config = {
+  model: FileModel,
+  name: "file",
+};
+const GetAll = FindAll(config);
 const GetOne =  FindOne(FileModel, Errormassage)
 
 

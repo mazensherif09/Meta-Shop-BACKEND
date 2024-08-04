@@ -33,30 +33,80 @@ schema.pre(/^find/, function (next) {
       model: "file",
       select: "_id url", // Example fields to select from the 'color' model
       options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
+    })
+    .populate({
+      path: "customProductPoster",
+      model: "file",
+      select: "_id url", // Example fields to select from the 'color' model
+      options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
+    })
+    .populate({
+      path: "poster",
+      model: "file",
+      select: "_id url", // Example fields to select from the 'color' model
+      options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
+    })
+    .populate({
+      path: "visionPoster",
+      model: "file",
+      select: "_id url", // Example fields to select from the 'color' model
+      options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
+    })
+    .populate({
+      path: "missionPoster",
+      model: "file",
+      select: "_id url", // Example fields to select from the 'color' model
+      options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
     });
   next();
 });
 export const SingleTypeModel = mongoose.model("singletype", schema);
 
 // Q&A_Page Schema
-const questionSchema = new mongoose.Schema({
-  question: {
+// FAQ Schema
+const faqSchema = new mongoose.Schema({
+  title: {
     type: String,
     required: true,
     trim: true,
-    minLength: [1, "Question is too short"],
+    minLength: [1, "Title is required"],
   },
-  answer: {
+  description: {
     type: String,
     required: true,
     trim: true,
-    minLength: [1, "Answer is too short"],
+    minLength: [1, "Description is required"],
   },
+  categories: [
+    {
+      name: {
+        type: String,
+        required: true,
+        trim: true,
+        minLength: [1, "Category name is too short"],
+      },
+      questions: [
+        {
+          question: {
+            type: String,
+            required: true,
+            trim: true,
+            minLength: [1, "Question is too short"],
+          },
+          answer: {
+            type: String,
+            required: true,
+            trim: true,
+            minLength: [1, "Answer is too short"],
+          },
+        },
+      ],
+    },
+  ],
 });
-export const questionPageModel = SingleTypeModel.discriminator(
-  "question",
-  questionSchema
-);
+
+// FAQ Model
+export const faqPageModel = SingleTypeModel.discriminator("faq", faqSchema);
 
 // landing_Page Schema
 const landingSchema = new mongoose.Schema({
@@ -97,6 +147,19 @@ const landingSchema = new mongoose.Schema({
     minLength: [1, "too short brand name"],
     required: true,
   },
+  customProductTitle: {
+    type: String,
+    trim: true,
+    required: true,
+    minLength: [1, "Custom product title is required"],
+  },
+  customProductDescription: {
+    type: String,
+    trim: true,
+    required: true,
+    minLength: [1, "Custom product description is required"],
+  },
+  customProductPoster: { type: ObjectId, ref: "file" },
 });
 
 export const landingPageModel = SingleTypeModel.discriminator(
@@ -110,28 +173,46 @@ const aboutUsSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    minLength: [1, "Title is too short"],
+    minLength: [1, "Title is required"],
+    maxLength: [150, "Title cannot exceed 150 characters"],
+  },
+  subtitle: {
+    type: String,
+    trim: true,
+    maxLength: [150, "Subtitle cannot exceed 150 characters"],
   },
   description: {
     type: String,
     required: true,
     trim: true,
-    minLength: [10, "Description is too short"],
+    minLength: [1, "Description is required"],
+    maxLength: [5000, "Description cannot exceed 5000 characters"],
   },
-  team: [
-    {
-      name: {
-        type: String,
-        trim: true,
-        minLength: [1, "Name is too short"],
-      },
-      position: {
-        type: String,
-        trim: true,
-        minLength: [1, "Position is too short"],
-      },
-    },
-  ],
+  missionStatement: {
+    type: String,
+    trim: true,
+    minLength: [1, "Mission statement is required"],
+    maxLength: [2000, "Mission statement cannot exceed 2000 characters"],
+  },
+  missionPoster: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "file",
+    required: false,
+    message: "Mission poster image is optional",
+  },
+  visionStatement: {
+    type: String,
+    trim: true,
+    minLength: [1, "Vision statement is required"],
+    maxLength: [2000, "Vision statement cannot exceed 2000 characters"],
+  },
+  visionPoster: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "file",
+    required: false,
+    message: "Vision poster image is optional",
+  },
+  poster: { type: ObjectId, ref: "file" },
 });
 export const aboutPageModel = SingleTypeModel.discriminator(
   "about_us",
@@ -159,3 +240,107 @@ export const warningPageModel = SingleTypeModel.discriminator(
   warningSchema
 );
 // warning messages that will be displayed when develment team is upgrading in system
+
+const privacyPolicySchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+    trim: true,
+    minLength: [1, "Title is required"],
+  },
+  description: {
+    type: String,
+    required: true,
+    trim: true,
+    minLength: [1, "Description is required"],
+  },
+  parts: [
+    {
+      partTitle: {
+        type: String,
+        required: true,
+        trim: true,
+        minLength: [1, "Part title is required"],
+      },
+      partDescription: {
+        type: String,
+        required: true,
+        trim: true,
+        minLength: [1, "Part description is required"],
+      },
+      subSections: [
+        {
+          subSectionTitle: {
+            type: String,
+            required: true,
+            trim: true,
+            minLength: [1, "Sub-section title is required"],
+          },
+          subSectionContent: {
+            type: String,
+            required: true,
+            trim: true,
+            minLength: [1, "Sub-section content is required"],
+          },
+        },
+      ],
+    },
+  ],
+  updatedBy: {
+    type: ObjectId,
+    ref: "user",
+  },
+  createdBy: {
+    type: ObjectId,
+    ref: "user",
+  },
+});
+
+export const privacyPolicyPageModel = SingleTypeModel.discriminator(
+  "privacy_policy",
+  privacyPolicySchema
+);
+
+const legalSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+    trim: true,
+    minLength: [1, "Title is required"],
+  },
+  description: {
+    type: String,
+    required: true,
+    trim: true,
+    minLength: [1, "Description is required"],
+  },
+  contentBlocks: [
+    {
+      header: {
+        type: String,
+        required: true,
+        trim: true,
+        minLength: [1, "Header is required"],
+      },
+      body: {
+        type: String,
+        required: true,
+        trim: true,
+        minLength: [1, "Body content is required"],
+      },
+    },
+  ],
+  updatedBy: {
+    type: ObjectId,
+    ref: "user",
+  },
+  createdBy: {
+    type: ObjectId,
+    ref: "user",
+  },
+});
+
+export const legalPageModel = SingleTypeModel.discriminator(
+  "legal",
+  legalSchema
+);
