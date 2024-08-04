@@ -11,7 +11,7 @@ const addToCart = AsyncHandler(async (req, res, next) => {
   let product = await productModel.findById(req?.body?.product);
   if (!product)
     return next(new AppError(responseHandler("NotFound", "product")));
-  const { color = null, size = null, quantity = 1 } = req.body;
+  const { color = null, size = null, quantity = null } = req.body;
   let cart = req?.cart;
   const item = cart.items.find(
     (v) =>
@@ -20,18 +20,21 @@ const addToCart = AsyncHandler(async (req, res, next) => {
       v?.size?._id?.toString() === size?.toString()
   );
   if (item) {
-    item.quantity = quantity;
+    item.quantity = quantity || +item?.quantity + 1;
   } else {
     cart.items.push({
       product: req?.body?.product,
-      color: color,
-      size: size,
+      color,
+      size,
     });
   }
-  const data = await cartModel.findByIdAndUpdate(cart?._id, cart, {
-    new: true,
-  });
-
+  const data = await cartModel.findByIdAndUpdate(
+    cart?._id,
+    { ...cart },
+    {
+      new: true,
+    }
+  );
   return res.status(200).json(data);
 });
 const removeItemCart = AsyncHandler(async (req, res, next) => {

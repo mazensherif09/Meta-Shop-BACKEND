@@ -71,7 +71,7 @@ export const FindAll = ({
   pushToPipeLine = [],
   customFiltersFN = null,
 }) => {
-  console.log("🚀 ~ model:", model)
+ 
   return AsyncHandler(async (req, res, next) => {
     // Handle filter with lookup and apply custom query logic
     let pipeline = handleFilterwithLookUp(customQuery, req?.query?.filters);
