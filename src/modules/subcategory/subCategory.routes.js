@@ -29,7 +29,7 @@ subCategoryRouter
     AttributedTo,
     addOneSubCategory
   )
-  .get(validation(paramsIdVal), tokenDetector, getAllSubCategories);
+  .get(tokenDetector, getAllSubCategories);
 subCategoryRouter
   .route("/:id")
   .get(validation(paramsIdVal), tokenDetector, getOneSubCategory)
