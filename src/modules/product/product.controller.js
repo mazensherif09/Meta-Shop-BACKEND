@@ -1,7 +1,5 @@
 import slugify from "slugify";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
-import { AppError } from "../../utils/AppError.js";
-import { Uploader } from "../../utils/cloudnairy.js";
 import {
   productModel,
   ClothesModel,
@@ -10,20 +8,68 @@ import {
 import {
   FindAll,
   FindOne,
+  InsertOne,
   deleteOne,
   updateOne,
 } from "../handlers/crudHandler.js";
-import { addLookup } from "../../utils/addLookup.js";
-import { ApiFetcher } from "../../utils/Fetcher.js";
 import mongoose from "mongoose";
 import { colorModel } from "../../../database/models/color.model.js";
 import { categoryModel } from "../../../database/models/category.model.js";
 import { sizeModel } from "../../../database/models/size.model.js";
-import httpStatus from "../../assets/messages/httpStatus.js";
-import responseHandler from "../../utils/responseHandler.js";
 
-const Errormassage = "product not found";
-
+let customQuery = [
+  {
+    field: "size",
+    fromCollection: "sizes",
+    localField: "colors.sizes.size",
+    foreignField: "_id",
+    matchField: "name",
+  },
+  {
+    field: "color",
+    fromCollection: "colors",
+    localField: "colors.color",
+    foreignField: "_id",
+    matchField: "name",
+  },
+  {
+    field: "category",
+    fromCollection: "categories",
+    localField: "category",
+    foreignField: "_id",
+    matchField: "slug",
+  },
+];
+let pushToPipeLine = [
+  {
+    $lookup: {
+      from: "files",
+      localField: "poster",
+      foreignField: "_id",
+      as: "poster",
+      pipeline: [
+        {
+          $project: { url: 1, _id: 0 },
+        },
+      ],
+    },
+  },
+  {
+    $addFields: {
+      poster: { $arrayElemAt: ["$poster", 0] },
+    },
+  },
+];
+let config = {
+  model: productModel,
+  name: "product",
+  slug: "title",
+  customQuery,
+  pushToPipeLine,
+};
+const deleteproduct = deleteOne(config);
+const getallproduct = FindAll(config);
+const getOneproduct = FindOne(config);
 const addproduct = AsyncHandler(async (req, res, next) => {
   const { type } = req.body;
 
@@ -58,142 +104,6 @@ const addproduct = AsyncHandler(async (req, res, next) => {
     data,
   });
 });
-
-const getallproduct = AsyncHandler(async (req, res, next) => {
-  // Define the populate array, you can adjust this as per your requirements
-
-  let pipeline = [];
-
-  if (req?.user?.role !== "admin") {
-    pipeline.push({
-      $match: {
-        publish: true,
-      },
-    });
-  }
-  // Add category lookup if category is provided
-  if (req.query.category) {
-    addLookup(
-      pipeline,
-      req.query,
-      "category",
-      "categories",
-      "category",
-      "_id",
-      "slug"
-    );
-  }
-  // Add color lookup and match stages if color is provided
-  if (req.query.color) {
-    addLookup(
-      pipeline,
-      req.query,
-      "color",
-      "colors",
-      "colors.color",
-      "_id",
-      "name"
-    );
-  }
-  // Add size lookup and match stages if size is provided
-  if (req.query.size) {
-    addLookup(
-      pipeline,
-      req.query,
-      "size",
-      "sizes",
-      "colors.sizes.size",
-      "_id",
-      "name"
-    );
-  }
-
-  // Add lookup for poster
-  pipeline.push({
-    $lookup: {
-      from: "files",
-      localField: "poster",
-      foreignField: "_id",
-      as: "poster",
-      pipeline: [
-        {
-          $project: { url: 1, _id: 0 },
-        },
-      ],
-    },
-  });
-  //
-  // Add a stage to replace the posterImage array with its first element
-  pipeline.push({
-    $addFields: {
-      poster: { $arrayElemAt: ["$poster", 0] },
-    },
-  });
-  req.query.sort = `createdAt:desc,${req.query.sort ? req.query.sort : ""}`;
-  // Instantiate ApiFetcher with the pipeline and search query
-  const apiFetcher = new ApiFetcher(pipeline, req.query);
-
-  // Apply various methods of ApiFetcher
-  apiFetcher.sort().select().search().filter();
-
-  // Get total count before executing the final aggregate query
-  const total = await apiFetcher.getTotalCount(productModel);
-
-  // Apply pagination after getting total count
-  apiFetcher.pagination();
-  const data = await productModel.aggregate(apiFetcher.queryOrPipeline);
-
-  const pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
-
-  return res.status(200).json({
-    data,
-    metadata: {
-      ...apiFetcher.metadata,
-      pages,
-      total,
-    },
-  });
-});
-
-const getOneproduct = AsyncHandler(async (req, res, next) => {
-  let query;
-  if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-    query = { _id: req.params.id };
-  } else {
-    query = { slug: req.params.id };
-  }
-  let document = null;
-  if (req?.user?.role == "admin") {
-    document = await productModel
-      .findOne(query)
-      .populate("createdBy", "fullName")
-      .populate("updatedBy", "fullName");
-  } else {
-    query.published = true;
-    document = await productModel.findOne(query);
-  }
-
-  if (!document) return next(new AppError(httpStatus.NotFound));
-  return res.json(document);
-});
-
-const getFilters = AsyncHandler(async (req, res, next) => {
-  let query = {
-    published: true,
-    limit: 20,
-  };
-  const colors = await colorModel.find(query).lean();
-  const categories = await categoryModel.find(query).lean();
-  const sizes = await sizeModel.find(query).lean();
-
-  return res.status(200).json({
-    message: "success",
-    colors,
-    categories,
-    sizes,
-  });
-});
-
 const updateproduct = AsyncHandler(async (req, res, next) => {
   // Find the product first to determine its type
   const product = await productModel.findById(req.params.id);
@@ -245,9 +155,22 @@ const updateproduct = AsyncHandler(async (req, res, next) => {
     data,
   });
 });
+const getFilters = AsyncHandler(async (req, res, next) => {
+  let query = {
+    published: true,
+    limit: 20,
+  };
+  const colors = await colorModel.find(query).lean();
+  const categories = await categoryModel.find(query).lean();
+  const sizes = await sizeModel.find(query).lean();
 
-const deleteproduct = deleteOne(productModel, Errormassage);
-
+  return res.status(200).json({
+    message: "success",
+    colors,
+    categories,
+    sizes,
+  });
+});
 export {
   addproduct,
   getallproduct,

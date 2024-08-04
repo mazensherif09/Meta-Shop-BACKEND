@@ -4,6 +4,7 @@ import { AppError } from "../../utils/AppError.js";
 import { ApiFetcher } from "../../utils/Fetcher.js";
 import httpStatus from "../../assets/messages/httpStatus.js";
 import responseHandler from "./../../utils/responseHandler.js";
+import { handleFilterwithLookUp } from "../../utils/QueryHandler.js";
 
 export const InsertOne = ({
   model,
@@ -68,13 +69,13 @@ export const FindAll = ({
 }) => {
   return AsyncHandler(async (req, res, next) => {
     // Handle filter with lookup and apply custom query logic
-    let pipeline = handleFilterwithLookUp(customQuery, query?.filters);
+    let pipeline = handleFilterwithLookUp(customQuery, req?.query?.filters);
     // Add custom query to pipeline
     pipeline = pipeline.concat(pushToPipeLine);
-    let sort = query?.sort || defaultSort;
+    let sort = req?.query?.sort || defaultSort;
     // Add sort field to pipeline
-    query.sort = sort;
-    const apiFetcher = new ApiFetcher(pipeline, query)
+    req.query.sort = sort;
+    const apiFetcher = new ApiFetcher(pipeline, req?.query)
       .filter()
       .sort()
       .select()
