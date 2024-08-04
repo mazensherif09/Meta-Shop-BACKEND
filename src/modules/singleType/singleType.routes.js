@@ -77,7 +77,7 @@ singleTypeRouter
     updatePage
   );
 singleTypeRouter
-  .route("/about-us")
+  .route("/about_us")
   .put(
     protectedRoutes,
     authorized(enumRoles.admin),
