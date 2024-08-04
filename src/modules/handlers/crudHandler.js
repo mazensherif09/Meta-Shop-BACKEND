@@ -131,24 +131,32 @@ export const updateOne = ({
         $or: [],
       };
       for (let i = 0; i < uniqueFields.length; i++) {
+        console.log(req.body?.[uniqueFields[i]]);
+
         if (req.body?.[uniqueFields[i]]) {
-          queryForCheck.$or.push({
+          queryForCheck?.$or.push({
             [uniqueFields[i]]: req.body?.[uniqueFields[i]],
           });
         }
       }
-      if (slug && req.body?.[slug]) {
+      if (req.body?.[slug]) {
         queryForCheck.$or.push({
           [slug]: req.body?.[slug],
         });
       }
-      const checkdata = await model.findOne(queryForCheck);
-      if (checkdata) {
-        return next(
-          new AppError(
-            responseHandler("conflict", undefined, `${name} is already exists `)
-          )
-        );
+      if (queryForCheck?.$or.length) {
+        const checkdata = await model.findOne(queryForCheck);
+        if (checkdata) {
+          return next(
+            new AppError(
+              responseHandler(
+                "conflict",
+                undefined,
+                `${name} is already exists `
+              )
+            )
+          );
+        }
       }
     } else if (req.body?.[slug]) {
       const checkDocument = await model.findOne({

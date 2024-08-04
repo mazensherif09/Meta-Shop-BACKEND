@@ -1,5 +1,3 @@
-
-
 import httpStatus from "../../assets/messages/httpStatus.js";
 import { AppError } from "../../utils/AppError.js";
 import { couponModel } from "./../../../database/models/coupon.model.js";
