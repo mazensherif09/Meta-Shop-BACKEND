@@ -1,6 +1,6 @@
 import mongoose, { Schema, model } from "mongoose";
 const ObjectId = mongoose.Schema.Types.ObjectId;
-const schema = new Schema(
+const schema = new mongoose.Schema(
   {
     filename: {
       type: String,
@@ -31,4 +31,4 @@ const schema = new Schema(
     timestamps: true,
   }
 );
-export const FileModel = model("file", schema);
+export const FileModel = mongoose.model("file", schema);

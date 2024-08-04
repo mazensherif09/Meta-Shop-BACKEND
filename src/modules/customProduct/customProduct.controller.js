@@ -27,7 +27,12 @@ const addCustomProduct = AsyncHandler(async (req, res, next) => {
     message: "Sucessfully Requested",
   });
 });
-const getallCustomProducts = FindAll(customProductModel);
+
+let config = {
+  model: customProductModel,
+  name: "customProduct",
+};
+const getallCustomProducts = FindAll(config);
 const getOneCustomProduct = FindOne(customProductModel, Errormassage);
 const updateCustomProduct = updateOne(customProductModel, Errormassage, "name");
 const deleteCustomProduct = AsyncHandler(async (req, res, next) => {
