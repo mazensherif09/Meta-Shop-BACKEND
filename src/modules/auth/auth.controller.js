@@ -33,7 +33,7 @@ const signUp = AsyncHandler(async (req, res, next) => {
 });
 const signIn = AsyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
- 
+
   let user = await UserModel.findOne({ email }).populate("cart");
   if (user && bcrypt.compareSync(password, user.password)) {
     if (user?.isblocked)
@@ -189,7 +189,6 @@ const verfiySession = AsyncHandler(async (req, res, next) => {
   });
 });
 const logOut = AsyncHandler(async (req, res, next) => {
-  //  handle logic refreash token
   res.cookie(
     "token",
     "",
