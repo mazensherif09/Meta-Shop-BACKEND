@@ -3,6 +3,9 @@ import {
   aboutPageModel,
   landingPageModel,
   warningPageModel,
+  faqPageModel,
+  privacyPolicyPageModel,
+  legalPageModel,
 } from "../../../database/models/singleType.js";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
@@ -24,8 +27,17 @@ const insert = AsyncHandler(async (req, res, next) => {
     case "about_us":
       Model = new aboutPageModel(req.body);
       break;
+    case "faq":
+      Model = new faqPageModel(req.body);
+      break;
     case "landing":
       Model = new landingPageModel(req.body);
+      break;
+    case "privacy_policy":
+      Model = new privacyPolicyPageModel(req.body);
+      break;
+    case "legal":
+      Model = new legalPageModel(req.body);
       break;
     default:
       return res.status(400).send("Invalid Page Type");
@@ -54,8 +66,8 @@ const getPage = AsyncHandler(async (req, res, next) => {
 
 const updatePage = AsyncHandler(async (req, res, next) => {
   // Find the single Model first to determine its type
-  let key = req.key
-  const singleModel = await SingleTypeModel.findOne({key});
+  let key = req.key;
+  const singleModel = await SingleTypeModel.findOne({ key });
   if (!singleModel) {
     return next(new AppError("Page not found", 404));
   }
@@ -71,18 +83,25 @@ const updatePage = AsyncHandler(async (req, res, next) => {
     case "about_us":
       model = aboutPageModel;
       break;
+    case "faq":
+      model = faqPageModel;
+      break;
+    case "privacy_policy":
+      model = privacyPolicyPageModel;
+      break;
+    case "legal":
+      model = legalPageModel;
+      break;
     default:
       model = singleModel;
   }
 
-  const data = await model.findByIdAndUpdate(
-    singleModel?._id,
-    req?.body,
-    {
+  const data = await model
+    .findByIdAndUpdate(singleModel?._id, req?.body, {
       new: true,
-    }
-  ).populate("createdBy", "fullName")
-  .populate("updatedBy", "fullName");
+    })
+    .populate("createdBy", "fullName")
+    .populate("updatedBy", "fullName");
   if (!data) return next(new AppError("Page not found", 404));
 
   return res.status(200).json({

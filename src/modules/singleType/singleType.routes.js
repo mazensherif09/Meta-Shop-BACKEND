@@ -41,6 +41,31 @@ singleTypeRouter.post(
   AttributedTo,
   insert
 );
+singleTypeRouter.post(
+  "/faq",
+  protectedRoutes,
+  authorized(enumRoles.admin),
+  keyHandler("faq"),
+  AttributedTo,
+  insert
+);
+singleTypeRouter.post(
+  "/privacy_policy",
+  protectedRoutes,
+  authorized(enumRoles.admin),
+  keyHandler("privacy_policy"),
+  AttributedTo,
+  insert
+);
+singleTypeRouter.post(
+  "/legal",
+  protectedRoutes,
+  authorized(enumRoles.admin),
+  keyHandler("legal"),
+  AttributedTo,
+  insert
+);
+
 // put toutes
 singleTypeRouter
   .route("/landing")
@@ -57,7 +82,7 @@ singleTypeRouter
     protectedRoutes,
     authorized(enumRoles.admin),
     AttributedTo,
-    keyHandler("about-us"),
+    keyHandler("about_us"),
     updatePage
   );
 singleTypeRouter
@@ -69,5 +94,33 @@ singleTypeRouter
     keyHandler("warning"),
     updatePage
   );
+  singleTypeRouter
+  .route("/faq")
+  .put(
+    protectedRoutes,
+    authorized(enumRoles.admin),
+    AttributedTo,
+    keyHandler("faq"),
+    updatePage
+  );
+  singleTypeRouter
+  .route("/privacy_policy")
+  .put(
+    protectedRoutes,
+    authorized(enumRoles.admin),
+    AttributedTo,
+    keyHandler("privacy_policy"),
+    updatePage
+  );
+  singleTypeRouter
+  .route("/legal")
+  .put(
+    protectedRoutes,
+    authorized(enumRoles.admin),
+    AttributedTo,
+    keyHandler("legal"),
+    updatePage
+  );
+  
 singleTypeRouter.get("/:key", tokenDetector, getPage);
 export default singleTypeRouter;

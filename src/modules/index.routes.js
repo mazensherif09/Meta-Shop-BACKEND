@@ -22,6 +22,7 @@ import { fileRouter } from "./file/file.routes.js";
 import { subCategoryRouter } from "./subcategory/subCategory.routes.js";
 import bodyParser from "body-parser";
 import { corsOptions } from "../../config/middlewars.js";
+import { customProductRouter } from "./customProduct/customProduct.routes.js";
 export const bootstrap = (app, express) => {
   const mainroute = "/api"; // main route
   app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" })); // for handle limitations of urlencoded
@@ -50,6 +51,7 @@ export const bootstrap = (app, express) => {
   app.use(`${mainroute}/coupons`, couponRouter);
   app.use(`${mainroute}/influencers`, influncerRouter);
   app.use(`${mainroute}/single-type`, singleTypeRouter);
+  app.use(`${mainroute}/custom-product`, customProductRouter);
   // End  Endpoints ------------------------------------------- |
   dbConnection(); // database connection
   app.use("*", (req, res, next) => {
