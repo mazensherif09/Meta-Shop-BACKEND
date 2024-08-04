@@ -6,28 +6,23 @@ import {
   deleteOne,
   updateOne,
 } from "../handlers/crudHandler.js";
-import { ApiFetcher } from "../../utils/Fetcher.js";
-import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 
-const Errormassage = " Category not found";
 
-const addsubCategory = InsertOne(
-  SubCategoryModel,
-  "can't create Category with name already exsit ",
-  "name"
-);
-const getAllsubCategoryies = FindAll(SubCategoryModel);
-const getOnesubCategory = FindOne(SubCategoryModel, Errormassage);
-const updateSubCategorty = updateOne(
-  SubCategoryModel,
-  "can't create Category with name already exsit ",
-  "name",
-);
-const deletesubCategory = deleteOne(SubCategoryModel, Errormassage);
+const config = {
+  model: SubCategoryModel,
+  name: "subcategory",
+  uniqueFields: ["name"],
+};
+const addOneSubCategory = InsertOne(config);
+const updateOneSubCategory = updateOne(config);
+const getOneSubCategory = FindOne(config);
+const getAllSubCategories = FindAll(config);
+const deleteOneSubCategory = deleteOne(config);
+
 export {
-  addsubCategory,
-  getAllsubCategoryies,
-  getOnesubCategory,
-  updateSubCategorty,
-  deletesubCategory,
+  addOneSubCategory,
+  updateOneSubCategory,
+  getOneSubCategory,
+  getAllSubCategories,
+  deleteOneSubCategory,
 };

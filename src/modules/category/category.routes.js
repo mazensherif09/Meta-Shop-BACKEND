@@ -1,10 +1,11 @@
 import express from "express";
+
 import {
-  addCategory,
-  deleteCategory,
+  addOneCategory,
   getOneCategory,
-  getallCategoryies,
-  updateCategorty,
+  getAllCategoryies,
+  updateOneCategory,
+  deleteOneCategory,
 } from "./category.controller.js";
 import {
   CategorySchemaVal,
@@ -28,24 +29,24 @@ categoryRouter
     protectedRoutes,
     authorized(enumRoles.admin),
     AttributedTo,
-    addCategory
+    addOneCategory
   )
-  .get(getallCategoryies);
+  .get(getAllCategoryies);
 categoryRouter
   .route("/:id")
-  .get(validation(paramsIdVal),tokenDetector, getOneCategory)
+  .get(validation(paramsIdVal), tokenDetector, getOneCategory)
   .put(
     validation(UpdateCategorySchemaVal),
     protectedRoutes,
     authorized(enumRoles.admin),
     AttributedTo,
-    updateCategorty
+    updateOneCategory
   )
   .delete(
     validation(paramsIdVal),
     protectedRoutes,
     authorized(enumRoles.admin),
     AttributedTo,
-    deleteCategory
+    deleteOneCategory
   );
 export { categoryRouter };

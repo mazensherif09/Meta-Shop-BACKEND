@@ -1,11 +1,11 @@
 import express from "express";
 
 import {
-  addsubCategory,
-  getAllsubCategoryies,
-  getOnesubCategory,
-  updateSubCategorty,
-  deletesubCategory,
+  addOneSubCategory,
+  updateOneSubCategory,
+  getOneSubCategory,
+  getAllSubCategories,
+  deleteOneSubCategory,
 } from "./subCategory.controller.js";
 
 import {
@@ -20,29 +20,31 @@ import { enumRoles } from "../../assets/enums/Roles_permissions.js";
 import { AttributedTo } from "../../middleware/globels/AttributedTo.js";
 import { tokenDetector } from "../../middleware/auth/tokenDetector.js";
 const subCategoryRouter = express.Router({ mergeParams: true });
-subCategoryRouter.route("/")
+subCategoryRouter
+  .route("/")
   .post(
     validation(subCategorySchemaVal),
     protectedRoutes,
     authorized(enumRoles.admin),
     AttributedTo,
-    addsubCategory
+    addOneSubCategory
   )
-  .get(getAllsubCategoryies);
-subCategoryRouter.route("/:id")
-  .get(validation(paramsIdVal),tokenDetector, getOnesubCategory)
+  .get(validation(paramsIdVal), tokenDetector, getAllSubCategories);
+subCategoryRouter
+  .route("/:id")
+  .get(validation(paramsIdVal), tokenDetector, getOneSubCategory)
   .put(
     validation(UpdatesubCategorySchemaVal),
     protectedRoutes,
     authorized(enumRoles.admin),
     AttributedTo,
-    updateSubCategorty
+    updateOneSubCategory
   )
   .delete(
     validation(paramsIdVal),
     protectedRoutes,
     authorized(enumRoles.admin),
     AttributedTo,
-    deletesubCategory
+    deleteOneSubCategory
   );
 export { subCategoryRouter };

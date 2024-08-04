@@ -1,4 +1,5 @@
 import { categoryModel } from "../../../database/models/category.model.js";
+import { Posterlookup } from "../commens/lookup.js";
 import {
   FindAll,
   FindOne,
@@ -6,19 +7,22 @@ import {
   deleteOne,
   updateOne,
 } from "../handlers/crudHandler.js";
-
-
-const Errormassage = "Category not found";
-const addCategory = InsertOne(categoryModel, Errormassage, "name");
-const getallCategoryies = FindAll(categoryModel);
-const getOneCategory = FindOne(categoryModel, Errormassage);
-const updateCategorty = updateOne(categoryModel, Errormassage, "name");
-const deleteCategory = deleteOne(categoryModel);
+const config = {
+  model: categoryModel,
+  name: "category",
+  slug: "name",
+  pushToPipeLine: Posterlookup,
+};
+const addOneCategory = InsertOne(config);
+const getAllCategoryies = FindAll(config);
+const getOneCategory = FindOne(config);
+const updateOneCategory = updateOne(config);
+const deleteOneCategory = deleteOne(config);
 
 export {
-  addCategory,
-  getallCategoryies,
+  addOneCategory,
+  getAllCategoryies,
   getOneCategory,
-  updateCategorty,
-  deleteCategory,
+  updateOneCategory,
+  deleteOneCategory,
 };

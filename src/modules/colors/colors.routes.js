@@ -5,8 +5,13 @@ import {
   paramsIdVal,
 } from "./colors.validation.js";
 import { validation } from "../../middleware/globels/validation.js";
-import { Insert, Delete, GetAll, Update, getOne } from "./colors.controller.js";
-
+import {
+  addOneColor,
+  DeleteOneColor,
+  GetAllColors,
+  UpdateOneColor,
+  getOneColor,
+} from "./colors.controller.js";
 import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
 import { authorized } from "../../middleware/globels/authorized.js";
 import { enumRoles } from "../../assets/enums/Roles_permissions.js";
@@ -22,26 +27,26 @@ colorsRouter
     protectedRoutes,
     authorized(enumRoles.admin),
     AttributedTo,
-    Insert
+    addOneColor
   )
-  .get(GetAll);
+  .get(GetAllColors);
 
 colorsRouter
   .route("/:id")
-  .get(tokenDetector, getOne)
+  .get(tokenDetector, getOneColor)
   .put(
     validation(updateColorSchemaVal),
     protectedRoutes,
     authorized(enumRoles.admin),
     AttributedTo,
-    Update
+    UpdateOneColor
   )
   .delete(
     validation(paramsIdVal),
     protectedRoutes,
     authorized(enumRoles.admin),
     AttributedTo,
-    Delete
+    DeleteOneColor
   );
 
 export default colorsRouter;

@@ -16,6 +16,7 @@ import mongoose from "mongoose";
 import { colorModel } from "../../../database/models/color.model.js";
 import { categoryModel } from "../../../database/models/category.model.js";
 import { sizeModel } from "../../../database/models/size.model.js";
+import { Posterlookup } from "../commens/lookup.js";
 
 let customQuery = [
   {
@@ -40,32 +41,12 @@ let customQuery = [
     matchField: "slug",
   },
 ];
-let pushToPipeLine = [
-  {
-    $lookup: {
-      from: "files",
-      localField: "poster",
-      foreignField: "_id",
-      as: "poster",
-      pipeline: [
-        {
-          $project: { url: 1, _id: 0 },
-        },
-      ],
-    },
-  },
-  {
-    $addFields: {
-      poster: { $arrayElemAt: ["$poster", 0] },
-    },
-  },
-];
 let config = {
   model: productModel,
   name: "product",
   slug: "title",
   customQuery,
-  pushToPipeLine,
+  pushToPipeLine: Posterlookup,
 };
 const deleteproduct = deleteOne(config);
 const getallproduct = FindAll(config);

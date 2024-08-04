@@ -6,11 +6,11 @@ import {
 } from "./sizes.validation.js";
 import { validation } from "../../middleware/globels/validation.js";
 import {
-  addSize,
-  getSizes,
-  updateSize,
-  deleteSize,
-  getOne,
+  addOneSize,
+  updateOneSize,
+  getOneSize,
+  getAllSizes,
+  deleteOneSize,
 } from "./sizes.controller.js";
 
 import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
@@ -28,26 +28,26 @@ sizesRouter
     protectedRoutes,
     authorized(enumRoles.admin),
     AttributedTo,
-    addSize
+    addOneSize
   )
-  .get(getSizes);
+  .get(getAllSizes);
 
 sizesRouter
   .route("/:id")
-  .get(tokenDetector, getOne)
+  .get(tokenDetector, getOneSize)
   .put(
     validation(updatesizeSchemaVal),
     protectedRoutes,
     authorized(enumRoles.admin),
     AttributedTo,
-    updateSize
+    updateOneSize
   )
   .delete(
     validation(paramsIdVal),
     protectedRoutes,
     authorized(enumRoles.admin),
     AttributedTo,
-    deleteSize
+    deleteOneSize
   );
 
 export default sizesRouter;
