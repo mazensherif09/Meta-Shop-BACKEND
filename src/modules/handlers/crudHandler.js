@@ -4,7 +4,10 @@ import { AppError } from "../../utils/AppError.js";
 import { ApiFetcher } from "../../utils/Fetcher.js";
 import httpStatus from "../../assets/messages/httpStatus.js";
 import responseHandler from "./../../utils/responseHandler.js";
-import { handleFilterwithLookUp } from "../../utils/QueryHandler.js";
+import {
+  handleFilterwithLookUp,
+  handleQuerySlugOrid,
+} from "../../utils/QueryHandler.js";
 
 export const InsertOne = ({
   model,
@@ -25,7 +28,7 @@ export const InsertOne = ({
         }
       }
       if (slug && req.body?.[slug]) {
-        queryForCheck.push({
+        queryForCheck.$or.push({
           [slug]: req.body?.[slug],
         });
       }
@@ -101,7 +104,7 @@ export const FindAll = ({
 export const FindOne = ({ model, name = "" }) => {
   return AsyncHandler(async (req, res, next) => {
     let user = req?.user;
-    const query = handleQuerySlugOrid(params?.id);
+    const query = handleQuerySlugOrid(req.params?.id);
     let data = null;
     if (user?.role == "admin") {
       data = await model
@@ -124,7 +127,7 @@ export const updateOne = ({
   return AsyncHandler(async (req, res, next) => {
     if (uniqueFields?.length) {
       const queryForCheck = {
-        _id: { $ne: params?.id },
+        _id: { $ne: req.params?.id },
         $or: [],
       };
       for (let i = 0; i < uniqueFields.length; i++) {
@@ -135,7 +138,7 @@ export const updateOne = ({
         }
       }
       if (slug && req.body?.[slug]) {
-        queryForCheck.push({
+        queryForCheck.$or.push({
           [slug]: req.body?.[slug],
         });
       }
@@ -150,7 +153,7 @@ export const updateOne = ({
     } else if (req.body?.[slug]) {
       const checkDocument = await model.findOne({
         [slug]: req.body[slug],
-        _id: { $ne: params?.id },
+        _id: { $ne: req.params?.id },
       });
       if (checkDocument)
         return next(
