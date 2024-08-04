@@ -5,12 +5,10 @@ import { AppError } from "../../utils/AppError.js";
 import { UserModel } from "../../../database/models/user.model.js";
 import httpStatus from "../../assets/messages/httpStatus.js";
 import responseHandler from "../../utils/responseHandler.js";
+import { deleteOne, FindAll } from "../handlers/crudHandler.js";
 const createuser = AsyncHandler(async (req, res, next) => {
   let cheackUser = await UserModel.findOne({
     email: req.body.email,
-    _id: {
-      $ne: req?.params?.id,
-    },
   });
   if (cheackUser)
     return next(
@@ -46,7 +44,9 @@ const updateuser = AsyncHandler(async (req, res, next) => {
     if (user) return next(new AppError(responseHandler("conflict", "email")));
   }
 
-  let data = await UserModel.findByIdAndUpdate(req?.params?.id, req?.body)
+  let data = await UserModel.findByIdAndUpdate(req?.params?.id, req?.body, {
+    new: true,
+  })
     .populate("createdBy", "fullName")
     .select("-password");
   if (!data) next(new AppError(responseHandler("NotFound", "user")));
@@ -56,52 +56,21 @@ const updateuser = AsyncHandler(async (req, res, next) => {
   };
   return res.status(200).json({ message: "Updated Sucessfully", data });
 });
-const deleteUser = AsyncHandler(async (req, res, next) => {
-  let user = req.user;
-  if (user._id === req?.params?.id)
-    return res.json({ message: "cann't delete your own self" });
-
-  await UserModel.findByIdAndDelete(req?.params?.id);
-  res.json({ message: "sucess" });
+const deleteUser = deleteOne({
+  model: UserModel,
+  name: "user",
 });
-const getAllUsers = AsyncHandler(async (req, res, next) => {
-  // Define the populate array, you can adjust this as per your requirements
-  const populateArray = [];
 
-  let filterObject = {};
-  if (!req?.query?.filters?.role) {
-    filterObject = {
-      role: { $eq: enumRoles.user },
-    };
-  }
-
-  // Exclude the current user from the query
-  filterObject._id = { $ne: req.user._id };
-
-  let apiFetcher = new ApiFetcher(UserModel.find(filterObject), req.query);
-  apiFetcher.filter().search().sort().select();
-
-  // Execute the modified query and get total count
-  const total = await UserModel.countDocuments(apiFetcher.queryOrPipeline);
-
-  // Apply pagination after getting total count
-  apiFetcher.pagination();
-
-  // Execute the modified query to fetch data
-  const data = await apiFetcher.queryOrPipeline.exec();
-
-  // Calculate pagination metadata
-  const pages = Math.ceil(total / apiFetcher.metadata.pageLimit);
-
-  res.status(200).json({
-    success: true,
-    data,
-    metadata: {
-      ...apiFetcher.metadata,
-      pages,
-      total,
-    },
-  });
+const getAllUsers = FindAll({
+  model: UserModel,
+  customFiltersFN: ({ query }, res, next) => {
+    query.filters._id = { $ne: req?.user?._id };
+    if (!query?.filters?.role) {
+      query.filters.role = { $ne: enumRoles.admin };
+    }
+    query.fields = "-password";
+    return query;
+  },
 });
 const findOneUser = AsyncHandler(async (req, res, next) => {
   if (req?.user?._id?.toString() === req?.params?.id.toString()) {

@@ -65,13 +65,18 @@ export class ApiFetcher {
   select() {
     if (this.searchQuery.fields) {
       const fields = this.searchQuery.fields.split(",").reduce((acc, field) => {
-        acc[field] = 1;
+        if (field.startsWith("-")) {
+          acc[field.substring(1)] = 0; // Exclude field
+        } else {
+          acc[field] = 1; // Include field
+        }
         return acc;
       }, {});
       this.pipeline.push({ $project: fields });
     }
     return this;
   }
+
   // Search method
   search() {
     if (this.searchQuery.index) {

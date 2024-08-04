@@ -69,6 +69,7 @@ export const FindAll = ({
   defaultSort = "createdAt:desc",
   customQuery = null, // Function to define custom query logic
   pushToPipeLine = [],
+  customFiltersFN = null,
 }) => {
   return AsyncHandler(async (req, res, next) => {
     // Handle filter with lookup and apply custom query logic
@@ -76,6 +77,10 @@ export const FindAll = ({
     // Add custom query to pipeline
     pipeline = pipeline.concat(pushToPipeLine);
     let sort = req?.query?.sort || defaultSort;
+    // Add custom filters to pipeline
+    if (customFiltersFN) {
+      req.query = customFiltersFN(req, res, next);
+    }
     // Add sort field to pipeline
     req.query.sort = sort;
     const apiFetcher = new ApiFetcher(pipeline, req?.query)
