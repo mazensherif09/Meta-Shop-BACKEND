@@ -1,5 +1,4 @@
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
-import { ApiFetcher } from "../../utils/Fetcher.js";
 import { enumRoles } from "../../assets/enums/Roles_permissions.js";
 import { AppError } from "../../utils/AppError.js";
 import { UserModel } from "../../../database/models/user.model.js";
@@ -60,16 +59,23 @@ const deleteUser = deleteOne({
   model: UserModel,
   name: "user",
 });
-
 const getAllUsers = FindAll({
   model: UserModel,
-  customFiltersFN: ({ query }, res, next) => {
-    query.filters._id = { $ne: req?.user?._id };
-    if (!query?.filters?.role) {
-      query.filters.role = { $ne: enumRoles.admin };
+  customFiltersFN: (req, res, next) => {
+    req.query.filters = {
+      ...req.query.filters,
+      _id: { $ne: req?.user?._id },
+    };
+    if (!req.query?.filters?.role) {
+      req.query.filters.role = { $ne: enumRoles.admin };
     }
-    query.fields = "-password";
-    return query;
+    if (req.query.fields.includes("password")) {
+      let arr = req.query?.fields
+        ?.split(",")
+        .filter((e) => !e?.includes("password"));
+      req.query.fields = [...arr, "-password"];
+    }
+    return req.query;
   },
 });
 const findOneUser = AsyncHandler(async (req, res, next) => {

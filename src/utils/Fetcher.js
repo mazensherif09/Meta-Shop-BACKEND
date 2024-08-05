@@ -72,6 +72,7 @@ export class ApiFetcher {
         }
         return acc;
       }, {});
+      console.log("🚀 ~ ApiFetcher ~ select ~ fields:", fields)
       this.pipeline.push({ $project: fields });
     }
     return this;
