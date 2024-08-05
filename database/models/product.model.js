@@ -142,10 +142,12 @@ clothesSchema.pre(/^find/, function (next) {
   this.populate({
     path: "colors.color",
     model: "color",
+    options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
   })
     .populate({
       path: "colors.images",
       model: "file",
+      options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
     })
     .populate({
       path: "colors.sizes.size",
