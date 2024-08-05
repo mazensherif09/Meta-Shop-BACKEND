@@ -130,4 +130,7 @@ const clothesSchema = new mongoose.Schema({
 export const productModel = mongoose.model("product", schema);
 // Define discriminators for product types
 export const DecorModel = productModel.discriminator("decor", DecorSchema);
-export const ClothesModel = productModel.discriminator("clothes", clothesSchema);
+export const ClothesModel = productModel.discriminator(
+  "clothes",
+  clothesSchema
+);
