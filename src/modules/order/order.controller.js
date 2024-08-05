@@ -8,7 +8,7 @@ import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
 import { FindCouponWithVerfiy } from "../coupon/coupon.services.js";
 import { couponhistoryModel } from "./../../../database/models/coupon_history.js";
-import { FindOne, FindAll } from "./../handlers/crudHandler.js";
+import { FindAll } from "./../handlers/crudHandler.js";
 
 const createCashOrder = AsyncHandler(async (req, res, next) => {
   const { user = {} } = req;
