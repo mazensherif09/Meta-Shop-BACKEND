@@ -55,16 +55,19 @@ schema.pre(/^find/, function (next) {
   this.populate({
     path: "colors.color",
     model: "color",
+    options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
     select: "_id code name",
   })
     .populate({
       path: "colors.images",
       model: "file",
+      options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
       select: "_id url mimetype", // Example fields to select from the 'color' model
     })
     .populate({
       path: "poster",
       model: "file",
+      options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
       select: "_id url mimetype", // Example fields to select from the 'color' model
     })
     .populate({
@@ -98,7 +101,6 @@ schema.pre(/^find/, function (next) {
 
   next();
 });
-export const productModel = mongoose.model("product", schema);
 // Tech Schema
 const DecorSchema = new mongoose.Schema({
   colors: [
@@ -109,18 +111,6 @@ const DecorSchema = new mongoose.Schema({
     },
   ],
 });
-// Pre-find hook to automatically populate images field
-DecorSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: "colors.color",
-    model: "color",
-  }).populate({
-    path: "colors.images",
-    model: "file",
-  });
-  next();
-});
-export const DecorModel = productModel.discriminator("decor", DecorSchema);
 // Clothes Schema
 const clothesSchema = new mongoose.Schema({
   colors: [
@@ -136,28 +126,8 @@ const clothesSchema = new mongoose.Schema({
     },
   ],
 });
-
-// Pre-find hook to automatically populate images field
-clothesSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: "colors.color",
-    model: "color",
-    options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
-  })
-    .populate({
-      path: "colors.images",
-      model: "file",
-      options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
-    })
-    .populate({
-      path: "colors.sizes.size",
-      model: "size",
-      options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
-    });
-  next();
-});
-
-export const ClothesModel = productModel.discriminator(
-  "clothes",
-  clothesSchema
-);
+// main product schema
+export const productModel = mongoose.model("product", schema);
+// Define discriminators for product types
+export const DecorModel = productModel.discriminator("decor", DecorSchema);
+export const ClothesModel = productModel.discriminator("clothes", clothesSchema);
