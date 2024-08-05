@@ -189,7 +189,9 @@ const createCashOrder = AsyncHandler(async (req, res, next) => {
 const getSpecificOrder = AsyncHandler(async (req, res, next) => {
   let user = req.user;
   const isAdmin = user.role === "admin";
-  let order = await orderModel.findById(req.params.id).populate("user", "fullName");
+  let order = await orderModel
+    .findById(req.params.id)
+    .populate("user", "fullName");
   let checker = order?.user?.toString() !== user._id.toString() && !isAdmin;
   if (!order || checker) {
     return next(new AppError({ message: "Order not found", code: 404 }));
@@ -204,17 +206,6 @@ const getSpecificOrder = AsyncHandler(async (req, res, next) => {
 
   return res.json(order);
 });
-// const getAllOrders = AsyncHandler(async (req, res, next) => {
-//   let user = req.user;
-//   const isAdmin = user.role === "admin";
-//   let orders = await orderModel
-//     .find()
-//     .populate("user", "fullName");
-//   console.log("🚀 ~ getAllOrders ~ orders:", orders)
-
-//   return res.json(orders || []);
-// });
-
 const getAllOrders = FindAll({
   model: orderModel,
   customFiltersFN: (req) => {
