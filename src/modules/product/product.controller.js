@@ -8,11 +8,8 @@ import {
 import {
   FindAll,
   FindOne,
-  InsertOne,
   deleteOne,
-  updateOne,
 } from "../handlers/crudHandler.js";
-import mongoose from "mongoose";
 import { colorModel } from "../../../database/models/color.model.js";
 import { categoryModel } from "../../../database/models/category.model.js";
 import { sizeModel } from "../../../database/models/size.model.js";

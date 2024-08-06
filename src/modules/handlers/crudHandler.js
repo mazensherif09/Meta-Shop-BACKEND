@@ -71,7 +71,6 @@ export const FindAll = ({
   pushToPipeLine = [],
   customFiltersFN = null,
 }) => {
- 
   return AsyncHandler(async (req, res, next) => {
     // Handle filter with lookup and apply custom query logic
     let pipeline = handleFilterwithLookUp(customQuery, req?.query?.filters);
@@ -80,7 +79,12 @@ export const FindAll = ({
     let sort = req?.query?.sort || defaultSort;
     // Add custom filters to pipeline
     if (customFiltersFN) {
-      req.query = customFiltersFN(req, res, next);
+      req.query = {
+        page: req?.query?.page,
+        limit: req?.query?.limit,
+        sort,
+        ...customFiltersFN(req, res, next),
+      };
     }
     // Add sort field to pipeline
     req.query.sort = sort;

@@ -2,10 +2,15 @@ import {
   ClothesModel,
   DecorModel,
 } from "../../../database/models/product.model.js";
-const ClothesCase = (
-  { product, color, size, quantity, cart, bulkOperations, orderItems },
-  next
-) => {
+const ClothesCase = ({
+  product,
+  color,
+  size,
+  quantity,
+  cart,
+  bulkOperations,
+  orderItems,
+}) => {
   const colorMatch = product?.colors?.find((c) =>
     c?.color?._id.equals(color?._id)
   );
@@ -23,14 +28,17 @@ const ClothesCase = (
     discount: product.discount,
     quantity: quantity,
     poster: product.poster.url,
-    size: {
-      original_id: sizeMatch.size,
-      name: sizeMatch.size.name,
-    },
-    color: {
-      original_id: colorMatch.color,
-      name: colorMatch.color.name,
-      code: colorMatch.color.code,
+    type: product.type,
+    selectedOptions: {
+      color: {
+        original_id: colorMatch?.color?._id,
+        name: colorMatch?.color?.name,
+        code: colorMatch?.color?.code,
+      },
+      size: {
+        original_id: sizeMatch.size,
+        name: sizeMatch.size.name,
+      },
     },
   });
   let task = {
@@ -61,15 +69,17 @@ const ClothesCase = (
   }
   return true;
 };
-const decorCase = (
-  { product, color, quantity, cart, bulkOperations, orderItems },
-  next
-) => {
+const decorCase = ({
+  product,
+  color,
+  quantity,
+  bulkOperations,
+  orderItems,
+}) => {
   const colorMatch = product?.colors?.find((c) =>
     c?.color?._id.equals(color?._id)
   );
   if (!product._id || !colorMatch || colorMatch?.stock < quantity) return false;
-
   // Add formatted order item to list
   orderItems.push({
     original_id: product?._id,
@@ -78,10 +88,13 @@ const decorCase = (
     discount: product?.discount,
     quantity,
     poster: product?.poster?.url,
-    color: {
-      original_id: colorMatch?.color?._id,
-      name: colorMatch?.color?.name,
-      code: colorMatch?.color?.code,
+    type: product?.type,
+    selectedOptions: {
+      color: {
+        original_id: colorMatch?.color?._id,
+        name: colorMatch?.color?.name,
+        code: colorMatch?.color?.code,
+      },
     },
   });
   let task = {

@@ -34,7 +34,6 @@ import { handleVerfiySession } from "../../middleware/auth/handleVerfiySession.j
 const AuthRouter = express.Router();
 AuthRouter.post(`/signup`, validation(signupschemaVal), checkEmailuser, signUp); //sign up :)
 AuthRouter.post(`/signin`, validation(signinSchemaVal), signIn); //log in :)
-AuthRouter.get(`/session`, handleVerfiySession, protectedRoutes, verfiySession);
 AuthRouter.get(`/logout`, logOut); // log out
 // AuthRouter.get("/verify/:token", verfiyEmail); // verfiy Email :)
 // AuthRouter.get(`/unsubscribe/:token`, unsubscribe); // unsubscribe  :)
@@ -45,22 +44,16 @@ AuthRouter.post(
   validation(authResetPasswordVal),
   protectedRoutes,
   ResetPassword
-); // reset password if token vaild
-//AuthRouter.delete("/softdelete", protectedRoutes, softdelete); // soft delete => account will be blocked (cant log in if  account blocked)
-AuthRouter.put(
-  "/me",
-  validation(updateVal),
-  protectedRoutes,
-  updateuser
-); // update user
-AuthRouter.route(`/:id`).delete(protectedRoutes, deleteUser); // delete user
-AuthRouter.put(
-  `/update-password`,
-  validation(updatePasswordVal),
-  protectedRoutes,
-  comparePassword,
-  changepassword
-); // reset password
-
+);
+AuthRouter.route("/me")
+  .put(validation(updateVal), protectedRoutes, updateuser)
+  .get(handleVerfiySession, protectedRoutes, verfiySession)
+  .delete(protectedRoutes, deleteUser) // delete user
+  .patch(
+    validation(updatePasswordVal),
+    protectedRoutes,
+    comparePassword,
+    changepassword
+  )
 //end forgot paswword routes
 export { AuthRouter };

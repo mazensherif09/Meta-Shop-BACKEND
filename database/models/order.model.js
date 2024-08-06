@@ -1,52 +1,51 @@
-import mongoose from "mongoose";
-const ObjectId = mongoose.Schema.Types.ObjectId;
-const schema = new mongoose.Schema(
+import mongoose, { Schema } from "mongoose";
+
+export const ObjectId = mongoose.Schema.Types.ObjectId;
+const orderItemSchema = new Schema({
+  original_id: { type: ObjectId, ref: "product" },
+  name: String,
+  price: { type: Number, min: 0, default: 0 }, // Price at the time of ordering
+  discount: { type: Number },
+  quantity: { type: Number, default: 1, min: 1 },
+  poster: String,
+  selectedOptions: {},
+});
+const couponSchema = new Schema({
+  code: { type: String, required: true },
+  discount: { type: Number, required: true },
+  original_id: { type: ObjectId, ref: "coupon", required: true },
+});
+const schema = new Schema(
   {
-    user: { type: mongoose.Types.ObjectId, ref: "user" },
-    orderItems: [
-      {
-        poster: String,
-        title: String,
-        slug: String,
-        selectedOptions: {},
-        quantity: {
-          type: Number,
-          default: 1,
-        },
-        price: Number,
-        product:{ type: mongoose.Types.ObjectId, ref: "product" }
-      },
-    ],
-    totalOrderPrice: Number,
+    user: { type: ObjectId, ref: "user", required: true },
+    orderItems: [orderItemSchema],
+    totalOrderPrice: { type: Number, min: 0, default: 0, required: true },
     shippingAddress: {
-      street: String,
-      city: String,
-      phone: String,
+      street: { type: String, required: true },
+      city: { type: String, required: true },
+      phone: { type: String, required: true },
     },
     paymentType: {
       type: String,
-      enum: ["card", "cash"],
+      enum: ["cash", "visa"],
       default: "cash",
     },
-    isDelivered: {
+    orderStatus: {
+      type: String,
+      enum: ["pending", "accepted", "delivered", "canceled"],
+      default: "pending",
+    },
+    isRefunded: {
       type: Boolean,
       default: false,
     },
     deliveredAt: Date,
-    isPaid: {
-      type: Boolean,
-      default: false,
-    },
     paidAt: Date,
+    updatedBy: { type: mongoose.Types.ObjectId, ref: "user" },
+    createdBy: { type: mongoose.Types.ObjectId, ref: "user" },
+    discount: { type: Number, min: 0, max: 100, default: 0 },
+    coupon: couponSchema,
   },
   { timestamps: true }
 );
-// Pre-find hook to automatically populate images field
-schema.pre(/^find/, function (next) {
-  this.populate({
-    path: 'orderItems.product',
-    model: 'product'
-  })
-  next();
-});
 export const orderModel = mongoose.model("order", schema);
