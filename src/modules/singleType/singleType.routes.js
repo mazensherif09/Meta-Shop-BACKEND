@@ -65,6 +65,14 @@ singleTypeRouter.post(
   AttributedTo,
   insert
 );
+singleTypeRouter.post(
+  "/care_service",
+  protectedRoutes,
+  authorized(enumRoles.admin),
+  keyHandler("care_service"),
+  AttributedTo,
+  insert
+);
 
 // put toutes
 singleTypeRouter
@@ -119,6 +127,15 @@ singleTypeRouter
     authorized(enumRoles.admin),
     AttributedTo,
     keyHandler("legal"),
+    updatePage
+  );
+  singleTypeRouter
+  .route("/care_service")
+  .put(
+    protectedRoutes,
+    authorized(enumRoles.admin),
+    AttributedTo,
+    keyHandler("care_service"),
     updatePage
   );
   
