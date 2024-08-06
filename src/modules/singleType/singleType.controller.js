@@ -6,6 +6,7 @@ import {
   faqPageModel,
   privacyPolicyPageModel,
   legalPageModel,
+  CareServiceModel,
 } from "../../../database/models/singleType.js";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
@@ -38,6 +39,9 @@ const insert = AsyncHandler(async (req, res, next) => {
       break;
     case "legal":
       Model = new legalPageModel(req.body);
+      break;
+    case "care_service":
+      Model = new CareServiceModel(req.body);
       break;
     default:
       return res.status(400).send("Invalid Page Type");
@@ -91,6 +95,9 @@ const updatePage = AsyncHandler(async (req, res, next) => {
       break;
     case "legal":
       model = legalPageModel;
+      break;
+    case "care_service":
+      model = CareServiceModel;
       break;
     default:
       model = singleModel;
