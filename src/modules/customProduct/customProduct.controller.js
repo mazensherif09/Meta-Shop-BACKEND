@@ -24,7 +24,7 @@ const addCustomProduct = AsyncHandler(async (req, res, next) => {
   await document.save();
 
   return res.status(200).json({
-    message: "Sucessfully Requested",
+    message: "Sucessfully Requested! We will message you :)",
   });
 });
 

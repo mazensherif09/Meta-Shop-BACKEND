@@ -67,7 +67,7 @@ schema.pre(/^find/, function (next) {
     .populate({
       path: "categories.category",
       model: "category",
-      select: "_id name", // Example fields to select from the 'color' model
+      select: "_id name description", // Example fields to select from the 'color' model
       options: { strictPopulate: false }, // Disable strictPopulate for this path if needed
     })
     .populate({
