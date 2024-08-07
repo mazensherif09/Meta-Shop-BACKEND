@@ -12,6 +12,7 @@ const schema = new mongoose.Schema(
     },
     createdBy: { type: mongoose.Types.ObjectId, ref: "user" },
     updatedBy: { type: mongoose.Types.ObjectId, ref: "user" },
+    publish: { type: Boolean, default: false, default: false },
   },
   { timestamps: true }
 );

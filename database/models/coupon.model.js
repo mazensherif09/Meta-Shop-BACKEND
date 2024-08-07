@@ -9,11 +9,12 @@ const schema = new mongoose.Schema(
       required: true,
       minLength: [1, "too short brand name"],
     },
+    publish: { type: Boolean, default: false, default: false },
     expires: Date,
     discount: { type: Number, default: 0, required: true, min: 0, max: 100 },
     count: { type: Number, default: 0, required: true, min: 0 },
-    createdBy: { type: mongoose.Types.ObjectId, ref: "user" },
-    updatedBy: { type: mongoose.Types.ObjectId, ref: "user" },
+    createdBy: { type: ObjectId, ref: "user" },
+    updatedBy: { type: ObjectId, ref: "user" },
   },
   { timestamps: true }
 );

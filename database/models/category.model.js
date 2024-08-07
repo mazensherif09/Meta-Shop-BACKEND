@@ -23,6 +23,7 @@ const schema = new mongoose.Schema(
       required: true,
     },
     poster: { type: ObjectId, ref: "file" },
+    publish: { type: Boolean, default: false, default: false },
     createdBy: { type: mongoose.Types.ObjectId, ref: "user" },
     updatedBy: { type: mongoose.Types.ObjectId, ref: "user" },
   },

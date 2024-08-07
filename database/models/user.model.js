@@ -38,24 +38,22 @@ schema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, 8);
   next();
 });
-
 schema.virtual("cart", {
   ref: "cart",
   localField: "_id",
   foreignField: "user",
-  justOne: true  // Ensures the virtual field returns an object instead of an array
+  justOne: true, // Ensures the virtual field returns an object instead of an array
 });
-
 // Ensure virtual fields are serialized
-schema.set('toObject', { virtuals: true });
-schema.set('toJSON', { virtuals: true });
+schema.set("toObject", { virtuals: true });
+schema.set("toJSON", { virtuals: true });
 // Middleware to populate related fields on find queries
 const autoPopulateFields = function (next) {
   this.populate({
     path: "updatedBy",
     select: "fullName _id",
   });
-  
+
   next();
 };
 

@@ -7,6 +7,7 @@ export const FindCouponWithVerfiy = async ({ filters, user }) => {
     {
       $match: {
         expires: { $gt: new Date() },
+        publish: true,
         ...filters,
       },
     },
@@ -31,10 +32,7 @@ export const FindCouponWithVerfiy = async ({ filters, user }) => {
   ]);
   const [coupon = null] = result;
   if (!coupon) throw new AppError(httpStatus.NotFound);
-  if (coupon.isUsedBefore)
-    throw new AppError(
-      httpStatus.badRequest,
-      "Coupon already used by this user"
-    );
+  if (coupon?.isUsedBefore) throw new AppError(httpStatus.badRequest);
+  console.log("🚀 ~ FindCouponWithVerfiy ~ coupon:", coupon)
   return coupon;
 };

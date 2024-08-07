@@ -18,6 +18,7 @@ const schema = new Schema({
   },
   createdBy: { type: ObjectId, ref: "user" },
   updatedBy: { type: mongoose.Types.ObjectId, ref: "user" },
+  publish: { type: Boolean, default: false, default: false },
 },{
   timestamps: true,
 });

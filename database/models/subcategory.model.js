@@ -20,6 +20,7 @@ const schema = new mongoose.Schema(
       lowercase: true,
       required: true,
     },
+    publish: { type: Boolean, default: false, default: false },
     poster: { type: ObjectId, ref: "file" },
     createdBy: { type: ObjectId, ref: "user" },
     updatedBy: { type: mongoose.Types.ObjectId, ref: "user" },
