@@ -185,7 +185,6 @@ import { FindAll } from "./../handlers/crudHandler.js";
 // });
 const createOrder = AsyncHandler(async (req, res, next) => {
   const { order, bulkOperations } = req.order;
-  console.log("🚀 ~ createOrder ~ order:", order);
 
   // Update stock products
   await UpdateStockProducts(bulkOperations);

@@ -17,13 +17,12 @@ export const makeOrder = AsyncHandler(async (req, res, next) => {
       })
     );
   }
-
   // Handle verify coupon
   let coupon = null;
   if (req.body.coupon) {
     const findCoupon = await FindCouponWithVerfiy({
       filters: {
-        code: { $eq: req.body.coupon.code },
+        _id: { $eq: req.body.coupon },
       },
       user,
     });
@@ -33,7 +32,6 @@ export const makeOrder = AsyncHandler(async (req, res, next) => {
       discount: findCoupon?.discount,
     };
   }
-
   let totalOrderPrice = 0;
   const orderItems = [];
   const bulkOperations = {};
@@ -48,7 +46,6 @@ export const makeOrder = AsyncHandler(async (req, res, next) => {
       })
     );
   };
-
   cart?.items?.forEach((item) => {
     const { product, quantity } = item;
     let configForThisType = allProductTypes?.[product?.type];

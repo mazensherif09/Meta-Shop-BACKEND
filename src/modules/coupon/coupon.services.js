@@ -21,6 +21,7 @@ export const FindCouponWithVerfiy = async ({ filters, user }) => {
     },
     {
       $project: {
+        _id: 1,
         code: 1,
         expires: 1,
         discount: 1,
@@ -33,6 +34,6 @@ export const FindCouponWithVerfiy = async ({ filters, user }) => {
   const [coupon = null] = result;
   if (!coupon) throw new AppError(httpStatus.NotFound);
   if (coupon?.isUsedBefore) throw new AppError(httpStatus.badRequest);
-  console.log("🚀 ~ FindCouponWithVerfiy ~ coupon:", coupon)
+  console.log("🚀 ~ FindCouponWithVerfiy ~ coupon:", coupon);
   return coupon;
 };
