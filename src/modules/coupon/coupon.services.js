@@ -6,8 +6,7 @@ export const FindCouponWithVerfiy = async ({ filters, user }) => {
   const result = await couponModel.aggregate([
     {
       $match: {
-        publish: true,
-        expiresAt: { $gt: new Date() },
+        expires: { $gt: new Date() },
         ...filters,
       },
     },
@@ -22,7 +21,8 @@ export const FindCouponWithVerfiy = async ({ filters, user }) => {
     {
       $project: {
         code: 1,
-        expiresAt: 1,
+        expires: 1,
+        discount: 1,
         isUsedBefore: {
           $in: [user._id, "$history.user"],
         },

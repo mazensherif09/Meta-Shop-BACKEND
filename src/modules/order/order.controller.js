@@ -1,6 +1,7 @@
 import { cartModel } from "../../../database/models/cart.model.js";
 import { couponhistoryModel } from "../../../database/models/coupon_history.js";
 import { orderModel } from "../../../database/models/order.model.js";
+import { influencerModel } from "../../../database/models/influencer.model.js";
 import { AsyncHandler } from "../../middleware/globels/AsyncHandler.js";
 import { AppError } from "../../utils/AppError.js";
 import { UpdateStockProducts } from "../product/product.services.js";
@@ -184,24 +185,49 @@ import { FindAll } from "./../handlers/crudHandler.js";
 // });
 const createOrder = AsyncHandler(async (req, res, next) => {
   const { order, bulkOperations } = req.order;
+  console.log("🚀 ~ createOrder ~ order:", order);
+
+  // Update stock products
   await UpdateStockProducts(bulkOperations);
-  // handle make order
-  let newOrder = new orderModel({ ...order });
+
+  // Handle order creation
+  let newOrder = new orderModel({
+    ...order,
+    coupon: order.coupon, // Pass the full coupon object
+  });
   await newOrder.save();
-  // handle coupon use
+
+  // Handle coupon usage
   if (order.coupon) {
     let newCouponRecord = new couponhistoryModel({
       user: order.user,
-      coupon: order.coupon,
+      coupon: order.coupon.original_id, // Store only ObjectId
     });
     await newCouponRecord.save();
+
+    // Find the influencer based on coupon reference
+    const influencer = await influencerModel.findOne({
+      coupon: order.coupon.original_id,
+    });
+
+    if (influencer) {
+      // Calculate discount amount and update influencer earnings
+      const discountAmount =
+        order.totalOrderPrice * (order.coupon.discount / 100);
+      await influencerModel.findByIdAndUpdate(influencer._id, {
+        $inc: { totalEarned: discountAmount },
+      });
+    }
   }
-  // handle clear cart
+
+  // Handle clear cart
   await cartModel.findByIdAndUpdate(req?.user?.cart?._id, { items: [] });
+
   return res.status(201).json({
     message: "Order created successfully",
   });
 });
+
 const getSpecificOrder = AsyncHandler(async (req, res, next) => {
   let user = req.user;
   const isAdmin = user.role === "admin";

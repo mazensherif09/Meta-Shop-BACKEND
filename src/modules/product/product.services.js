@@ -22,13 +22,13 @@ const ClothesCase = ({
 
   // Add formatted order item to list
   orderItems.push({
-    original_id: product._id,
-    name: product.name,
-    price: product.price,
-    discount: product.discount,
+    original_id: product?._id,
+    name: product?.name,
+    price: product?.price,
+    discount: product?.discount,
     quantity: quantity,
-    poster: product.poster.url,
-    type: product.type,
+    poster: product?.poster?.url,
+    type: product?.type,
     selectedOptions: {
       color: {
         original_id: colorMatch?.color?._id,

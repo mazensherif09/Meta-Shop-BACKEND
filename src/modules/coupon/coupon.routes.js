@@ -20,6 +20,8 @@ import { protectedRoutes } from "../../middleware/auth/protectedRoutes.js";
 import { AttributedTo } from "../../middleware/globels/AttributedTo.js";
 const couponRouter = express.Router();
 
+couponRouter.get("/verify", protectedRoutes, verifyCoupon);
+
 couponRouter
   .route("/")
   .post(
@@ -36,7 +38,6 @@ couponRouter
     getAllCoupons
   );
 
-couponRouter.get("/verify", protectedRoutes, verifyCoupon);
 
 couponRouter
   .route("/:id")
@@ -55,5 +56,6 @@ couponRouter
     AttributedTo,
     deleteOneCoupon
   );
+
 
 export default couponRouter;
