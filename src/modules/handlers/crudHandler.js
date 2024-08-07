@@ -113,6 +113,7 @@ export const FindAll = ({
 };
 export const FindOne = ({ model, name = "" }) => {
   return AsyncHandler(async (req, res, next) => {
+    console.log("hola")
     let user = req?.user;
     const query = handleQuerySlugOrid(req.params?.id);
     let data = null;

@@ -108,8 +108,11 @@ const Update = AsyncHandler(async (req, res, next) => {
   });
 });
 
-
-const GetAll = FindAll(influencerModel);
-const GetOne =  FindOne(influencerModel, Errormassage)
+let config = {
+  model: influencerModel,
+  name: "influencer",
+};
+const GetAll = FindAll(config);
+const GetOne =  FindOne(config, Errormassage)
 
 export { InsertOne, GetAll, requestForBenfluencer, Delete, Update, GetOne };

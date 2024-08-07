@@ -17,6 +17,10 @@ const schema = new mongoose.Schema(
       default: 0,
       min: 0,
     },
+    totalEarned: {
+      type: Number,
+      default: 0,
+    },
     updatedBy: { type: mongoose.Types.ObjectId, ref: "user" },
   },
   { timestamps: true }

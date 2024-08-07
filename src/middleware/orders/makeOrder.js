@@ -6,7 +6,8 @@ import { AsyncHandler } from "../globels/AsyncHandler.js";
 export const makeOrder = AsyncHandler(async (req, res, next) => {
   const { user = {} } = req;
   const { cart = {} } = user; // cart is populated with user
-  // 1:2 Handle error cases
+
+  // Handle error cases
   if (!cart || !cart?.items?.length) {
     return next(
       new AppError({
@@ -16,12 +17,13 @@ export const makeOrder = AsyncHandler(async (req, res, next) => {
       })
     );
   }
-  // 2:1 Handle verfiy coupon
+
+  // Handle verify coupon
   let coupon = null;
   if (req.body.coupon) {
     const findCoupon = await FindCouponWithVerfiy({
       filters: {
-        _id: { $eq: req.body.coupon },
+        code: { $eq: req.body.coupon.code },
       },
       user,
     });
@@ -31,13 +33,14 @@ export const makeOrder = AsyncHandler(async (req, res, next) => {
       discount: findCoupon?.discount,
     };
   }
+
   let totalOrderPrice = 0;
   const orderItems = [];
   const bulkOperations = {};
   const onError = () => {
     return next(
       new AppError({
-        message: "some products are not available",
+        message: "Some products are not available",
         code: 400,
         details: {
           cart: [...cart.items],
@@ -45,21 +48,23 @@ export const makeOrder = AsyncHandler(async (req, res, next) => {
       })
     );
   };
+
   cart?.items?.forEach((item) => {
     const { product, quantity } = item;
     let configForThisType = allProductTypes?.[product?.type];
     if (!configForThisType) return onError();
-    const isvaild = configForThisType.orderhelper({
+    const isValid = configForThisType.orderhelper({
       ...item,
       cart,
       orderItems,
       bulkOperations,
     });
-    if (!isvaild) return onError();
+    if (!isValid) return onError();
     // Calculate order item price and add to total order price
     const itemPrice = product?.price * quantity;
     totalOrderPrice += itemPrice;
   });
+
   let order = {
     user: user._id,
     orderItems,
@@ -71,12 +76,13 @@ export const makeOrder = AsyncHandler(async (req, res, next) => {
   };
   if (coupon) {
     order.discount = coupon?.discount;
-    order.coupon = coupon;
+    order.coupon = coupon; // Pass the full coupon object
     order.totalOrderPrice -= totalOrderPrice * (coupon?.discount / 100);
   }
   req.order = {
     order,
     bulkOperations,
   };
+
   return next();
 });
