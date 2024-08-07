@@ -54,6 +54,6 @@ AuthRouter.route("/me")
     protectedRoutes,
     comparePassword,
     changepassword
-  )
+  );
 //end forgot paswword routes
 export { AuthRouter };
