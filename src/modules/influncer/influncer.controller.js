@@ -63,14 +63,7 @@ const Delete = AsyncHandler(async (req, res, next) => {
   const document = await influencerModel.findByIdAndDelete(req.params?.id);
   if (!document)
     return next(new AppError(responseHandler("NotFound", "Influncer")));
-
-  await UserModel.findOneAndUpdate(
-    { influencer: req.params?.id },
-    {
-      $unset: { influencer: 1 },
-    }
-  );
-
+  
   return res.status(200).json({
     message: "Deleted Sucessfully",
   });
