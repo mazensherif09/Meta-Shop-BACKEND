@@ -11,15 +11,20 @@ const ClothesCase = ({
   bulkOperations,
   orderItems,
 }) => {
+
+
   const colorMatch = product?.colors?.find((c) =>
     c?.color?._id.equals(color?._id)
   );
+ 
   const sizeMatch = colorMatch?.sizes?.find((s) =>
     s?.size?._id.equals(size?._id)
   );
-  if (!product._id || !colorMatch || !sizeMatch || sizeMatch.stock < quantity)
-    return false;
 
+
+  
+  if (!product._id || !colorMatch || !sizeMatch || sizeMatch.stock < quantity)  return false
+  
   // Add formatted order item to list
   orderItems.push({
     original_id: product?._id,
@@ -44,9 +49,9 @@ const ClothesCase = ({
   let task = {
     updateOne: {
       filter: {
-        _id: product._id,
-        "colors.color": color._id,
-        "colors.sizes.size": size._id,
+        _id: product?._id,
+        "colors.color": color?._id,
+        "colors.sizes.size": size?._id,
       },
       update: {
         $inc: {
@@ -54,8 +59,8 @@ const ClothesCase = ({
         },
       },
       arrayFilters: [
-        { "colorElem.color": color._id },
-        { "sizeElem.size": size._id },
+        { "colorElem.color": color?._id },
+        { "sizeElem.size": size?._id },
       ],
     },
   };
@@ -79,7 +84,7 @@ const decorCase = ({
   const colorMatch = product?.colors?.find((c) =>
     c?.color?._id.equals(color?._id)
   );
-  if (!product._id || !colorMatch || colorMatch?.stock < quantity) return false;
+  if (!product?._id || !colorMatch || colorMatch?.stock < quantity) return false;
   // Add formatted order item to list
   orderItems.push({
     original_id: product?._id,

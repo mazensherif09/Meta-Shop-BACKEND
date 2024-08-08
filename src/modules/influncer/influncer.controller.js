@@ -50,9 +50,9 @@ const requestForBenfluencer = AsyncHandler(async (req, res, next) => {
   const influencer = new influencerModel(req.body);
   await influencer.save();
 
-  await UserModel.findByIdAndUpdate(req.user._id, {
-    influencer: influencer._id,
-  });
+  // await UserModel.findByIdAndUpdate(req.user._id, {
+  //   influencer: influencer._id,
+  // });
 
   return res.status(200).json({
     message: "Send Sucessfully",
@@ -106,6 +106,6 @@ let config = {
   name: "influencer",
 };
 const GetAll = FindAll(config);
-const GetOne =  FindOne(config, Errormassage)
+const GetOne =  FindOne(config)
 
 export { InsertOne, GetAll, requestForBenfluencer, Delete, Update, GetOne };

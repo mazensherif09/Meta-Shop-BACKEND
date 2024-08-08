@@ -113,15 +113,13 @@ export const FindAll = ({
 };
 export const FindOne = ({ model, name = "" }) => {
   return AsyncHandler(async (req, res, next) => {
-    console.log("hola")
     let user = req?.user;
-    const query = handleQuerySlugOrid(req.params?.id);
+    const query =  handleQuerySlugOrid(req.params?.id);
     let data = null;
     if (user?.role == "admin") {
-      data = await model
-        .findOne(query)
+      data = await model.findById(query)
         .populate("createdBy", "fullName")
-        .populate("updatedBy", "fullName");
+        .populate("updatedBy", "fullName")
     } else {
       data = await model.findOne(query);
     }

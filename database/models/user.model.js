@@ -11,7 +11,6 @@ const schema = new mongoose.Schema(
     phone: { type: String, trim: true },
     pincode: Number,
     isresetPassword: { type: Boolean, default: false },
-    // roles:  { type: mongoose.Types.ObjectId, ref: "user_roles", default: null },
     role: {
       type: String,
       enum: [...Object.values(enumRoles)],
@@ -34,7 +33,9 @@ const schema = new mongoose.Schema(
 );
 
 schema.pre("save", async function (next) {
-  this.password = await bcrypt.hash(this.password, 8);
+  if (this.isModified('password')) {
+    this.password = await bcrypt.hash(this.password, 8);
+  }
   next();
 });
 
@@ -63,11 +64,10 @@ const autoPopulateFields = function (next) {
   this.populate({
     path: "updatedBy",
     select: "fullName _id",
-  });
+  })
   next();
 };
 
-// schema.pre(/^find/, excludePassword);
 schema.pre(/^find/, autoPopulateFields);
 
 export const UserModel = mongoose.model("user", schema);

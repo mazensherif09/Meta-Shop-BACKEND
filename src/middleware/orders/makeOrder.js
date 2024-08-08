@@ -22,16 +22,17 @@ export const makeOrder = AsyncHandler(async (req, res, next) => {
   if (req.body.coupon) {
     const findCoupon = await FindCouponWithVerfiy({
       filters: {
-        _id: { $eq: req.body.coupon },
-      },
-      user,
-    });
+        _id: req.body.coupon,
+      }, 
+      user
+    });    
     coupon = {
       original_id: findCoupon._id,
       code: findCoupon.code,
       discount: findCoupon?.discount,
     };
   }
+  
   let totalOrderPrice = 0;
   const orderItems = [];
   const bulkOperations = {};
@@ -47,14 +48,17 @@ export const makeOrder = AsyncHandler(async (req, res, next) => {
     );
   };
   cart?.items?.forEach((item) => {
-    const { product, quantity } = item;
+    const { product, quantity, color , size} = item;
     let configForThisType = allProductTypes?.[product?.type];
-    if (!configForThisType) return onError();
+    if (!configForThisType) return onError();    
     const isValid = configForThisType.orderhelper({
-      ...item,
+      product,
+      color,
+      size,
+      quantity,
       cart,
-      orderItems,
       bulkOperations,
+      orderItems,
     });
     if (!isValid) return onError();
     // Calculate order item price and add to total order price

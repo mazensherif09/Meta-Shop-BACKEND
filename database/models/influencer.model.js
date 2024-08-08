@@ -14,7 +14,7 @@ const schema = new mongoose.Schema(
     coupon: { type: mongoose.Types.ObjectId, ref: "coupon" },
     relatedTo: { type: mongoose.Types.ObjectId, ref: "user" },
     createdBy: { type: mongoose.Types.ObjectId, ref: "user" },
-    balance: {
+    totalSales: {
       type: Number,
       default: 0,
       min: 0,
@@ -29,15 +29,16 @@ const schema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Pre-find hook to automatically populate fields
 schema.pre(/^find/, function (next) {
+  
+  // Populate `relatedTo` and conditionally populate `coupon`
   this.populate({
-    path: 'relatedTo',
-    select: '_id fullName'
-  })
-  .populate({
-    path: 'coupon',
-    select: '_id code'
+    path: "coupon",
+    select: "_id code expires discount",
+    match: { publish: true },
+  }).populate({
+    path: "relatedTo",
+    select: "_id fullName"
   });
   next();
 });

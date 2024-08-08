@@ -13,7 +13,10 @@ export const protectedRoutes = AsyncHandler(async (req, res, next) => {
   jwt.verify(token, process.env.SECRETKEY, async (err, decoded) => {
     if (err) return next(new AppError(httpStatus.Forbidden));
     // 3- Check if user exists
-    const user = await UserModel.findById(decoded._id).populate("cart").lean();
+    const user = await UserModel.findById(decoded._id)
+      .populate("cart")
+      .populate( "influencer")
+      .exec();
     if (!user) return next(new AppError(httpStatus.Forbidden));
     // 4- Check if user is blocked
     if (user.isblocked) return next(new AppError(httpStatus.Forbidden));

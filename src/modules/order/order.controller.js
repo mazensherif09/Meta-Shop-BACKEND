@@ -214,7 +214,7 @@ const createOrder = AsyncHandler(async (req, res, next) => {
       const discountAmount =
         order.totalOrderPrice * (order.coupon.discount / 100);
       await influencerModel.findByIdAndUpdate(influencer._id, {
-        $inc: { totalEarned: discountAmount },
+        $inc: { totalEarned: discountAmount, totalSales: 1 },
       });
     }
   }

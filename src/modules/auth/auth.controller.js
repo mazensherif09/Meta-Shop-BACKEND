@@ -34,7 +34,7 @@ const signUp = AsyncHandler(async (req, res, next) => {
 const signIn = AsyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
-  let user = await UserModel.findOne({ email }).populate("cart");
+  let user = await UserModel.findOne({ email }).populate("cart").populate("influencer");
   if (user && bcrypt.compareSync(password, user.password)) {
     if (user?.isblocked)
       return next(
@@ -60,6 +60,7 @@ const signIn = AsyncHandler(async (req, res, next) => {
         email: user?.email,
         role: user?.role,
         phone: user?.phone,
+        influencer: user?.influencer,
       },
       cart,
     });

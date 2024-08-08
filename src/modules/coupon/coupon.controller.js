@@ -20,6 +20,8 @@ const getOneCoupon = FindOne(config);
 const getAllCoupons = FindAll(config);
 const deleteOneCoupon = deleteOne(config);
 const verifyCoupon = AsyncHandler(async (req, res, next) => {
+  console.log(req?.query?.code);
+  
   const coupon = await FindCouponWithVerfiy({
     filters: {
       code: req?.query?.code,
